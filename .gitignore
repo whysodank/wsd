@@ -1,0 +1,25 @@
+# Please feel free to add your editors' files while you are working with the project.
+# But do restrain yourself from adding non-project related files here.
+
+# Python
+__pycache__
+*.pyc
+
+# Node
+node_modules
+
+# IDEs & Editors
+.idea
+
+# Frameworks & Libraries
+venv
+yarn-debug.log*
+yarn-error.log*
+.eslintcache
+build
+
+# Project Specific
+.env
+
+# ETC
+.DS_Store

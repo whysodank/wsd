@@ -1,0 +1,14 @@
+django==4.1.1
+pre-commit==2.9.2
+iubeo==0.2.0
+psycopg2==2.9.5
+django-lifecycle==1.0.0
+django-extensions==3.1.0
+django-hosts==5.1
+django-admin-autocomplete-filter==0.6.1
+python-dotenv==0.15.0
+django-filter==2.4.0
+django-pghistory==2.5.1
+djangorestframework==3.12.2
+decorator==5.1.1
+whitenoise==6.2.0

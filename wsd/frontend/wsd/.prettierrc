@@ -1,0 +1,12 @@
+{
+  "printWidth": 120,
+  "semi": false,
+  "singleQuote": true,
+  "trailingComma": "es5",
+  "importOrder": [
+    "^[a-zA-Z0-9].*$",
+    "^\\@.*$", "^/.*$",
+    "^\\..*$"
+  ],
+  "importOrderSeparation": true
+}

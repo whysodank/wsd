@@ -1,0 +1,18 @@
+@import '~normalize.css';
+@import 'constants';
+@import 'utils';
+
+* {
+  box-sizing: border-box;
+  font-size: var(--font-normal);
+}
+
+body {
+  height: 100vh;
+  width: 100vw;
+  margin: 0;
+
+  > #root {
+    @extend .FullWH;
+  }
+}

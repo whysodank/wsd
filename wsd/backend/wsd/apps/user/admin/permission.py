@@ -1,0 +1,15 @@
+from django.contrib import admin
+from django.contrib.auth.models import Permission
+from apps.common.utils import returns
+
+
+@admin.register(Permission)
+class PermissionAdmin(admin.ModelAdmin):
+    list_fields = ["name", "codename"]
+    search_fields = ["name", "codename"]
+    autocomplete_filters = ["name", "codename"]
+    readonly_fields = ["content_type", "name", "codename"]
+    list_filter = ["content_type"]
+
+    has_add_permission = returns(False)
+    has_change_permission = returns(False)
