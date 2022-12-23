@@ -10,8 +10,8 @@ urlpatterns = [
     path(
         "openapi-schema/",
         get_schema_view(
-            title="OpenField",
-            description="OpenField Open API V1 Documentation + schema.",
+            title="Why So Dank",
+            description="WSD Open API V1 Documentation + schema.",
             version="1.0.0",
             patterns=router.urls,
         ),

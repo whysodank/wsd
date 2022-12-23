@@ -1,0 +1,17 @@
+from .post import Post
+from .original_source_claim import OriginalSourceClaim
+from .user_post_view import UserPostView
+
+
+PostComment = Post.comment_class
+PostCommentVote = PostComment.vote_class
+PostVote = Post.vote_class
+
+__all__ = [
+    "Post",
+    "PostComment",
+    "PostCommentVote",
+    "PostVote",
+    "OriginalSourceClaim",
+    "UserPostView",
+]

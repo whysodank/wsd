@@ -1,11 +1,12 @@
 from base64 import urlsafe_b64decode, urlsafe_b64encode
+from uuid import UUID, uuid4
+
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import BEFORE_CREATE, LifecycleModel, hook
-from uuid import UUID, uuid4
 
 
-class Base(LifecycleModel):
+class BaseModel(LifecycleModel):
     REPR = "{self.__class__.__name__}(id={self.id})"
     FIELDS = ["id", "slug", "created_at", "updated_at"]
 
@@ -37,6 +38,10 @@ class Base(LifecycleModel):
         for key, val in kwargs.items():
             setattr(self, key, val)
         return self.save(skip_hooks=skip_hooks, update_fields=kwargs.keys())
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        return super().save(*args, **kwargs)
 
     __repr__ = __str__ = __default_repr
 

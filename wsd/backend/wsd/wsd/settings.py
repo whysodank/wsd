@@ -2,16 +2,16 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 
-from .config import CONFIG
+from .config import CONFIG as config  # Django thinks CONFIG is a settings if it is all caps  # NOQA
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 load_dotenv(dotenv_path=BASE_DIR.parent / ".env", verbose=True, override=False)
 
-DEBUG = CONFIG.DEBUG
-SECRET_KEY = CONFIG.SECRET_KEY
-ALLOWED_HOSTS = CONFIG.ALLOWED_HOSTS
+DEBUG = config.DEBUG
+SECRET_KEY = config.SECRET_KEY
+ALLOWED_HOSTS = config.ALLOWED_HOSTS
 
 # Application definition
 WSD_APPS_FIRST = [
@@ -19,10 +19,11 @@ WSD_APPS_FIRST = [
     "apps.common.apps.CommonConfig",
     "apps.api.rest.api.apps.ApiRestApiConfig",
     "apps.api.rest.autocomplete_filters.apps.ApiRestAutocompleteFiltersConfig",
-    "apps.api.rest.generic.apps.ApiRestGenericConfig"
+    "apps.api.rest.generic.apps.ApiRestGenericConfig",
 ]
 
 THIRD_PARTY_APPS = [
+    "whitenoise.runserver_nostatic",
     "pgtrigger",
     "pghistory",
     "pghistory.admin",
@@ -30,6 +31,18 @@ THIRD_PARTY_APPS = [
     "django_hosts",
     "admin_auto_filters",
     "django_filters",
+    "django_object_actions",
+    # DRF + DRF libraries
+    "rest_framework",
+    "rest_framework.authtoken",
+    # Auth libraries
+    "allauth",
+    "allauth.account",
+    "allauth.socialaccount",
+    "dj_rest_auth",
+    "dj_rest_auth.registration",
+    "allauth.socialaccount.providers.google",
+    "sslserver",
 ]
 
 BUILTIN_APPS = [
@@ -39,6 +52,7 @@ BUILTIN_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    "django.contrib.sites",
 ]
 
 WSD_APPS_LAST = [
@@ -50,7 +64,9 @@ INSTALLED_APPS = WSD_APPS_FIRST + THIRD_PARTY_APPS + BUILTIN_APPS + WSD_APPS_LAS
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    "apps.common.utils.media_whitenoise_middleware.MediaWhiteNoiseMiddleware",
     "django_hosts.middleware.HostsRequestMiddleware",
+    "pghistory.middleware.HistoryMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -63,6 +79,7 @@ MIDDLEWARE = [
 ROOT_URLCONF = "wsd.urls.root"
 ROOT_HOSTCONF = "wsd.hosts"
 DEFAULT_HOST = "root"
+HOST = config.HOST
 
 TEMPLATES = [
     {
@@ -86,11 +103,11 @@ WSGI_APPLICATION = "wsd.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": CONFIG.DB.NAME,
-        "USER": CONFIG.DB.USER,
-        "PASSWORD": CONFIG.DB.PASSWORD,
-        "HOST": CONFIG.DB.HOST,
-        "PORT": CONFIG.DB.PORT,
+        "NAME": config.DB.NAME,
+        "USER": config.DB.USER,
+        "PASSWORD": config.DB.PASSWORD,
+        "HOST": config.DB.HOST,
+        "PORT": config.DB.PORT,
     }
 }
 
@@ -115,7 +132,8 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-
+MEDIA_URL = f"http://{HOST}/media/"
+MEDIA_ROOT = BASE_DIR / "mediafiles"
 
 REST_FRAMEWORK = {
     "PAGE_SIZE": 100,

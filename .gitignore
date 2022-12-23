@@ -20,6 +20,8 @@ build
 
 # Project Specific
 .env
+staticfiles
+mediafiles
 
 # ETC
 .DS_Store
