@@ -1,9 +1,17 @@
+from django.conf import settings
 from django.urls import path
 from django.views.generic import TemplateView
-from rest_framework.routers import DefaultRouter
 from rest_framework.schemas import get_schema_view
 
-router = DefaultRouter()
+from apps.rest.routers import Router
+from apps.rest.v1.viewsets import PostViewSet, PostCommentViewSet, OriginalSourceClaimViewSet
+
+router = Router()
+
+router.register_viewset(PostViewSet)
+router.register_viewset(PostCommentViewSet)
+router.register_viewset(OriginalSourceClaimViewSet)
+
 SCHEMA_URL_NAME = "openapi-schema-v1"
 
 urlpatterns = [
@@ -14,6 +22,7 @@ urlpatterns = [
             description="WSD Open API V1 Documentation + schema.",
             version="1.0.0",
             patterns=router.urls,
+            url=f"api.{settings.HOST}/v1/"
         ),
         name=SCHEMA_URL_NAME,
     ),

@@ -1,3 +1,3 @@
 from django.urls import include, path
 
-urlpatterns = [path("", include("apps.api.rest.api.urls"))]
+urlpatterns = [path("", include("apps.rest.urls"))]

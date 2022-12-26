@@ -17,9 +17,7 @@ ALLOWED_HOSTS = config.ALLOWED_HOSTS
 WSD_APPS_FIRST = [
     "apps.core.apps.CoreConfig",
     "apps.common.apps.CommonConfig",
-    "apps.api.rest.api.apps.ApiRestApiConfig",
-    "apps.api.rest.autocomplete_filters.apps.ApiRestAutocompleteFiltersConfig",
-    "apps.api.rest.generic.apps.ApiRestGenericConfig",
+    "apps.rest.apps.RestConfig",
 ]
 
 THIRD_PARTY_APPS = [
@@ -80,6 +78,7 @@ ROOT_URLCONF = "wsd.urls.root"
 ROOT_HOSTCONF = "wsd.hosts"
 DEFAULT_HOST = "root"
 HOST = config.HOST
+SESSION_COOKIE_DOMAIN = f".{HOST}"
 
 TEMPLATES = [
     {
@@ -132,14 +131,14 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-MEDIA_URL = f"http://{HOST}/media/"
+MEDIA_URL = f"/media/"
 MEDIA_ROOT = BASE_DIR / "mediafiles"
 
 REST_FRAMEWORK = {
     "PAGE_SIZE": 100,
-    "DEFAULT_PAGINATION_CLASS": "apps.api.rest.paginators.CustomizablePageNumberPaginator",
+    "DEFAULT_PAGINATION_CLASS": "apps.rest.paginators.CustomizablePageNumberPaginator",
     "DEFAULT_FILTER_BACKENDS": [
-        "apps.api.rest.autocomplete_filters.backends.AutocompleteFilterBackend",
+        "django_filters.rest_framework.DjangoFilterBackend",
         "rest_framework.filters.SearchFilter",
         "rest_framework.filters.OrderingFilter",
     ],

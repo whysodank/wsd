@@ -43,6 +43,9 @@ class BaseModel(LifecycleModel):
         self.full_clean()
         return super().save(*args, **kwargs)
 
+    def as_queryset(self):
+        return self.__class__.objects.filter(id=self.id)
+
     __repr__ = __str__ = __default_repr
 
     class Meta:

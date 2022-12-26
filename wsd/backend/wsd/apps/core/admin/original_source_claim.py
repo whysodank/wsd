@@ -15,7 +15,9 @@ class OriginalSourceClaimAdmin(BaseAdmin):
     list_display = ["user", "post", "source", "comment", "status"]
     autocomplete_list_filter = ["user", "post"]
     list_filter = ["status"]
-    object_fieldsets = [[["user", "post", "source", "comment", "status"], "Original Source Claim"]]
+    object_fieldsets = [
+        [["user", "post", "source", "comment", "status", "contact_information"], "Original Source Claim"],
+    ]
 
     @action(description="Approve claim and set post original source to claim source")
     def approve(self, request, queryset):

@@ -53,4 +53,4 @@ class PostQuerySet(models.QuerySet):
         return (first.initial if first.initial is not None else first) if first is not None else None
 
     def without_reposts(self):
-        return self.filter(initial__isnull=True)
+        return self.filter(is_repost=False)

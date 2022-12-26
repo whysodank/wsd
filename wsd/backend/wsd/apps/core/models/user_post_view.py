@@ -25,8 +25,14 @@ class UserPostView(BaseModel):
 
     @classmethod
     def mark_posts_viewed_by_user(cls, posts, user):
-        views = [cls(user=user, post=post) for post in posts]
-        cls.objects.bulk_create(views)
+        if user is not None:
+            views = [cls(user=user, post=post) for post in posts]
+            cls.objects.bulk_create(views)
+
+    @classmethod
+    def mark_post_viewed_by_user(cls, post, user):
+        if user is not None:
+            cls.mark_posts_viewed_by_user(post.as_queryset(), user)
 
     class Meta:
         verbose_name = _("User Post View")
