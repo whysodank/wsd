@@ -119,6 +119,9 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 AUTH_USER_MODEL = "user.User"
+ACCOUNT_ADAPTER = "apps.user.allauth.account_adapter.AccountAdapter"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 
 # Internationalization
 LANGUAGE_CODE = "en-us"
@@ -143,3 +146,9 @@ REST_FRAMEWORK = {
         "rest_framework.filters.OrderingFilter",
     ],
 }
+
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# TODO: document this
+# And maybe a better way to do this?
+CLIENT_EMAIL_VERIFICATION_PAGE_URL = f"{HOST}/registration/verify-email/?token={{}}"

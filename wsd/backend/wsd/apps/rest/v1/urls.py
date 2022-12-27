@@ -1,4 +1,5 @@
 from django.conf import settings
+from django.urls import include
 from django.urls import path
 from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
@@ -42,5 +43,7 @@ urlpatterns = [
         ),
         name="swagger",
     ),
+    path('auth/', include('dj_rest_auth.urls')),
+    path('registration/', include('dj_rest_auth.registration.urls')),
     *router.urls,
 ]
