@@ -9,6 +9,8 @@ class BaseModelViewSet(ModelViewSet):
     filterset_fields = {}
     declared_filters = {}
     filterset_base = FilterSet
+    prefetch_related = []
+    select_related = []
 
     @classproperty
     def ordering_fields(cls):
@@ -19,7 +21,9 @@ class BaseModelViewSet(ModelViewSet):
         return [cls.serializer_class.Meta.model._meta.pk.name]  # NOQA
 
     def get_queryset(self):
-        return self.serializer_class.Meta.model.objects.all().order_by("pk")
+        qs = self.serializer_class.Meta.model.objects.all()
+        qs = qs.prefetch_related(*self.prefetch_related).select_related(*self.select_related)
+        return qs
 
     @classproperty
     def filterset_class(cls):
@@ -33,3 +37,6 @@ class BaseModelViewSet(ModelViewSet):
         serializer_class = self.get_serializer_class()
         force_current_user_fields = {field: self.request.user for field in serializer_class.force_current_user_fields}
         serializer.save(**force_current_user_fields)
+
+    def __init_subclass__(cls, **kwargs):
+        cls.model = cls.serializer_class.Meta.model

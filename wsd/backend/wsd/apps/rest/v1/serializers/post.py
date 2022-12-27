@@ -8,6 +8,7 @@ class PostSerializer(BaseModelSerializer):
     force_current_user_fields = ["user"]
     upvote_count = serializers.SerializerMethodField(source="get_upvote_count")
     downvote_count = serializers.SerializerMethodField(source="get_downvote_count")
+    tags = serializers.SerializerMethodField(source="get_tags")
 
     class Meta:
         model = Post
@@ -24,6 +25,7 @@ class PostSerializer(BaseModelSerializer):
             "original_source",
             "upvote_count",
             "downvote_count",
+            "tags",
         ]
         read_only_fields = [
             "created_at",
@@ -35,6 +37,7 @@ class PostSerializer(BaseModelSerializer):
             "user",
             "upvote_count",
             "downvote_count",
+            "tags",
         ]
 
     @staticmethod
@@ -44,3 +47,7 @@ class PostSerializer(BaseModelSerializer):
     @staticmethod
     def get_downvote_count(instance):
         return instance.votes.filter(body=instance.vote_class.VoteType.DOWNVOTE).count()
+
+    @staticmethod
+    def get_tags(instance):
+        return list(instance.tags.all().values_list("name", flat=True))

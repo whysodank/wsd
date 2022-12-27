@@ -16,6 +16,7 @@ class BaseAdmin(DjangoObjectActions, ModelAdmin):
     META_FIELDS = BaseModel.FIELDS
     object_fieldsets = []
     meta_fieldsets = [[META_FIELDS, "Meta"]]
+    safe_m2m_fields = []
 
     @staticmethod
     def make_fieldset_field(*fields, name):
@@ -39,3 +40,12 @@ class BaseAdmin(DjangoObjectActions, ModelAdmin):
         object_fieldsets = [self.make_fieldset_field(*fields, name=name) for fields, name in self.object_fieldsets]
         meta_fieldsets = [self.make_fieldset_field(*fields, name=name) for fields, name in self.meta_fieldsets]
         return object_fieldsets + meta_fieldsets if obj else object_fieldsets
+
+    def formfield_for_manytomany(self, db_field, request, **kwargs):
+        if db_field.name in self.safe_m2m_fields:
+            db_field.remote_field.through._meta.auto_created = True
+            form_field = super().formfield_for_manytomany(db_field, request, **kwargs)
+            db_field.remote_field.through._meta.auto_created = False
+        else:
+            form_field = super().formfield_for_manytomany(db_field, request, **kwargs)
+        return form_field

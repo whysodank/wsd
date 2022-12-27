@@ -8,6 +8,7 @@ from apps.common.models.base import BaseModel
 from apps.common.utils import track_events
 from apps.core.querysets import PostQuerySet
 from apps.feedback import comments, votes
+from apps.tags import tags
 
 
 @track_events
@@ -42,6 +43,7 @@ class Post(BaseModel):
         verbose_name=_("Image"),
         help_text=_("The post itself."),
     )
+    tags = tags()
 
     # Feedback from the user
     comments = comments()
