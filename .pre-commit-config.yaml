@@ -9,21 +9,21 @@ repos:
     rev: 22.12.0
     hooks:
       - id: black
-        files: 'snp/backend/'
+        files: 'wsd/backend/'
         args: [--line-length=120]
 
   - repo: https://github.com/pycqa/isort
     rev: 5.11.2
     hooks:
       - id: isort
-        files: 'snp/backend/'
+        files: 'wsd/backend/'
         args: [--profile=black, -m=3, -l=120]
 
   - repo: https://github.com/hakancelikdev/unimport
     rev: stable
     hooks:
       - id: unimport
-        files: 'snp/backend/'
+        files: 'wsd/backend/'
         args: [--remove, --include-star-import]
 
   - repo: local

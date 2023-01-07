@@ -1,5 +1,5 @@
 {
-  "name": "snp",
+  "name": "wsd",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -34,7 +34,7 @@
     "workbox-streams": "^5.1.3"
   },
   "scripts": {
-    "start": "react-scripts start",
+    "start:dev": "react-scripts --openssl-legacy-provider start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -68,9 +68,9 @@
     "eslint-config-google": "^0.14.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.5",
-    "node-sass": "4",
     "pre-commit": "^1.2.2",
-    "prettier": "^2.2.0"
+    "prettier": "^2.2.0",
+    "sass": "^1.57.1"
   },
   "pre-commit": [
     "yarn lint"
