@@ -1,13 +1,12 @@
 from functools import lru_cache
 
+from apps.common.models.base import BaseModel
+from apps.common.utils import camel_to_snake, track_events
 from django.contrib.postgres.fields import CICharField
 from django.core.validators import RegexValidator
 from django.db import models
 from django.db.models.manager import Manager
 from django.utils.translation import gettext_lazy as _
-
-from apps.common.models.base import BaseModel
-from apps.common.utils import track_events, camel_to_snake
 
 TAG_NAME_REGEX = r"^[a-zA-Z0-9_.-]*$"
 TAG_NAME_REGEX_ERROR_MESSAGE = "Tags can only contain letters, numbers, - and _."

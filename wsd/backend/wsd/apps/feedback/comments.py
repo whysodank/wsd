@@ -1,12 +1,11 @@
 from functools import lru_cache
 
+from apps.common.models.base import BaseModel
+from apps.common.utils import camel_to_snake, track_events
+from apps.feedback.votes import votes
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
-from apps.common.models.base import BaseModel
-from apps.common.utils import track_events, camel_to_snake
-from apps.feedback.votes import votes
 
 
 @lru_cache(maxsize=None)

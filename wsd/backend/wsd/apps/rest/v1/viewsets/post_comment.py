@@ -1,8 +1,8 @@
+from apps.rest.v1.serializers import PostCommentSerializer
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from apps.rest.v1.serializers import PostCommentSerializer
 from .base import BaseModelViewSet
 
 

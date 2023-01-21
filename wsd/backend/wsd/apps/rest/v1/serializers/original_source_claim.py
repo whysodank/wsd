@@ -1,6 +1,5 @@
-from rest_framework import serializers
-
 from apps.core.models import OriginalSourceClaim
+
 from .base import BaseModelSerializer
 
 
@@ -22,6 +21,5 @@ class OriginalSourceClaimSerializer(BaseModelSerializer):
             "created_at",
             "updated_at",
             "user",
-            "post"
-            "status",
+            "post" "status",
         ]

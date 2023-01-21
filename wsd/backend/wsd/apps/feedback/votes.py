@@ -1,11 +1,10 @@
 from functools import lru_cache
 
+from apps.common.models.base import BaseModel
+from apps.common.utils import camel_to_snake, track_events
 from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
-
-from apps.common.models.base import BaseModel
-from apps.common.utils import track_events, camel_to_snake
 
 
 @lru_cache(maxsize=None)
@@ -48,7 +47,7 @@ def create_vote_class(klass, name):
     class Meta:
         app_label = klass._meta.app_label  # NOQA
         verbose_name = _(f"{klass.__name__} Vote")
-        verbose_name_plural = _(f"{klass._meta.verbose_name.title()} Votes") # NOQA
+        verbose_name_plural = _(f"{klass._meta.verbose_name.title()} Votes")  # NOQA
         constraints = [
             models.UniqueConstraint(
                 fields=["user", "post"],

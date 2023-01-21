@@ -1,11 +1,11 @@
 from functools import wraps
 
+from apps.core.models import UserPostView
+from apps.rest.v1.serializers import PostSerializer, PostTagSerializer
 from rest_framework import status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
-from apps.core.models import UserPostView
-from apps.rest.v1.serializers import PostSerializer, PostTagSerializer
 from .base import BaseModelViewSet
 
 

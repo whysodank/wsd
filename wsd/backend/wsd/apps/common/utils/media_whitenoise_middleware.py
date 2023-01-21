@@ -15,7 +15,7 @@ class MediaWhiteNoiseMiddleware(WhiteNoiseMiddleware):
         script_prefix = get_script_prefix().rstrip("/")
         if script_prefix:
             if self.static_prefix.startswith(script_prefix):
-                self.static_prefix = self.static_prefix[len(script_prefix):]
+                self.static_prefix = self.static_prefix[len(script_prefix) :]
         if settings.DEBUG:
             self.max_age = 0
         # Allow settings to override default attributes

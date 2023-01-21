@@ -4,12 +4,12 @@ from django.db.models.fields import FloatField, IntegerField
 
 
 class HexToInt(Func):
-    function = 'hex_to_int'
+    function = "hex_to_int"
     output_field = IntegerField()
 
 
 class HammingSimilarity(Func):
-    function = 'hamming_text'
+    function = "hamming_text"
     arity = 2
     output_field = FloatField()
 

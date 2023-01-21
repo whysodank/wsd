@@ -1,6 +1,6 @@
+from apps.common.utils import returns
 from django.contrib import admin
 from django.contrib.auth.models import Permission
-from apps.common.utils import returns
 
 
 @admin.register(Permission)

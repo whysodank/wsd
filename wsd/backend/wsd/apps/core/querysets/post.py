@@ -1,8 +1,7 @@
+from apps.common.utils import first_of
+from apps.core.utils import HammingSimilarity
 from django.db import models
 from django.db.models import Value
-
-from apps.core.utils import HammingSimilarity
-from apps.common.utils import first_of
 
 
 class PostQuerySet(models.QuerySet):
@@ -30,13 +29,17 @@ class PostQuerySet(models.QuerySet):
         return qs
 
     def _hamming_similarity_is_too_high(self, instance, threshold=RAW_HAMMING_SIMILARITY):
-        similar_posts = self.with_hamming_similarities(instance).filter(
-            phash_hamming_similarity__gte=threshold,
-            dhash_hamming_similarity__gte=threshold,
-            whash_hamming_similarity__gte=threshold,
-            average_hash_hamming_similarity__gte=threshold,
-            colorhash_hamming_similarity__gte=threshold,
-        ).order_by(*self.model.HASH_FIELDS)
+        similar_posts = (
+            self.with_hamming_similarities(instance)
+            .filter(
+                phash_hamming_similarity__gte=threshold,
+                dhash_hamming_similarity__gte=threshold,
+                whash_hamming_similarity__gte=threshold,
+                average_hash_hamming_similarity__gte=threshold,
+                colorhash_hamming_similarity__gte=threshold,
+            )
+            .order_by(*self.model.HASH_FIELDS)
+        )
         return self.__get_initial(similar_posts, instance)
 
     def _cryptographic_hash_is_same(self, instance):

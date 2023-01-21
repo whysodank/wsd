@@ -1,9 +1,8 @@
 from admin_auto_filters.filters import AutocompleteFilterFactory as Autocomplete
+from apps.common.models import BaseModel
 from django.contrib.admin import ModelAdmin
 from django.utils.translation import gettext_lazy as _
 from django_object_actions import DjangoObjectActions
-
-from apps.common.models import BaseModel
 
 
 class BaseAdmin(DjangoObjectActions, ModelAdmin):

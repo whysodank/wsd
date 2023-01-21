@@ -1,7 +1,6 @@
-from django.contrib import admin
-
 from apps.common.admin.base import BaseAdmin
 from apps.core.models import PostTag
+from django.contrib import admin
 
 
 @admin.register(PostTag)

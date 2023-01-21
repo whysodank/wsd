@@ -1,11 +1,9 @@
+from apps.rest.routers import Router
+from apps.rest.v1.viewsets import OriginalSourceClaimViewSet, PostCommentViewSet, PostViewSet
 from django.conf import settings
-from django.urls import include
-from django.urls import path
+from django.urls import include, path
 from django.views.generic import TemplateView
 from rest_framework.schemas import get_schema_view
-
-from apps.rest.routers import Router
-from apps.rest.v1.viewsets import PostViewSet, PostCommentViewSet, OriginalSourceClaimViewSet
 
 router = Router()
 
@@ -23,7 +21,7 @@ urlpatterns = [
             description="WSD Open API V1 Documentation + schema.",
             version="1.0.0",
             patterns=router.urls,
-            url=f"api.{settings.HOST}/v1/"
+            url=f"api.{settings.HOST}/v1/",
         ),
         name=SCHEMA_URL_NAME,
     ),
@@ -43,7 +41,7 @@ urlpatterns = [
         ),
         name="swagger",
     ),
-    path('auth/', include('dj_rest_auth.urls')),
-    path('registration/', include('dj_rest_auth.registration.urls')),
+    path("auth/", include("dj_rest_auth.urls")),
+    path("registration/", include("dj_rest_auth.registration.urls")),
     *router.urls,
 ]

@@ -1,14 +1,13 @@
-from django.contrib.auth import get_user_model
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django_lifecycle import hook, AFTER_CREATE
-from ume import phash, dhash, whash, average_hash, colorhash, get_text_from_image, normalize_text, cryptographic_hash
-
 from apps.common.models.base import BaseModel
 from apps.common.utils import track_events
 from apps.core.querysets import PostQuerySet
 from apps.feedback import comments, votes
 from apps.tags import tags
+from django.contrib.auth import get_user_model
+from django.db import models
+from django.utils.translation import gettext_lazy as _
+from django_lifecycle import AFTER_CREATE, hook
+from ume import average_hash, colorhash, cryptographic_hash, dhash, get_text_from_image, normalize_text, phash, whash
 
 
 @track_events

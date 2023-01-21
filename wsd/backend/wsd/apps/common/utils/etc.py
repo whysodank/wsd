@@ -9,6 +9,7 @@ def with_attrs(**kwargs):
     """
     Creates a decorator that adds the given attributes to the decorated function.
     """
+
     def decorator(func):
         for key, value in kwargs.items():
             setattr(func, key, value)
@@ -21,6 +22,7 @@ def returns(value):
     """
     Creates a lambda function that returns the given value.
     """
+
     def wrapper(*a, **kw):
         return value
 
@@ -28,14 +30,15 @@ def returns(value):
 
 
 def camel_to_snake(name):
-    name = re.sub('(.)([A-Z][a-z]+)', r'\1_\2', name)
-    return re.sub('([a-z0-9])([A-Z])', r'\1_\2', name).lower()
+    name = re.sub("(.)([A-Z][a-z]+)", r"\1_\2", name)
+    return re.sub("([a-z0-9])([A-Z])", r"\1_\2", name).lower()
 
 
 def action(description):
     """
     ModelAdmin method decorator to mark a method as both list and detail action.
     """
+
     def decorator(func):
         return atomic(takes_instance_or_queryset(action_(description=description)(func)))
 

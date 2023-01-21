@@ -1,6 +1,6 @@
+from apps.core.models import Post
 from rest_framework import serializers
 
-from apps.core.models import Post
 from .base import BaseModelSerializer
 
 

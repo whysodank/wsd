@@ -4,11 +4,10 @@ import django.db.models.deletion
 import django_lifecycle.mixins
 import pgtrigger.compiler
 import pgtrigger.migrations
+from apps.core.sql import CREATE_HAMMING_DISTANCE_FUNCTION, CREATE_HEX_TO_INT_FUNCTION, execute
+from apps.core.utils import PGSimilarityExtension
 from django.conf import settings
 from django.db import migrations, models
-
-from apps.core.sql import execute, CREATE_HAMMING_DISTANCE_FUNCTION, CREATE_HEX_TO_INT_FUNCTION
-from apps.core.utils import PGSimilarityExtension
 
 
 def create_hamming_distance_utilities(apps, schema_editor):
@@ -44,15 +43,11 @@ class Migration(migrations.Migration):
                 ("slug", models.SlugField(blank=True, null=True, verbose_name="Slug")),
                 (
                     "created_at",
-                    models.DateTimeField(
-                        auto_now_add=True, db_index=True, verbose_name="Created At"
-                    ),
+                    models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Created At"),
                 ),
                 (
                     "updated_at",
-                    models.DateTimeField(
-                        auto_now=True, db_index=True, verbose_name="Updated At"
-                    ),
+                    models.DateTimeField(auto_now=True, db_index=True, verbose_name="Updated At"),
                 ),
                 (
                     "comment",
@@ -117,15 +112,11 @@ class Migration(migrations.Migration):
                 ("slug", models.SlugField(blank=True, null=True, verbose_name="Slug")),
                 (
                     "created_at",
-                    models.DateTimeField(
-                        auto_now_add=True, db_index=True, verbose_name="Created At"
-                    ),
+                    models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Created At"),
                 ),
                 (
                     "updated_at",
-                    models.DateTimeField(
-                        auto_now=True, db_index=True, verbose_name="Updated At"
-                    ),
+                    models.DateTimeField(auto_now=True, db_index=True, verbose_name="Updated At"),
                 ),
                 (
                     "title",
@@ -286,21 +277,15 @@ class Migration(migrations.Migration):
                 ("slug", models.SlugField(blank=True, null=True, verbose_name="Slug")),
                 (
                     "created_at",
-                    models.DateTimeField(
-                        auto_now_add=True, db_index=True, verbose_name="Created At"
-                    ),
+                    models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Created At"),
                 ),
                 (
                     "updated_at",
-                    models.DateTimeField(
-                        auto_now=True, db_index=True, verbose_name="Updated At"
-                    ),
+                    models.DateTimeField(auto_now=True, db_index=True, verbose_name="Updated At"),
                 ),
                 (
                     "body",
-                    models.TextField(
-                        help_text="The actual comment.", verbose_name="Body"
-                    ),
+                    models.TextField(help_text="The actual comment.", verbose_name="Body"),
                 ),
                 (
                     "post",
@@ -346,15 +331,11 @@ class Migration(migrations.Migration):
                 ("slug", models.SlugField(blank=True, null=True, verbose_name="Slug")),
                 (
                     "created_at",
-                    models.DateTimeField(
-                        auto_now_add=True, db_index=True, verbose_name="Created At"
-                    ),
+                    models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Created At"),
                 ),
                 (
                     "updated_at",
-                    models.DateTimeField(
-                        auto_now=True, db_index=True, verbose_name="Updated At"
-                    ),
+                    models.DateTimeField(auto_now=True, db_index=True, verbose_name="Updated At"),
                 ),
                 (
                     "body",
@@ -408,15 +389,11 @@ class Migration(migrations.Migration):
                 ("slug", models.SlugField(blank=True, null=True, verbose_name="Slug")),
                 (
                     "created_at",
-                    models.DateTimeField(
-                        auto_now_add=True, db_index=True, verbose_name="Created At"
-                    ),
+                    models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Created At"),
                 ),
                 (
                     "updated_at",
-                    models.DateTimeField(
-                        auto_now=True, db_index=True, verbose_name="Updated At"
-                    ),
+                    models.DateTimeField(auto_now=True, db_index=True, verbose_name="Updated At"),
                 ),
                 (
                     "body",
@@ -470,15 +447,11 @@ class Migration(migrations.Migration):
                 ("slug", models.SlugField(blank=True, null=True, verbose_name="Slug")),
                 (
                     "created_at",
-                    models.DateTimeField(
-                        auto_now_add=True, db_index=True, verbose_name="Created At"
-                    ),
+                    models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Created At"),
                 ),
                 (
                     "updated_at",
-                    models.DateTimeField(
-                        auto_now=True, db_index=True, verbose_name="Updated At"
-                    ),
+                    models.DateTimeField(auto_now=True, db_index=True, verbose_name="Updated At"),
                 ),
                 (
                     "post",
@@ -524,9 +497,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "slug",
-                    models.SlugField(
-                        blank=True, db_index=False, null=True, verbose_name="Slug"
-                    ),
+                    models.SlugField(blank=True, db_index=False, null=True, verbose_name="Slug"),
                 ),
                 (
                     "created_at",
@@ -601,9 +572,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "slug",
-                    models.SlugField(
-                        blank=True, db_index=False, null=True, verbose_name="Slug"
-                    ),
+                    models.SlugField(blank=True, db_index=False, null=True, verbose_name="Slug"),
                 ),
                 (
                     "created_at",
@@ -686,9 +655,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "slug",
-                    models.SlugField(
-                        blank=True, db_index=False, null=True, verbose_name="Slug"
-                    ),
+                    models.SlugField(blank=True, db_index=False, null=True, verbose_name="Slug"),
                 ),
                 (
                     "created_at",
@@ -878,9 +845,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "slug",
-                    models.SlugField(
-                        blank=True, db_index=False, null=True, verbose_name="Slug"
-                    ),
+                    models.SlugField(blank=True, db_index=False, null=True, verbose_name="Slug"),
                 ),
                 (
                     "created_at",
@@ -963,9 +928,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "slug",
-                    models.SlugField(
-                        blank=True, db_index=False, null=True, verbose_name="Slug"
-                    ),
+                    models.SlugField(blank=True, db_index=False, null=True, verbose_name="Slug"),
                 ),
                 (
                     "created_at",
@@ -977,9 +940,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "body",
-                    models.TextField(
-                        help_text="The actual comment.", verbose_name="Body"
-                    ),
+                    models.TextField(help_text="The actual comment.", verbose_name="Body"),
                 ),
                 (
                     "pgh_context",
@@ -1046,9 +1007,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "slug",
-                    models.SlugField(
-                        blank=True, db_index=False, null=True, verbose_name="Slug"
-                    ),
+                    models.SlugField(blank=True, db_index=False, null=True, verbose_name="Slug"),
                 ),
                 (
                     "created_at",
@@ -1169,15 +1128,11 @@ class Migration(migrations.Migration):
         ),
         migrations.AddConstraint(
             model_name="postvote",
-            constraint=models.UniqueConstraint(
-                fields=("user", "post"), name="unique_post_vote"
-            ),
+            constraint=models.UniqueConstraint(fields=("user", "post"), name="unique_post_vote"),
         ),
         migrations.AddConstraint(
             model_name="postcommentvote",
-            constraint=models.UniqueConstraint(
-                fields=("user", "post"), name="unique_post_comment_vote"
-            ),
+            constraint=models.UniqueConstraint(fields=("user", "post"), name="unique_post_comment_vote"),
         ),
         migrations.AddConstraint(
             model_name="postcomment",

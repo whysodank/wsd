@@ -1,0 +1,5 @@
+export { default as Meme } from 'src/components/wsd/Meme/Meme'
+export { default as NavBar } from 'src/components/wsd/Navbar/NavBar'
+export { default as LeftMenu } from 'src/components/wsd/LeftMenu/LeftMenu'
+export { default as RightMenu } from 'src/components/wsd/RightMenu/RightMenu'
+export { default as Memes } from 'src/components/wsd/Memes/Memes'

@@ -1,7 +1,6 @@
-from .post import Post
 from .original_source_claim import OriginalSourceClaim
+from .post import Post
 from .user_post_view import UserPostView
-
 
 PostComment = Post.comment_class
 PostCommentVote = PostComment.vote_class

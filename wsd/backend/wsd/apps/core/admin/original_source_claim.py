@@ -1,8 +1,7 @@
-from django.contrib import admin
-
 from apps.common.admin import BaseAdmin
 from apps.common.utils import action
 from apps.core.models import OriginalSourceClaim
+from django.contrib import admin
 
 
 @admin.register(OriginalSourceClaim)

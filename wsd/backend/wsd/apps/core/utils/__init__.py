@@ -1,7 +1,7 @@
-from .db import HexToInt, HammingSimilarity, PGSimilarityExtension
+from .db import HammingSimilarity, HexToInt, PGSimilarityExtension
 
 __all__ = [
-    'HexToInt',
+    "HexToInt",
     "HammingSimilarity",
     "PGSimilarityExtension",
 ]

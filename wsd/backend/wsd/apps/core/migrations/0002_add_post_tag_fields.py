@@ -1,12 +1,13 @@
+import uuid
+
 import django.contrib.postgres.fields.citext
 import django.core.validators
-from django.db import migrations, models
 import django.db.models.deletion
 import django_lifecycle.mixins
 import pgtrigger.compiler
 import pgtrigger.migrations
-import uuid
 from django.contrib.postgres.operations import CITextExtension
+from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
@@ -35,15 +36,11 @@ class Migration(migrations.Migration):
                 ("slug", models.SlugField(blank=True, null=True, verbose_name="Slug")),
                 (
                     "created_at",
-                    models.DateTimeField(
-                        auto_now_add=True, db_index=True, verbose_name="Created At"
-                    ),
+                    models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Created At"),
                 ),
                 (
                     "updated_at",
-                    models.DateTimeField(
-                        auto_now=True, db_index=True, verbose_name="Updated At"
-                    ),
+                    models.DateTimeField(auto_now=True, db_index=True, verbose_name="Updated At"),
                 ),
                 (
                     "post",
@@ -79,15 +76,11 @@ class Migration(migrations.Migration):
                 ("slug", models.SlugField(blank=True, null=True, verbose_name="Slug")),
                 (
                     "created_at",
-                    models.DateTimeField(
-                        auto_now_add=True, db_index=True, verbose_name="Created At"
-                    ),
+                    models.DateTimeField(auto_now_add=True, db_index=True, verbose_name="Created At"),
                 ),
                 (
                     "updated_at",
-                    models.DateTimeField(
-                        auto_now=True, db_index=True, verbose_name="Updated At"
-                    ),
+                    models.DateTimeField(auto_now=True, db_index=True, verbose_name="Updated At"),
                 ),
                 (
                     "name",
@@ -127,9 +120,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "slug",
-                    models.SlugField(
-                        blank=True, db_index=False, null=True, verbose_name="Slug"
-                    ),
+                    models.SlugField(blank=True, db_index=False, null=True, verbose_name="Slug"),
                 ),
                 (
                     "created_at",
@@ -194,9 +185,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     "slug",
-                    models.SlugField(
-                        blank=True, db_index=False, null=True, verbose_name="Slug"
-                    ),
+                    models.SlugField(blank=True, db_index=False, null=True, verbose_name="Slug"),
                 ),
                 (
                     "created_at",
@@ -297,15 +286,11 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name="post",
             name="tags",
-            field=models.ManyToManyField(
-                through="core.PostObjectTag", to="core.posttag"
-            ),
+            field=models.ManyToManyField(through="core.PostObjectTag", to="core.posttag"),
         ),
         migrations.AddConstraint(
             model_name="postobjecttag",
-            constraint=models.UniqueConstraint(
-                fields=("tag", "post"), name="unique_post_object_tag"
-            ),
+            constraint=models.UniqueConstraint(fields=("tag", "post"), name="unique_post_object_tag"),
         ),
         pgtrigger.migrations.AddTrigger(
             model_name="postobjecttag",

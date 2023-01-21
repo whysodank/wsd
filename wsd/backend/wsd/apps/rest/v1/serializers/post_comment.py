@@ -1,6 +1,6 @@
+from apps.core.models import PostComment
 from rest_framework import serializers
 
-from apps.core.models import PostComment
 from .base import BaseModelSerializer
 
 
