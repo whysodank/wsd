@@ -24,4 +24,4 @@ staticfiles
 mediafiles
 
 # ETC
-.DS_Store
+*.DS_Store
