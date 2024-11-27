@@ -1,1 +1,0 @@
-PWA frontend for WSD.

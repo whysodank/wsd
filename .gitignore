@@ -1,27 +1,31 @@
-# Please feel free to add your editors' files while you are working with the project.
-# But do restrain yourself from adding non-project related files here.
-
 # Python
+venv
+.venv
 __pycache__
-*.pyc
+*.py[cod]
 
 # Node
 node_modules
 
-# IDEs & Editors
-.idea
+# TypeScript
+*.tsbuildinfo
 
-# Frameworks & Libraries
-venv
-yarn-debug.log*
-yarn-error.log*
-.eslintcache
-build
-
-# Project Specific
-.env
+# Django
+media
 staticfiles
 mediafiles
 
+# IDE
+.idea
+
+# Docker - Docker Compose
+wsd/server/nginx.conf
+
 # ETC
-*.DS_Store
+*.log
+*.env
+.DS_Store
+*.pem
+npm-debug.log*
+*.mo
+.env.sentry-build-plugin
