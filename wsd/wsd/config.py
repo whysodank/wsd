@@ -26,6 +26,15 @@ CONFIG = config(
                 "CLIENT_SECRET": string(),
             },
         },
+        "EMAIL": {
+            "SMTP": {
+                "HOST": str,
+                "PORT": {"TSL": int},
+                "USER": str,
+                "PASSWORD": str,
+            },
+            "DEFAULT_VERIFICATION_FROM_EMAIL": str,
+        },
     },
     prefix="WSD",
 )

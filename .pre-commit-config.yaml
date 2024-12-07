@@ -35,7 +35,7 @@ repos:
 
   - repo: local
     hooks:
-      - id: check-i18n
-        name: check-i18n
-        entry: scripts/pre-commit/i18n.sh
+      - id: lint-frontend
+        name: lint-frontend
+        entry: scripts/pre-commit/lint_frontend.sh
         language: script
