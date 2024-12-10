@@ -1,7 +1,7 @@
 import re
 from functools import wraps
 
-from common.utils.pyutils import purge_iterable, purge_mapping
+from apps.common.utils.pyutils import purge_iterable, purge_mapping
 from memoization import cached
 from rest_framework import serializers
 

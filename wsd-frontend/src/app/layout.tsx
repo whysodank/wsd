@@ -9,7 +9,6 @@ import { Toaster } from '@/components/shadcn/sonner'
 import MonkeyPatches from '@/app/monkeypatches'
 import config from '@/config'
 import { getWSDMetadata } from '@/lib/metadata'
-import { cn } from '@/lib/utils'
 
 import { GoogleAnalytics } from '@next/third-parties/google'
 
@@ -32,7 +31,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         />
         {gaID && <GoogleAnalytics gaId={gaID} />}
       </head>
-      <body className={cn('min-h-screen font-sans antialiased dark')}>
+      <body className="min-h-screen font-sans antialiased">
         {children}
         <Toaster />
       </body>

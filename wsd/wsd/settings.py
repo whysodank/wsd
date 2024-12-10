@@ -27,6 +27,7 @@ THIRD_PARTY_APPS = [
     "django_object_actions",
     # Auth libraries
     "allauth",
+    "allauth.headless",
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
@@ -54,12 +55,13 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "apps.common.utils.media_whitenoise_middleware.MediaWhiteNoiseMiddleware",
     "django_hosts.middleware.HostsRequestMiddleware",
-    "allauth.account.middleware.AccountMiddleware",
     "pghistory.middleware.HistoryMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
+    # "django.contrib.sessions.middleware.SessionMiddleware",
+    "apps.core.middleware.session.CookieORHeaderSessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django_hosts.middleware.HostsResponseMiddleware",
@@ -125,6 +127,7 @@ AUTHENTICATION_BACKENDS = [
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 HEADLESS_ONLY = True
+HEADLESS_FRONTEND_URLS = {"socialaccount_login_error": "https://example.com"}
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -142,6 +145,11 @@ SOCIALACCOUNT_PROVIDERS = {
         "OAUTH_PKCE_ENABLED": True,
     }
 }
+
+CSRF_COOKIE_SECURE = True
+SESSION_COOKIE_SECURE = True
+SESSION_COOKIE_HTTPONLY = False
+SESSION_HEADER_NAME = "X-Session-Token"
 
 # Internationalization
 LANGUAGE_CODE = "en-us"

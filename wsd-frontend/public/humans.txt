@@ -1,1 +1,2 @@
-# https://github.com/whysodank/wsd
+# We are open source and hosted on GitHub, you can check out all contributors here:
+# https://github.com/whysodank/wsd/graphs/contributors

@@ -6,6 +6,7 @@ const RAW = Object.freeze({
   domain: process.env.NEXT_PUBLIC_WSD__DOMAIN,
   api: {
     baseUrl: process.env.NEXT_PUBLIC_WSD__API__BASE_URL,
+    authBaseURL: process.env.NEXT_PUBLIC_WSD__API__AUTH_BASE_URL,
   },
   devtools: {
     googleAnalytics: {
@@ -20,9 +21,9 @@ export const config = Object.freeze({
   domain: stringConfig({ name: 'domain', value: RAW.domain }),
   api: {
     baseURL: stringConfig({ name: 'api.baseURL', value: RAW.api.baseUrl }),
-    bearerTokenCookieName: 'BearerToken',
-    bearerTokenHeaderName: 'Authorization',
-    bearerTokenPrefix: 'Token',
+    authBaseURL: stringConfig({ name: 'api.authBaseURL', value: RAW.api.authBaseURL }),
+    sessionCookieName: 'sessionid',
+    sessionTokenHeaderName: 'X-Session-Token',
   },
   ux: {
     defaultTitlePageSize: 50,

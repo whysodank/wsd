@@ -1,5 +1,5 @@
 from .db import track_events
-from .etc import action, camel_to_snake, first_of, returns, with_attrs
+from .pyutils import action, camel_to_snake, first_of, returns, with_attrs
 
 __all__ = [
     "with_attrs",
