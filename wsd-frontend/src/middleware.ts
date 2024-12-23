@@ -12,7 +12,8 @@ export const config = {
 
 const middlewares: ((request: NextRequest) => Promise<NextResponse | void>)[] = [
   HygieneMiddlewares.queryParamHygiene,
-  AuthMiddlewares.redirectAuthenticatedBackTo(/^\/auth\//, '/'),
+  AuthMiddlewares.redirectAuthenticatedBackTo(/^(\/auth\/(?!verify-email\/).*)$/, '/'),
+  AuthMiddlewares.redirectAnonymousBackTo(/^\/profile\//, '/auth/login'),
 ]
 
 export async function middleware(request: NextRequest) {

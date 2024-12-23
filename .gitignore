@@ -18,12 +18,13 @@ mediafiles
 # Next
 .next
 .out
+certificates
 
 # IDE
 .idea
 
 # Docker - Docker Compose
-wsd/server/nginx.conf
+server/nginx.conf
 
 # ETC
 *.log

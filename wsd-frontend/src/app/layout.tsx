@@ -2,8 +2,6 @@ import '~/src/app/globals.css'
 
 import type { Metadata } from 'next'
 
-import React from 'react'
-
 import { Toaster } from '@/components/shadcn/sonner'
 
 import MonkeyPatches from '@/app/monkeypatches'

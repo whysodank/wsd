@@ -16,8 +16,8 @@ export class WSDAPI {
   }
 
   isAuthenticated = async () => {
-    const response = await this.auth.session()
-    return response.ok
+    const { response } = await this.auth.session()
+    return response?.ok
   }
 
   fetch = async (input: RequestInfo, init?: RequestInit | undefined): Promise<Response> => {
@@ -30,7 +30,7 @@ export class WSDAPI {
       init.headers[config.api.sessionTokenHeaderName] = sessionToken
     }
     init.headers['Content-Type'] = 'application/json'
-    init.cache = 'no-cache'
+    init.credentials = 'include'
     return await fetch(input, init)
   }
 

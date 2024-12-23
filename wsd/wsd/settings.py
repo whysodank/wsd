@@ -1,6 +1,8 @@
 import itertools
 from pathlib import Path
 
+from corsheaders.defaults import default_headers
+
 from .config import CONFIG as config  # Django thinks CONFIG is a settings if it is all caps  # NOQA
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,6 +10,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = config.DEBUG
 SECRET_KEY = config.SECRET_KEY
 ALLOWED_HOSTS = config.ALLOWED_HOSTS
+PROTOCOL = "https" if not DEBUG else "http"
 
 # Application definition
 WSD_APPS_FIRST = [
@@ -31,6 +34,11 @@ THIRD_PARTY_APPS = [
     "allauth.account",
     "allauth.socialaccount",
     "allauth.socialaccount.providers.google",
+    "allauth.socialaccount.providers.microsoft",
+    "allauth.socialaccount.providers.apple",
+    "allauth.socialaccount.providers.github",
+    "allauth.socialaccount.providers.discord",
+    "allauth.socialaccount.providers.reddit",
     "sslserver",
     "corsheaders",
 ]
@@ -83,7 +91,7 @@ PARENT_HOST = config.HOSTS.DOMAIN
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -91,6 +99,9 @@ TEMPLATES = [
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+            ],
+            "builtins": [
+                "django.templatetags.i18n",
             ],
         },
     },
@@ -112,22 +123,37 @@ DATABASES = {
 
 # Authentication
 AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
     {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 16}},
-    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator"},
     {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
 AUTH_USER_MODEL = "user.User"
+
+ACCOUNT_ADAPTER = "apps.core.backends.allauth.WSDAllauthAccountAdapter"
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
+ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False
+ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False
+
+SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
+SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
+SOCIALACCOUNT_STORE_TOKENS = True
 
 AUTHENTICATION_BACKENDS = [
     "django.contrib.auth.backends.ModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 HEADLESS_ONLY = True
-HEADLESS_FRONTEND_URLS = {"socialaccount_login_error": "https://example.com"}
+HEADLESS_FRONTEND_URLS = {
+    "account_confirm_email": f"{PROTOCOL}://{HOST}/auth/verify-email/{{key}}",
+    "account_signup": f"{PROTOCOL}://{HOST}/auth/signup",
+    "account_reset_password": f"{PROTOCOL}://{HOST}/auth/password-reset",
+    "account_reset_password_from_key": f"{PROTOCOL}://{HOST}/auth/password-reset/{{key}}",
+    "socialaccount_login_error": f"{PROTOCOL}://{HOST}/auth/provider-error",
+}
+
 
 SOCIALACCOUNT_PROVIDERS = {
     "google": {
@@ -135,20 +161,52 @@ SOCIALACCOUNT_PROVIDERS = {
             "client_id": config.OAUTH.GOOGLE.CLIENT_ID,
             "secret": config.OAUTH.GOOGLE.CLIENT_SECRET,
         },
-        "SCOPE": [
-            "profile",
-            "email",
-        ],
+        "SCOPE": ["profile", "email"],
         "AUTH_PARAMS": {
             "access_type": "offline",
         },
         "OAUTH_PKCE_ENABLED": True,
-    }
+    },
+    "microsoft": {
+        "APPS": [
+            {
+                "client_id": config.OAUTH.MICROSOFT.CLIENT_ID,
+                "secret": config.OAUTH.MICROSOFT.CLIENT_SECRET,
+                "settings": {
+                    "tenant": "consumers",
+                },
+            },
+        ],
+    },
+    "reddit": {
+        "APP": {
+            "client_id": config.OAUTH.REDDIT.CLIENT_ID,
+            "secret": config.OAUTH.REDDIT.CLIENT_SECRET,
+        },
+        "AUTH_PARAMS": {"duration": "permanent"},
+        "SCOPE": ["identity"],
+        "USER_AGENT": f"web:{config.OAUTH.REDDIT.CLIENT_ID}:0.1.0 (by /u/{config.OAUTH.REDDIT.APP_OWNER_USERNAME})",
+    },
+    "discord": {
+        "APP": {
+            "client_id": config.OAUTH.DISCORD.CLIENT_ID,
+            "secret": config.OAUTH.DISCORD.CLIENT_SECRET,
+        },
+        "SCOPE": ["identify", "email"],
+    },
+    "github": {
+        "APP": {
+            "client_id": config.OAUTH.GITHUB.CLIENT_ID,
+            "secret": config.OAUTH.GITHUB.CLIENT_SECRET,
+        },
+        "SCOPE": ["user"],
+    },
 }
+
 
 CSRF_COOKIE_SECURE = True
 SESSION_COOKIE_SECURE = True
-SESSION_COOKIE_HTTPONLY = False
+SESSION_COOKIE_HTTPONLY = True
 SESSION_HEADER_NAME = "X-Session-Token"
 
 # Internationalization
@@ -204,6 +262,8 @@ DOMAINS = [
 
 CORS_ALLOWED_ORIGINS = list(itertools.chain.from_iterable(map(http_https, DOMAINS)))
 CSRF_TRUSTED_ORIGINS = list(itertools.chain.from_iterable(map(http_https, DOMAINS)))
+CORS_ALLOW_HEADERS = default_headers + (SESSION_HEADER_NAME,)
+CORS_ALLOW_CREDENTIALS = True
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_HOST = config.EMAIL.SMTP.HOST
@@ -211,9 +271,23 @@ EMAIL_PORT = config.EMAIL.SMTP.PORT.TSL
 EMAIL_HOST_USER = config.EMAIL.SMTP.USER
 EMAIL_HOST_PASSWORD = config.EMAIL.SMTP.PASSWORD
 EMAIL_USE_TSL = True
-DEFAULT_VERIFICATION_FROM_EMAIL = config.EMAIL.DEFAULT_VERIFICATION_FROM_EMAIL
+DEFAULT_AUTH_FROM_EMAIL = config.EMAIL.DEFAULT_AUTH_FROM_EMAIL
 
 
 if DEBUG:
-    CORS_ALLOW_ALL_ORIGINS = True
+    # Some stuff here are hardcoded, like devports.
+    # This would break for instance when the ports change for development servers
+    # TODO: handle these better
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+    CSRF_COOKIE_SECURE = False
+    SESSION_COOKIE_SECURE = False
+    DOMAINS = [
+        APEX_DOMAIN,
+        f"{ADMIN_SUBDOMAIN}.{APEX_DOMAIN}",
+        f"{API_SUBDOMAIN}.{APEX_DOMAIN}",
+    ]
+    PORTS = ["80", "3000"]
+    ORIGINS = [f"http://{domain}:{port}" for domain in DOMAINS for port in PORTS]
+
+    CORS_ALLOWED_ORIGINS = ORIGINS
+    CSRF_TRUSTED_ORIGINS = ORIGINS

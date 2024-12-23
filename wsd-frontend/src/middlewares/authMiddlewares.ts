@@ -13,3 +13,13 @@ export function redirectAuthenticatedBackTo(path: RegExp, redirectTo: string) {
     }
   })
 }
+
+export function redirectAnonymousBackTo(path: RegExp, redirectTo: string) {
+  return runMiddlewareIfPathMatches(path)(async function (request: NextRequest) {
+    const wsd = useWSDAPI()
+    const isAuthenticated = await wsd.isAuthenticated()
+    if (!isAuthenticated) {
+      return NextResponse.redirect(new URL(redirectTo, request.url))
+    }
+  })
+}

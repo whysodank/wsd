@@ -9,7 +9,7 @@ export interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> 
 const Input = React.forwardRef<HTMLInputElement, InputProps>(
   ({ className, type, errorText, ...props }, ref) => {
     return (
-      <div className="contents">
+      <div className="block">
         <input
           type={type}
           className={cn(
@@ -19,7 +19,7 @@ const Input = React.forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           {...props}
         />
-        {errorText && <span className="text-sm text-destructive">{errorText}</span>}
+        {errorText && <span className="text-sm text-destructive whitespace-pre-line">{errorText}</span>}
       </div>
     )
   },

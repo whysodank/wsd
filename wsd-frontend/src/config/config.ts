@@ -19,6 +19,7 @@ export const config = Object.freeze({
   debug: booleanConfig({ name: 'debug', value: RAW.debug, default: false }),
   name: stringConfig({ name: 'name', value: RAW.name, default: 'WSD' }),
   domain: stringConfig({ name: 'domain', value: RAW.domain }),
+  url: `https://${stringConfig({ name: 'domain', value: RAW.domain })}`,
   api: {
     baseURL: stringConfig({ name: 'api.baseURL', value: RAW.api.baseUrl }),
     authBaseURL: stringConfig({ name: 'api.authBaseURL', value: RAW.api.authBaseURL }),

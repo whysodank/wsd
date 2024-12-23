@@ -25,11 +25,11 @@ export const noDirectConsoleLog = withAttributes<Record<'__noDirectConsoleLog', 
       window.console.warn = conditionalLog(originalConsole.warn)
       window.console.error = conditionalLog(originalConsole.error)
 
-      const lw = window.lw || {}
-      lw.debug = (flag: boolean) => {
+      const whysodank = window.whysodank || {}
+      whysodank.debug = (flag: boolean) => {
         noDirectConsoleLog.__noDirectConsoleLog = !flag
       }
-      window.lw = lw
+      window.whysodank = whysodank
     }
   },
   { __noDirectConsoleLog: true }

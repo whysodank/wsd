@@ -1,5 +1,3 @@
-import React from 'react'
-
 export function SeparatorWithText({ text }: { text: string }) {
   return (
     <div className="relative">

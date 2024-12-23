@@ -21,7 +21,7 @@ export async function getWSDMetadata(metadata: WSDMetaData): Promise<Metadata> {
       title: metadata.title,
       description: metadata.description,
       type: 'website',
-      url: `https://${config.domain}`,
+      url: config.url,
       siteName: config.name,
     },
   }

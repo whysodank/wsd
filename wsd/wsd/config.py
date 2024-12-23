@@ -5,6 +5,8 @@ load_dotenv(verbose=True, override=False)
 
 CONFIG = config(
     {
+        "NAME": string(),
+        "NAME_SHORT": string(),
         "DEBUG": boolean(),
         "DB": {
             "NAME": string(),
@@ -25,6 +27,23 @@ CONFIG = config(
                 "CLIENT_ID": string(),
                 "CLIENT_SECRET": string(),
             },
+            "MICROSOFT": {
+                "CLIENT_ID": string(),
+                "CLIENT_SECRET": string(),
+            },
+            "REDDIT": {
+                "CLIENT_ID": string(),
+                "CLIENT_SECRET": string(),
+                "APP_OWNER_USERNAME": string(),
+            },
+            "DISCORD": {
+                "CLIENT_ID": string(),
+                "CLIENT_SECRET": string(),
+            },
+            "GITHUB": {
+                "CLIENT_ID": string(),
+                "CLIENT_SECRET": string(),
+            },
         },
         "EMAIL": {
             "SMTP": {
@@ -33,7 +52,7 @@ CONFIG = config(
                 "USER": str,
                 "PASSWORD": str,
             },
-            "DEFAULT_VERIFICATION_FROM_EMAIL": str,
+            "DEFAULT_AUTH_FROM_EMAIL": str,
         },
     },
     prefix="WSD",

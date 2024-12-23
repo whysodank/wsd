@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 export function useElementAttribute<T extends HTMLElement, K extends keyof T>(attributeKey: K) {
   /**
