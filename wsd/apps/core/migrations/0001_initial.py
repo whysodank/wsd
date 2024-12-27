@@ -214,16 +214,6 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 (
-                    "contact_information",
-                    models.TextField(
-                        blank=True,
-                        help_text="Contact Information for the user, so that we can get in touch about this claim",
-                        max_length=1000,
-                        null=True,
-                        verbose_name="Contact information",
-                    ),
-                ),
-                (
                     "user",
                     models.ForeignKey(
                         help_text="User who made the claim.",
@@ -406,16 +396,6 @@ class Migration(migrations.Migration):
                         help_text="The status of the claim.",
                         max_length=100,
                         verbose_name="Status",
-                    ),
-                ),
-                (
-                    "contact_information",
-                    models.TextField(
-                        blank=True,
-                        help_text="Contact Information for the user, so that we can get in touch about this claim",
-                        max_length=1000,
-                        null=True,
-                        verbose_name="Contact information",
                     ),
                 ),
                 (
@@ -1170,7 +1150,7 @@ class Migration(migrations.Migration):
             trigger=pgtrigger.compiler.Trigger(
                 name="insert_insert",
                 sql=pgtrigger.compiler.UpsertTriggerSql(
-                    func='INSERT INTO "core_originalsourceclaimevent" ("comment", "contact_information", "created_at", "id", "pgh_context_id", "pgh_created_at", "pgh_label", "pgh_obj_id", "post_id", "slug", "source", "status", "updated_at", "user_id") VALUES (NEW."comment", NEW."contact_information", NEW."created_at", NEW."id", _pgh_attach_context(), NOW(), \'insert\', NEW."id", NEW."post_id", NEW."slug", NEW."source", NEW."status", NEW."updated_at", NEW."user_id"); RETURN NULL;',
+                    func='INSERT INTO "core_originalsourceclaimevent" ("comment", "created_at", "id", "pgh_context_id", "pgh_created_at", "pgh_label", "pgh_obj_id", "post_id", "slug", "source", "status", "updated_at", "user_id") VALUES (NEW."comment", NEW."created_at", NEW."id", _pgh_attach_context(), NOW(), \'insert\', NEW."id", NEW."post_id", NEW."slug", NEW."source", NEW."status", NEW."updated_at", NEW."user_id"); RETURN NULL;',
                     hash="ababf65d0cb999e438e764d7c738473c8c4d3272",
                     operation="INSERT",
                     pgid="pgtrigger_insert_insert_1e9a2",
@@ -1185,7 +1165,7 @@ class Migration(migrations.Migration):
                 name="update_update",
                 sql=pgtrigger.compiler.UpsertTriggerSql(
                     condition="WHEN (OLD.* IS DISTINCT FROM NEW.*)",
-                    func='INSERT INTO "core_originalsourceclaimevent" ("comment", "contact_information", "created_at", "id", "pgh_context_id", "pgh_created_at", "pgh_label", "pgh_obj_id", "post_id", "slug", "source", "status", "updated_at", "user_id") VALUES (NEW."comment", NEW."contact_information", NEW."created_at", NEW."id", _pgh_attach_context(), NOW(), \'update\', NEW."id", NEW."post_id", NEW."slug", NEW."source", NEW."status", NEW."updated_at", NEW."user_id"); RETURN NULL;',
+                    func='INSERT INTO "core_originalsourceclaimevent" ("comment", "created_at", "id", "pgh_context_id", "pgh_created_at", "pgh_label", "pgh_obj_id", "post_id", "slug", "source", "status", "updated_at", "user_id") VALUES (NEW."comment", NEW."created_at", NEW."id", _pgh_attach_context(), NOW(), \'update\', NEW."id", NEW."post_id", NEW."slug", NEW."source", NEW."status", NEW."updated_at", NEW."user_id"); RETURN NULL;',
                     hash="b4804f32fc2435ba83a6a93f38900fdbb761bf00",
                     operation="UPDATE",
                     pgid="pgtrigger_update_update_c0a25",
@@ -1199,7 +1179,7 @@ class Migration(migrations.Migration):
             trigger=pgtrigger.compiler.Trigger(
                 name="delete_delete",
                 sql=pgtrigger.compiler.UpsertTriggerSql(
-                    func='INSERT INTO "core_originalsourceclaimevent" ("comment", "contact_information", "created_at", "id", "pgh_context_id", "pgh_created_at", "pgh_label", "pgh_obj_id", "post_id", "slug", "source", "status", "updated_at", "user_id") VALUES (OLD."comment", OLD."contact_information", OLD."created_at", OLD."id", _pgh_attach_context(), NOW(), \'delete\', OLD."id", OLD."post_id", OLD."slug", OLD."source", OLD."status", OLD."updated_at", OLD."user_id"); RETURN NULL;',
+                    func='INSERT INTO "core_originalsourceclaimevent" ("comment", "created_at", "id", "pgh_context_id", "pgh_created_at", "pgh_label", "pgh_obj_id", "post_id", "slug", "source", "status", "updated_at", "user_id") VALUES (OLD."comment", OLD."created_at", OLD."id", _pgh_attach_context(), NOW(), \'delete\', OLD."id", OLD."post_id", OLD."slug", OLD."source", OLD."status", OLD."updated_at", OLD."user_id"); RETURN NULL;',
                     hash="ab89699b9099dc755f7772ee31f584af79cf3205",
                     operation="DELETE",
                     pgid="pgtrigger_delete_delete_5484f",

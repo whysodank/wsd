@@ -1,7 +1,7 @@
 from apps.common.models.base import BaseModel
 from apps.common.utils import track_events
 from django.contrib.auth import get_user_model
-from django.db import models
+from django.db import models, transaction
 from django.utils.translation import gettext_lazy as _
 
 
@@ -44,14 +44,8 @@ class OriginalSourceClaim(BaseModel):
         verbose_name=_("Status"),
         help_text=_("The status of the claim."),
     )
-    contact_information = models.TextField(
-        verbose_name=_("Contact information"),
-        help_text=_("Contact Information for the user, so that we can get in touch about this claim"),
-        max_length=COMMENT_MAX_LENGTH,
-        null=True,
-        blank=True,
-    )
 
+    @transaction.atomic
     def approve(self):
         self.update(status=self.OriginalSourceClaimStatus.APPROVED)
         self.post.update(original_source=self.source)

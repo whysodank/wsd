@@ -16,7 +16,7 @@ class OriginalSourceClaimAdmin(BaseAdmin):
     autocomplete_list_filter = ["user", "post"]
     list_filter = ["status"]
     object_fieldsets = [
-        [["user", "post", "source", "comment", "status", "contact_information"], _("Original Source Claim")],
+        [["user", "post", "source", "comment", "status"], _("Original Source Claim")],
     ]
 
     @action(description=_("Approve claim and set post original source to claim source"))

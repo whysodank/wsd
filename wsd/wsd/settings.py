@@ -39,8 +39,10 @@ THIRD_PARTY_APPS = [
     "allauth.socialaccount.providers.github",
     "allauth.socialaccount.providers.discord",
     "allauth.socialaccount.providers.reddit",
+    #
     "sslserver",
     "corsheaders",
+    "drf_spectacular",
 ]
 
 BUILTIN_APPS = [
