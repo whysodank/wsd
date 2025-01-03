@@ -83,10 +83,12 @@ ROOT_HOSTCONF = "wsd.hosts"
 DEFAULT_HOST = "root"
 HOST = config.HOSTS.DOMAIN
 SESSION_COOKIE_DOMAIN = f".{HOST}"
+CSRF_COOKIE_DOMAIN = f".{HOST}"
 
 APEX_DOMAIN = config.HOSTS.DOMAIN
 ADMIN_SUBDOMAIN = config.HOSTS.ADMIN_SUBDOMAIN
 API_SUBDOMAIN = config.HOSTS.API_SUBDOMAIN
+AUTH_SUBDOMAIN = config.HOSTS.AUTH_SUBDOMAIN
 
 PARENT_HOST = config.HOSTS.DOMAIN
 
@@ -260,6 +262,7 @@ DOMAINS = [
     APEX_DOMAIN,
     f"{ADMIN_SUBDOMAIN}.{APEX_DOMAIN}",
     f"{API_SUBDOMAIN}.{APEX_DOMAIN}",
+    f"{AUTH_SUBDOMAIN}.{APEX_DOMAIN}",
 ]
 
 CORS_ALLOWED_ORIGINS = list(itertools.chain.from_iterable(map(http_https, DOMAINS)))
@@ -277,19 +280,13 @@ DEFAULT_AUTH_FROM_EMAIL = config.EMAIL.DEFAULT_AUTH_FROM_EMAIL
 
 
 if DEBUG:
-    # Some stuff here are hardcoded, like devports.
+    # Some stuff here are hardcoded, like dev ports.
     # This would break for instance when the ports change for development servers
     # TODO: handle these better
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
     CSRF_COOKIE_SECURE = False
     SESSION_COOKIE_SECURE = False
-    DOMAINS = [
-        APEX_DOMAIN,
-        f"{ADMIN_SUBDOMAIN}.{APEX_DOMAIN}",
-        f"{API_SUBDOMAIN}.{APEX_DOMAIN}",
-    ]
-    PORTS = ["80", "3000"]
-    ORIGINS = [f"http://{domain}:{port}" for domain in DOMAINS for port in PORTS]
-
+    PORTS = ["80", "3000", "8000", "443"]
+    ORIGINS = [f"http://{d}:{p}" for d in DOMAINS for p in PORTS] + [f"http://{d}" for d in DOMAINS]
     CORS_ALLOWED_ORIGINS = ORIGINS
     CSRF_TRUSTED_ORIGINS = ORIGINS

@@ -24,7 +24,7 @@ v0_urlpatterns = [
     ),
     path(
         "redoc/",
-        SpectacularRedocView.as_view(url=reverse_lazy(f"rest:v1:{SCHEMA_URL_NAME}")),
+        SpectacularRedocView.as_view(url=reverse_lazy(f"rest:v0:{SCHEMA_URL_NAME}")),
         name="redoc",
     ),
     *router.urls,

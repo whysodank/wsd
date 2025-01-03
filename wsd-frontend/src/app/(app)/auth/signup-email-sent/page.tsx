@@ -13,6 +13,6 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function SignupEmailSentPage() {
+export default async function SignupEmailSentPage() {
   return <SignupEmailSent />
 }

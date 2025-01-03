@@ -13,6 +13,6 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function PasswordResetPage({ params }: { params: { key: string } }) {
+export default async function PasswordResetPage({ params }: { params: { key: string } }) {
   return <PasswordRest passwordResetKey={params.key} />
 }

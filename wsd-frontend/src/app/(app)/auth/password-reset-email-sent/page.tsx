@@ -13,6 +13,6 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function PasswordResetEmailSentPage() {
+export default async function PasswordResetEmailSentPage() {
   return <PasswordResetEmailSent />
 }

@@ -13,6 +13,6 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default function VerifyEmailPage({ params }: { params: { key: string } }) {
+export default async function VerifyEmailPage({ params }: { params: { key: string } }) {
   return <VerifyEmail verificationKey={params.key} />
 }

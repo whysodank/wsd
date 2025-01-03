@@ -1,17 +1,19 @@
 import { WSD_AUTH_API } from '@/api/authApi'
 import { paths } from '@/api/schema'
 import config from '@/config'
-import { getLazyValueAsync } from '@/lib/utils'
+import { getLazyValueAsync, setKeyValueToObjectIfValue } from '@/lib/utils'
 
 import createClient from 'openapi-fetch'
 
 export class WSDAPI {
   config = config.api
   sessionToken: string | null | (() => Promise<string | null>)
+  csrfToken: string | null | (() => Promise<string | null>)
   auth: WSD_AUTH_API
 
-  constructor(sessionToken: typeof this.sessionToken) {
+  constructor(sessionToken: typeof this.sessionToken, csrfToken: typeof this.csrfToken) {
     this.sessionToken = sessionToken
+    this.csrfToken = csrfToken
     this.auth = new WSD_AUTH_API(this.fetch)
   }
 
@@ -22,13 +24,14 @@ export class WSDAPI {
 
   fetch = async (input: RequestInfo, init?: RequestInit | undefined): Promise<Response> => {
     const sessionToken = await getLazyValueAsync<string | null>(this.sessionToken)
+    const csrfToken = await getLazyValueAsync<string | null>(this.csrfToken)
 
     init = init || {}
     init.headers = (init.headers instanceof Headers ? init.headers : { ...init.headers }) as Record<string, string>
 
-    if (sessionToken) {
-      init.headers[config.api.sessionTokenHeaderName] = sessionToken
-    }
+    setKeyValueToObjectIfValue(config.api.sessionTokenHeaderName, sessionToken, init.headers)
+    setKeyValueToObjectIfValue(config.api.csrfTokenHeaderName, csrfToken, init.headers)
+
     init.headers['Content-Type'] = 'application/json'
     init.credentials = 'include'
     return await fetch(input, init)

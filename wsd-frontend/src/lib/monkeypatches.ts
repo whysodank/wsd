@@ -44,5 +44,10 @@ export function globalWSDAPI(window: Window) {
     }
   }
 
-  window.wsd = new WSDAPI(() => Promise.resolve(getCookie(config.api.sessionCookieName) || null))
+  const wsd = new WSDAPI(null, null)
+  console.log('Session: ', wsd.auth.session())
+  window.wsd = new WSDAPI(
+    () => Promise.resolve(getCookie(config.api.sessionCookieName) || null),
+    () => Promise.resolve(getCookie(config.api.csrfTokenCookieName) || null)
+  )
 }

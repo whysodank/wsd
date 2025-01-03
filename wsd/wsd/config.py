@@ -20,6 +20,7 @@ CONFIG = config(
             "DOMAIN": string(),
             "API_SUBDOMAIN": string(),
             "ADMIN_SUBDOMAIN": string(),
+            "AUTH_SUBDOMAIN": string(),
         },
         "ALLOWED_HOSTS": comma_separated_list(),
         "OAUTH": {
@@ -47,12 +48,19 @@ CONFIG = config(
         },
         "EMAIL": {
             "SMTP": {
-                "HOST": str,
-                "PORT": {"TSL": int},
-                "USER": str,
-                "PASSWORD": str,
+                "HOST": string(),
+                "PORT": {"TSL": string()},
+                "USER": string(),
+                "PASSWORD": string(),
             },
-            "DEFAULT_AUTH_FROM_EMAIL": str,
+            "DEFAULT_AUTH_FROM_EMAIL": string(),
+        },
+        "SETUP": {
+            "SUPERUSER": {
+                "USERNAME": string(),
+                "EMAIL": string(),
+                "PASSWORD": string(),
+            },
         },
     },
     prefix="WSD",

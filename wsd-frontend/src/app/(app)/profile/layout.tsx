@@ -24,6 +24,7 @@ export default async function ProfileLayout({ children }: { children: React.Reac
 
   const { data } = await wsd.auth.session()
   const sessionData = data?.data as { user: { username: string } }
+  const username = sessionData?.user?.username
 
   const profileTabs = [
     { name: 'Profile', href: '/profile/details', icon: Icons.User },
@@ -34,15 +35,17 @@ export default async function ProfileLayout({ children }: { children: React.Reac
 
   return (
     <div className="min-h-screen flex flex-col gap-1 items-center justify-center bg-gray-100 p-4">
-      <div className="flex flex-col justify-center items-center gap-1">
-        <Avatar className="w-24 h-24">
-          <AvatarImage src={`https://robohash.org/${sessionData.user.username}/?size=96x96`} alt="John Doe" />
-          <AvatarFallback>{Array.from(sessionData.user.username)[0]}</AvatarFallback>
-        </Avatar>
-        <Link href={{ pathname: '/users/username' }} className="hover:underline">
-          {sessionData.user.username}
-        </Link>
-      </div>
+      {username && (
+        <div className="flex flex-col justify-center items-center gap-1">
+          <Avatar className="w-24 h-24">
+            <AvatarImage src={`https://robohash.org/${username}/?size=96x96`} alt="John Doe" />
+            <AvatarFallback>{Array.from(username)[0]}</AvatarFallback>
+          </Avatar>
+          <Link href={{ pathname: '/users/username' }} className="hover:underline">
+            {username}
+          </Link>
+        </div>
+      )}
       <div className="flex flex-col justify-center items-center mb-36">
         <Card className="w-full max-w-xl">
           <CardContent className="p-6 flex flex-col gap-4">

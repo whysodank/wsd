@@ -13,12 +13,9 @@ import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
 export async function Connections() {
   const wsd = sUseWSDAPI()
   const { data } = await wsd.auth.connections()
-  const typedData = data as {
-    status: number
-    data: { uid: string; display: string; provider: { id: string; name: string; client_id: string; flows: string[] } }[]
-  }
-  const connectedAccounts = _.map(typedData.data, 'provider.id')
-  const providerToUidMap = _.fromPairs(_.map(typedData.data, (account) => [account.provider.id, account.uid]))
+  const connections = data?.data as { uid: string; display: string; provider: { id: string; name: string } }[]
+  const connectedAccounts: string[] = connections ? _.map(connections, 'provider.id') : []
+  const providerToUidMap = connections ? _.fromPairs(_.map(connections, (a) => [a.provider.id, a.uid])) : {}
 
   const providers = [
     { name: 'Google', icon: Brands.Google, id: 'google' },

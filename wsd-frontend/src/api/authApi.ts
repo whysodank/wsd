@@ -1,3 +1,5 @@
+import { isDynamicServerError } from 'next/dist/client/components/hooks-server-context'
+
 import config from '@/config'
 import { checkRequiredKeys } from '@/lib/utils'
 
@@ -27,16 +29,20 @@ export class WSD_AUTH_API {
         error = responseData
       }
     } catch (err) {
+      if (isDynamicServerError(err)) {
+        throw err
+      }
       // Server error, we should handle this generically here
       console.error(err)
     }
+    console.log('INPUT: ', input)
     return Promise.resolve({ response, data, error })
   }
 
   // Below are the untyped allauth API endpoints
 
   public async config() {
-    return await this.fetch('/auth/config')
+    return await this.fetch('/config')
   }
 
   public async session() {
@@ -125,6 +131,13 @@ export class WSD_AUTH_API {
     return await this.fetch('/auth/email/verify', {
       method: 'POST',
       body: JSON.stringify(data),
+    })
+  }
+
+  public async markEmailPrimary(data: { email: string }) {
+    return await this.fetch('/account/email', {
+      method: 'PATCH',
+      body: JSON.stringify({ ...data, primary: true }),
     })
   }
 }

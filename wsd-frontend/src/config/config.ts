@@ -25,6 +25,8 @@ export const config = Object.freeze({
     authBaseURL: stringConfig({ name: 'api.authBaseURL', value: RAW.api.authBaseURL }),
     sessionCookieName: 'sessionid',
     sessionTokenHeaderName: 'X-Session-Token',
+    csrfTokenCookieName: 'csrftoken',
+    csrfTokenHeaderName: 'X-CSRFToken',
   },
   ux: {
     defaultTitlePageSize: 50,
