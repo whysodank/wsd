@@ -11,7 +11,7 @@ RUN apt-get update && \
         libxslt-dev && \
     rm -rf /var/lib/apt/lists/*
 
-RUN git clone https://github.com/eulerto/pg_similarity.git
+RUN git clone https://github.com/whysodank/pg_similarity.git
 
 
 RUN cd pg_similarity && make && make install

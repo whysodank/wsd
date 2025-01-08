@@ -15,6 +15,6 @@ class HammingSimilarity(Func):
 
 
 class PGSimilarityExtension(CreateExtension):
-    # https://github.com/eulerto/pg_similarity
+    # https://github.com/whysodank/pg_similarity
     def __init__(self):  # NOQA
         self.name = "pg_similarity"

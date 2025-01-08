@@ -105,7 +105,7 @@ def s(serializer):
     # returns a function that doesn't accept any arguments for conditional serializer mixin
     def actual_serializer(*serializer_args, **serializer_kwargs):
         def serializer_returning_inner_function():
-            prefix = "rest.serializers."
+            prefix = "apps.rest.v0.serializers."
             try:
                 serializer_class = import_string(serializer)
             except ImportError:

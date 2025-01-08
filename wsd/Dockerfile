@@ -6,6 +6,8 @@ ENV PYTHONDONTWRITEBYTECODE=1
 RUN apt update
 RUN apt install gettext -y
 RUN apt install libexpat1 -y
+RUN apt install tesseract-ocr libtesseract-dev -y
+RUN apt install postgresql-client -y
 
 WORKDIR /wsd
 

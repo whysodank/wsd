@@ -224,7 +224,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-MEDIA_URL = f"https://{HOST}/media/"
+MEDIA_URL = f"http://{API_SUBDOMAIN}.{HOST}/media/"
 MEDIA_ROOT = BASE_DIR / "mediafiles"
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
