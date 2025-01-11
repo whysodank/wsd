@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+VOTE_CLASS_ATTRIBUTE = "vote_class"
+
 
 @lru_cache(maxsize=None)
 def create_vote_class(klass, name):
@@ -61,14 +63,10 @@ def create_vote_class(klass, name):
 
 
 class VoteMaker:
-    def __init__(self, **kwargs):
-        self.related_name = kwargs.get("related_name")
-        self.vote_class_attribute_name = kwargs.get("vote_class_attribute_name")
-
-    def contribute_to_class(self, cls, name):
-        setattr(cls, self.vote_class_attribute_name, create_vote_class(cls, name))
+    def contribute_to_class(self, cls, name):  # NOQA
+        setattr(cls, VOTE_CLASS_ATTRIBUTE, create_vote_class(cls, name))
 
 
-def votes(vote_class_attribute_name="vote_class"):
-    vote_maker = VoteMaker(vote_class_attribute_name=vote_class_attribute_name)
+def votes():
+    vote_maker = VoteMaker()
     return vote_maker

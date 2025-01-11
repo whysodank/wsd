@@ -7,6 +7,8 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 
+COMMENT_CLASS_ATTRIBUTE = "comment_class"
+
 
 @lru_cache(maxsize=None)
 def create_comment_class(klass, name, comment_min_length=0, comment_max_length=1000):
@@ -62,18 +64,16 @@ def create_comment_class(klass, name, comment_min_length=0, comment_max_length=1
 
 class CommentMaker:
     def __init__(self, **kwargs):
-        self.related_name = kwargs.get("related_name")
-        self.comment_class_attribute_name = kwargs.get("comment_class_attribute_name")
         self.comment_min_length = kwargs.get("comment_min_length")
         self.comment_max_length = kwargs.get("comment_max_length")
 
     def contribute_to_class(self, cls, name):
-        setattr(cls, self.comment_class_attribute_name, create_comment_class(cls, name))
+        comment_class = create_comment_class(cls, name, self.comment_min_length, self.comment_max_length)
+        setattr(cls, COMMENT_CLASS_ATTRIBUTE, comment_class)
 
 
-def comments(comment_class_attribute_name="comment_class", comment_min_length=0, comment_max_length=1000):
+def comments(comment_min_length=0, comment_max_length=1000):
     comment_maker = CommentMaker(
-        comment_class_attribute_name=comment_class_attribute_name,
         comment_min_length=comment_min_length,
         comment_max_length=comment_max_length,
     )

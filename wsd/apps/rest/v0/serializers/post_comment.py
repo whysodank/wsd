@@ -1,11 +1,16 @@
-from apps.core.models import Post, PostVote
+from apps.core.models import PostComment, PostCommentVote
 from rest_framework import serializers
 
 from .base import BaseModelSerializer, s
 
 
-class PostSerializer(BaseModelSerializer):
-    vote = serializers.ChoiceField(choices=PostVote.VoteType.choices, required=False, read_only=True, allow_null=True)
+class PostCommentSerializer(BaseModelSerializer):
+    vote = serializers.ChoiceField(
+        choices=PostCommentVote.VoteType.choices,
+        required=False,
+        read_only=True,
+        allow_null=True,
+    )
     positive_vote_count = serializers.IntegerField(
         required=False,
         read_only=True,
@@ -18,15 +23,14 @@ class PostSerializer(BaseModelSerializer):
     )
 
     class Meta:
-        model = Post
+        model = PostComment
         fields = [
             "id",
             "created_at",
             "updated_at",
             "user",
-            "title",
-            "image",
-            "tags",
+            "post",
+            "body",
             "vote",
             "positive_vote_count",
             "negative_vote_count",
@@ -40,6 +44,5 @@ class PostSerializer(BaseModelSerializer):
             "negative_vote_count",
         ]
         relational_fields = {
-            "tags": s("PostTagSerializer")(many=True),
             "user": s("PublicUserSerializer")(),
         }
