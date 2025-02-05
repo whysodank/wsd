@@ -1,0 +1,2706 @@
+openapi: 3.0.3
+info:
+  title: WSD API
+  version: 0.1.0
+  description: WSD API
+paths:
+  /v0/post-comments/:
+    get:
+      operationId: post_comments_list
+      description: List post comments with optional filters
+      summary: List Post Comments
+      parameters:
+      - in: query
+        name: created_at
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__gt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__lt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: include
+        schema:
+          type: string
+          enum:
+          - user
+        explode: false
+        style: form
+      - in: query
+        name: negative_vote_count
+        schema:
+          type: number
+      - in: query
+        name: negative_vote_count__gt
+        schema:
+          type: number
+      - in: query
+        name: negative_vote_count__gte
+        schema:
+          type: number
+      - in: query
+        name: negative_vote_count__lt
+        schema:
+          type: number
+      - in: query
+        name: negative_vote_count__lte
+        schema:
+          type: number
+      - in: query
+        name: ordering
+        schema:
+          type: string
+          enum:
+          - -created_at
+          - -negative_vote_count
+          - -positive_vote_count
+          - -updated_at
+          - created_at
+          - negative_vote_count
+          - positive_vote_count
+          - updated_at
+        explode: false
+        style: form
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: positive_vote_count
+        schema:
+          type: number
+      - in: query
+        name: positive_vote_count__gt
+        schema:
+          type: number
+      - in: query
+        name: positive_vote_count__gte
+        schema:
+          type: number
+      - in: query
+        name: positive_vote_count__lt
+        schema:
+          type: number
+      - in: query
+        name: positive_vote_count__lte
+        schema:
+          type: number
+      - in: query
+        name: post
+        schema:
+          type: string
+          format: uuid
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: updated_at
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__gt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__lt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: user
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: vote
+        schema:
+          type: integer
+          enum:
+          - -1
+          - 1
+        description: |-
+          * `1` - Upvote
+          * `-1` - Downvote
+      - in: query
+        name: vote__isnull
+        schema:
+          type: boolean
+      tags:
+      - post-comments
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPostCommentList'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    post:
+      operationId: post_comments_create
+      description: Create a new post comment
+      summary: Create Post Comment
+      tags:
+      - post-comments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCommentRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostCommentRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PostCommentRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostComment'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostCommentError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+  /v0/post-comments/{id}/:
+    get:
+      operationId: post_comments_retrieve
+      description: Retrieve post comment by id
+      summary: Retrieve Post Comment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Comment.
+        required: true
+      - in: query
+        name: include
+        schema:
+          type: string
+          enum:
+          - user
+        explode: false
+        style: form
+      tags:
+      - post-comments
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostComment'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    put:
+      operationId: post_comments_update
+      description: Update an existing post comment by id
+      summary: Put Post Comment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Comment.
+        required: true
+      tags:
+      - post-comments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostCommentUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostCommentUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PostCommentUpdateRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostComment'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostCommentError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    patch:
+      operationId: post_comments_partial_update
+      description: Partially update an existing post comment by id
+      summary: Patch Post Comment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Comment.
+        required: true
+      tags:
+      - post-comments
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPostCommentUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPostCommentUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPostCommentUpdateRequest'
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostComment'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostCommentError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    delete:
+      operationId: post_comments_destroy
+      description: Delete an existing Post Comment by id
+      summary: Delete Post Comment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Comment.
+        required: true
+      tags:
+      - post-comments
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostCommentDestroyError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+  /v0/post-comments/{id}/downvote/:
+    post:
+      operationId: post_comments_downvote_create
+      description: Cast an up vote to a post comment by id
+      summary: Downvote Post Comment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Comment.
+        required: true
+      tags:
+      - post-comments
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
+  /v0/post-comments/{id}/unvote/:
+    post:
+      operationId: post_comments_unvote_create
+      description: Remove vote from post comment by id
+      summary: Remove Post Comment Vote
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Comment.
+        required: true
+      tags:
+      - post-comments
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
+  /v0/post-comments/{id}/upvote/:
+    post:
+      operationId: post_comments_upvote_create
+      description: Cast a down vote to a post comment by id
+      summary: Upvote Post Comment
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Comment.
+        required: true
+      tags:
+      - post-comments
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
+  /v0/post-tags/:
+    get:
+      operationId: post_tags_list
+      description: List post tags with optional filters
+      summary: List Post Tags
+      parameters:
+      - in: query
+        name: include
+        schema:
+          type: string
+        explode: false
+        style: form
+      - in: query
+        name: ordering
+        schema:
+          type: string
+        explode: false
+        style: form
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - post-tags
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPostTagList'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    post:
+      operationId: post_tags_create
+      description: Create a new post tag
+      summary: Create Post Tag
+      tags:
+      - post-tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostTagRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostTagRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PostTagRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTag'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTagError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+  /v0/post-tags/{id}/:
+    get:
+      operationId: post_tags_retrieve
+      description: Retrieve post tag by id
+      summary: Retrieve Post Tag
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Tag.
+        required: true
+      - in: query
+        name: include
+        schema:
+          type: string
+        explode: false
+        style: form
+      tags:
+      - post-tags
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTag'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    put:
+      operationId: post_tags_update
+      description: Update an existing post tag by id
+      summary: Put Post Tag
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Tag.
+        required: true
+      tags:
+      - post-tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostTagUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostTagUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PostTagUpdateRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTag'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTagError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    patch:
+      operationId: post_tags_partial_update
+      description: Partially update an existing post tag by id
+      summary: Patch Post Tag
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Tag.
+        required: true
+      tags:
+      - post-tags
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPostTagUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPostTagUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPostTagUpdateRequest'
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTag'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTagError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    delete:
+      operationId: post_tags_destroy
+      description: Delete an existing Post Tag by id
+      summary: Delete Post Tag
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Tag.
+        required: true
+      tags:
+      - post-tags
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostTagDestroyError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+  /v0/posts/:
+    get:
+      operationId: posts_list
+      description: List posts with optional filters
+      summary: List Posts
+      parameters:
+      - in: query
+        name: comment_count
+        schema:
+          type: number
+      - in: query
+        name: comment_count__gt
+        schema:
+          type: number
+      - in: query
+        name: comment_count__gte
+        schema:
+          type: number
+      - in: query
+        name: comment_count__lt
+        schema:
+          type: number
+      - in: query
+        name: comment_count__lte
+        schema:
+          type: number
+      - in: query
+        name: created_at
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__gt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__lt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: include
+        schema:
+          type: string
+          enum:
+          - tags
+          - tags,user
+          - user
+        explode: false
+        style: form
+      - in: query
+        name: negative_vote_count
+        schema:
+          type: number
+      - in: query
+        name: negative_vote_count__gt
+        schema:
+          type: number
+      - in: query
+        name: negative_vote_count__gte
+        schema:
+          type: number
+      - in: query
+        name: negative_vote_count__lt
+        schema:
+          type: number
+      - in: query
+        name: negative_vote_count__lte
+        schema:
+          type: number
+      - in: query
+        name: ordering
+        schema:
+          type: string
+          enum:
+          - -comment_count
+          - -created_at
+          - -negative_vote_count
+          - -positive_vote_count
+          - -updated_at
+          - comment_count
+          - created_at
+          - negative_vote_count
+          - positive_vote_count
+          - updated_at
+        explode: false
+        style: form
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: positive_vote_count
+        schema:
+          type: number
+      - in: query
+        name: positive_vote_count__gt
+        schema:
+          type: number
+      - in: query
+        name: positive_vote_count__gte
+        schema:
+          type: number
+      - in: query
+        name: positive_vote_count__lt
+        schema:
+          type: number
+      - in: query
+        name: positive_vote_count__lte
+        schema:
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: title
+        schema:
+          type: string
+      - in: query
+        name: updated_at
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__gt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__lt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: user
+        schema:
+          type: string
+          format: uuid
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPostList'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    post:
+      operationId: posts_create
+      description: Create a new post
+      summary: Create Post
+      tags:
+      - posts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PostRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+  /v0/posts/{id}/:
+    get:
+      operationId: posts_retrieve
+      description: Retrieve post by id
+      summary: Retrieve Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      - in: query
+        name: include
+        schema:
+          type: string
+          enum:
+          - tags
+          - tags,user
+          - user
+        explode: false
+        style: form
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    put:
+      operationId: posts_update
+      description: Update an existing post by id
+      summary: Put Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PostUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PostUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PostUpdateRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    patch:
+      operationId: posts_partial_update
+      description: Partially update an existing post by id
+      summary: Patch Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedPostUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedPostUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedPostUpdateRequest'
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Post'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    delete:
+      operationId: posts_destroy
+      description: Delete an existing Post by id
+      summary: Delete Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostDestroyError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+  /v0/posts/{id}/downvote/:
+    post:
+      operationId: posts_downvote_create
+      description: Cast an up vote to a post by id
+      summary: Downvote Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
+  /v0/posts/{id}/unvote/:
+    post:
+      operationId: posts_unvote_create
+      description: Remove vote from post by id
+      summary: Remove Post Vote
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
+  /v0/posts/{id}/upvote/:
+    post:
+      operationId: posts_upvote_create
+      description: Cast a down vote to a post by id
+      summary: Upvote Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
+  /v0/users/:
+    get:
+      operationId: users_list
+      description: List users with optional filters
+      summary: List Users
+      parameters:
+      - in: query
+        name: created_at
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__gt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__lt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: include
+        schema:
+          type: string
+        explode: false
+        style: form
+      - in: query
+        name: is_active
+        schema:
+          type: boolean
+      - in: query
+        name: is_staff
+        schema:
+          type: boolean
+      - in: query
+        name: is_superuser
+        schema:
+          type: boolean
+      - in: query
+        name: ordering
+        schema:
+          type: string
+        explode: false
+        style: form
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - in: query
+        name: post_comment_count
+        schema:
+          type: number
+      - in: query
+        name: post_comment_count__gt
+        schema:
+          type: number
+      - in: query
+        name: post_comment_count__gte
+        schema:
+          type: number
+      - in: query
+        name: post_comment_count__lt
+        schema:
+          type: number
+      - in: query
+        name: post_comment_count__lte
+        schema:
+          type: number
+      - in: query
+        name: post_count
+        schema:
+          type: number
+      - in: query
+        name: post_count__gt
+        schema:
+          type: number
+      - in: query
+        name: post_count__gte
+        schema:
+          type: number
+      - in: query
+        name: post_count__lt
+        schema:
+          type: number
+      - in: query
+        name: post_count__lte
+        schema:
+          type: number
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: updated_at
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__gt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__lt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: username__icontains
+        schema:
+          type: string
+      - in: query
+        name: username__iexact
+        schema:
+          type: string
+      tags:
+      - users
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPublicUserList'
+          description: ''
+  /v0/users/{id}/:
+    get:
+      operationId: users_retrieve
+      description: Retrieve user by id
+      summary: Retrieve User
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this User.
+        required: true
+      - in: query
+        name: include
+        schema:
+          type: string
+        explode: false
+        style: form
+      tags:
+      - users
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PublicUser'
+          description: ''
+  /v0/users/me/:
+    get:
+      operationId: users_me_retrieve
+      description: Retrieve the current user
+      summary: Retrieve Me
+      tags:
+      - users
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+    put:
+      operationId: users_me_update
+      description: Update the current user
+      summary: Put Me
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserRequest'
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserError'
+          description: ''
+    patch:
+      operationId: users_me_partial_update
+      description: Partially update the current user
+      summary: Patch Me
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedUserRequest'
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserError'
+          description: ''
+components:
+  schemas:
+    Forbidden:
+      type: object
+      properties:
+        detail:
+          type: string
+      required:
+      - detail
+    NullEnum:
+      enum:
+      - null
+    PaginatedPostCommentList:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of items available.
+          example: 1102
+        page_size:
+          type: integer
+          description: Number of results to return per page.
+          example: 100
+        total_pages:
+          type: integer
+          description: Total number of pages.
+          example: 17
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostComment'
+      required:
+      - count
+      - page_size
+      - total_pages
+      - results
+    PaginatedPostList:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of items available.
+          example: 1102
+        page_size:
+          type: integer
+          description: Number of results to return per page.
+          example: 100
+        total_pages:
+          type: integer
+          description: Total number of pages.
+          example: 17
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+      required:
+      - count
+      - page_size
+      - total_pages
+      - results
+    PaginatedPostTagList:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of items available.
+          example: 1102
+        page_size:
+          type: integer
+          description: Number of results to return per page.
+          example: 100
+        total_pages:
+          type: integer
+          description: Total number of pages.
+          example: 17
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostTag'
+      required:
+      - count
+      - page_size
+      - total_pages
+      - results
+    PaginatedPublicUserList:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of items available.
+          example: 1102
+        page_size:
+          type: integer
+          description: Number of results to return per page.
+          example: 100
+        total_pages:
+          type: integer
+          description: Total number of pages.
+          example: 17
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PublicUser'
+      required:
+      - count
+      - page_size
+      - total_pages
+      - results
+    PatchedPostCommentUpdateRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        user:
+          type: string
+          format: uuid
+          description: User who wrote this comment.
+        body:
+          type: string
+          minLength: 1
+          description: The actual comment.
+    PatchedPostTagUpdateRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: The tag's name, the tag itself.
+          pattern: ^[a-zA-Z0-9_.-]*$
+          maxLength: 100
+    PatchedPostUpdateRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        user:
+          type: string
+          format: uuid
+          description: User who posted this post.
+        title:
+          type: string
+          minLength: 1
+          description: Title of the post.
+          maxLength: 100
+        image:
+          type: string
+          format: binary
+          description: The post itself.
+    PatchedUserRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+    Post:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+          description: User who posted this post.
+        title:
+          type: string
+          description: Title of the post.
+          maxLength: 100
+        image:
+          type: string
+          format: uri
+          description: The post itself.
+        tags:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
+        vote:
+          readOnly: true
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/VoteEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        positive_vote_count:
+          type: integer
+          readOnly: true
+          nullable: true
+        negative_vote_count:
+          type: integer
+          readOnly: true
+          nullable: true
+        comment_count:
+          type: integer
+          readOnly: true
+          nullable: true
+      required:
+      - comment_count
+      - created_at
+      - id
+      - image
+      - negative_vote_count
+      - positive_vote_count
+      - tags
+      - title
+      - updated_at
+      - user
+      - vote
+    PostComment:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+          description: User who wrote this comment.
+        post:
+          type: string
+          format: uuid
+          description: The post this comment is for.
+        body:
+          type: string
+          description: The actual comment.
+        vote:
+          readOnly: true
+          nullable: true
+          oneOf:
+          - $ref: '#/components/schemas/VoteEnum'
+          - $ref: '#/components/schemas/NullEnum'
+        positive_vote_count:
+          type: integer
+          readOnly: true
+          nullable: true
+        negative_vote_count:
+          type: integer
+          readOnly: true
+          nullable: true
+      required:
+      - body
+      - created_at
+      - id
+      - negative_vote_count
+      - positive_vote_count
+      - post
+      - updated_at
+      - user
+      - vote
+    PostCommentDestroyError:
+      type: object
+      properties:
+        protected_elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProtectedElement'
+      required:
+      - protected_elements
+    PostCommentError:
+      type: object
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        created_at:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        updated_at:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        user:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        post:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        body:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        vote:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        positive_vote_count:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        negative_vote_count:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        non_field_errors:
+          type: array
+          items:
+            type: string
+          readOnly: true
+      required:
+      - body
+      - created_at
+      - id
+      - negative_vote_count
+      - non_field_errors
+      - positive_vote_count
+      - post
+      - updated_at
+      - user
+      - vote
+    PostCommentRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        user:
+          type: string
+          format: uuid
+          description: User who wrote this comment.
+        post:
+          type: string
+          format: uuid
+          description: The post this comment is for.
+        body:
+          type: string
+          minLength: 1
+          description: The actual comment.
+      required:
+      - body
+      - post
+      - user
+    PostCommentUpdateRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        user:
+          type: string
+          format: uuid
+          description: User who wrote this comment.
+        body:
+          type: string
+          minLength: 1
+          description: The actual comment.
+      required:
+      - body
+      - user
+    PostDestroyError:
+      type: object
+      properties:
+        protected_elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProtectedElement'
+      required:
+      - protected_elements
+    PostError:
+      type: object
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        created_at:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        updated_at:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        user:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        title:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        image:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        tags:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        vote:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        positive_vote_count:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        negative_vote_count:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        comment_count:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        non_field_errors:
+          type: array
+          items:
+            type: string
+          readOnly: true
+      required:
+      - comment_count
+      - created_at
+      - id
+      - image
+      - negative_vote_count
+      - non_field_errors
+      - positive_vote_count
+      - tags
+      - title
+      - updated_at
+      - user
+      - vote
+    PostRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        user:
+          type: string
+          format: uuid
+          description: User who posted this post.
+        title:
+          type: string
+          minLength: 1
+          description: Title of the post.
+          maxLength: 100
+        image:
+          type: string
+          format: binary
+          description: The post itself.
+      required:
+      - image
+      - title
+      - user
+    PostTag:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          description: The tag's name, the tag itself.
+          pattern: ^[a-zA-Z0-9_.-]*$
+          maxLength: 100
+      required:
+      - created_at
+      - id
+      - name
+      - updated_at
+    PostTagDestroyError:
+      type: object
+      properties:
+        protected_elements:
+          type: array
+          items:
+            $ref: '#/components/schemas/ProtectedElement'
+      required:
+      - protected_elements
+    PostTagError:
+      type: object
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        created_at:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        updated_at:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        name:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        non_field_errors:
+          type: array
+          items:
+            type: string
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - name
+      - non_field_errors
+      - updated_at
+    PostTagRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: The tag's name, the tag itself.
+          pattern: ^[a-zA-Z0-9_.-]*$
+          maxLength: 100
+      required:
+      - name
+    PostTagUpdateRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        name:
+          type: string
+          minLength: 1
+          description: The tag's name, the tag itself.
+          pattern: ^[a-zA-Z0-9_.-]*$
+          maxLength: 100
+      required:
+      - name
+    PostUpdateRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        user:
+          type: string
+          format: uuid
+          description: User who posted this post.
+        title:
+          type: string
+          minLength: 1
+          description: Title of the post.
+          maxLength: 100
+        image:
+          type: string
+          format: binary
+          description: The post itself.
+      required:
+      - image
+      - title
+      - user
+    ProtectedElement:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        type:
+          type: string
+          readOnly: true
+      required:
+      - id
+      - type
+    PublicUser:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+        is_active:
+          type: boolean
+          readOnly: true
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        is_staff:
+          type: boolean
+          readOnly: true
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_superuser:
+          type: boolean
+          readOnly: true
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - id
+      - is_active
+      - is_staff
+      - is_superuser
+      - updated_at
+      - username
+    User:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        username:
+          type: string
+          readOnly: true
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+        email:
+          type: string
+          format: email
+          readOnly: true
+          title: Email address
+        is_active:
+          type: boolean
+          readOnly: true
+          title: Active
+          description: Designates whether this user should be treated as active. Unselect
+            this instead of deleting accounts.
+        is_staff:
+          type: boolean
+          readOnly: true
+          title: Staff status
+          description: Designates whether the user can log into this admin site.
+        is_superuser:
+          type: boolean
+          readOnly: true
+          title: Superuser status
+          description: Designates that this user has all permissions without explicitly
+            assigning them.
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+      required:
+      - created_at
+      - email
+      - id
+      - is_active
+      - is_staff
+      - is_superuser
+      - updated_at
+      - username
+    UserError:
+      type: object
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        username:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        first_name:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        last_name:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        email:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        is_active:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        is_staff:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        is_superuser:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        created_at:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        updated_at:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        non_field_errors:
+          type: array
+          items:
+            type: string
+          readOnly: true
+      required:
+      - created_at
+      - email
+      - first_name
+      - id
+      - is_active
+      - is_staff
+      - is_superuser
+      - last_name
+      - non_field_errors
+      - updated_at
+      - username
+    UserRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        first_name:
+          type: string
+          maxLength: 150
+        last_name:
+          type: string
+          maxLength: 150
+    VoteEnum:
+      enum:
+      - 1
+      - -1
+      type: integer
+      description: |-
+        * `1` - Upvote
+        * `-1` - Downvote
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+    cookieAuth:
+      type: apiKey
+      in: cookie
+      name: sessionid
+    tokenAuth:
+      type: apiKey
+      in: header
+      name: Authorization
+      description: Token-based authentication with required prefix "Token"

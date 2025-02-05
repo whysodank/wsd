@@ -2,8 +2,8 @@ from apps.core.models import Post, PostVote
 from apps.rest.utils.filters import make_filters
 from apps.rest.utils.schema_helpers import fake_serializer
 from apps.rest.v0.serializers import PostSerializer
-from django.db.models import Count, Q
-from django_filters import BooleanFilter, ChoiceFilter, NumberFilter
+from django.db.models import Count, IntegerField, OuterRef, Q, Subquery, Value
+from django_filters import NumberFilter
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -18,10 +18,11 @@ class PostViewSet(BaseModelViewSet):
     serializer_class = PostSerializer
 
     declared_filters = {
-        "vote": ChoiceFilter(choices=PostVote.VoteType.choices),
-        "vote__isnull": BooleanFilter(field_name="vote", lookup_expr="isnull"),
+        # "vote": ChoiceFilter(choices=PostVote.VoteType.choices),
+        # "vote__isnull": BooleanFilter(field_name="vote", lookup_expr="isnull"),
         **make_filters("positive_vote_count", NumberFilter, ["exact", "gt", "gte", "lt", "lte"]),
         **make_filters("negative_vote_count", NumberFilter, ["exact", "gt", "gte", "lt", "lte"]),
+        **make_filters("comment_count", NumberFilter, ["exact", "gt", "gte", "lt", "lte"]),
     }
 
     filterset_fields = {
@@ -36,14 +37,25 @@ class PostViewSet(BaseModelViewSet):
         "updated_at",
         "positive_vote_count",
         "negative_vote_count",
+        "comment_count",
     ]
 
     def get_queryset(self):
         qs = Post.objects.annotate(
             positive_vote_count=Count("votes", filter=Q(votes__body=PostVote.VoteType.UPVOTE)),
             negative_vote_count=Count("votes", filter=Q(votes__body=PostVote.VoteType.DOWNVOTE)),
+            comment_count=Count("comments"),
         )
+        qs = self.annotate_vote(qs, self.request)
         return qs
+
+    @staticmethod
+    def annotate_vote(queryset, request):
+        queryset = queryset.annotate(vote=Value(0, output_field=IntegerField(null=True)))
+        if request and request.user and request.user.is_authenticated:
+            user_vote = PostVote.objects.filter(post=OuterRef("pk"), user=request.user).values("body")[:1]
+            queryset = queryset.annotate(vote=Subquery(user_vote, output_field=IntegerField(null=True)))
+        return queryset
 
     @django_to_drf_validation_error
     def perform_create(self, serializer):

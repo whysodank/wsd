@@ -13,7 +13,6 @@ export function PasswordInput({ className, ...props }: React.ComponentProps<type
   const [showPassword, setShowPassword] = useState(false)
 
   function togglePasswordVisibility() {
-    console.log(showPassword)
     setShowPassword(!showPassword)
   }
 

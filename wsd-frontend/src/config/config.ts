@@ -29,8 +29,7 @@ export const config = Object.freeze({
     csrfTokenHeaderName: 'X-CSRFToken',
   },
   ux: {
-    defaultTitlePageSize: 50,
-    defaultEntryPageSize: 25,
+    defaultPostPerPage: 10, // It's infinite scroll, so this is how much we fetch per scroll
   },
   devtools: {
     googleAnalytics: {

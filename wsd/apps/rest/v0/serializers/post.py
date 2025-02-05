@@ -16,6 +16,11 @@ class PostSerializer(BaseModelSerializer):
         read_only=True,
         allow_null=True,
     )
+    comment_count = serializers.IntegerField(
+        required=False,
+        read_only=True,
+        allow_null=True,
+    )
 
     class Meta:
         model = Post
@@ -30,6 +35,7 @@ class PostSerializer(BaseModelSerializer):
             "vote",
             "positive_vote_count",
             "negative_vote_count",
+            "comment_count",
         ]
         read_only_fields = [
             "id",
@@ -38,6 +44,7 @@ class PostSerializer(BaseModelSerializer):
             "vote",
             "positive_vote_count",
             "negative_vote_count",
+            "comment_count",
         ]
         relational_fields = {
             "tags": s("PostTagSerializer")(many=True),

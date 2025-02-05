@@ -1,5 +1,6 @@
 import { WSD_AUTH_API } from '@/api/authApi'
 import { paths } from '@/api/schema'
+import type { APIQuery, APIType } from '@/api/typeHelpers'
 import config from '@/config'
 import { getLazyValueAsync, setKeyValueToObjectIfValue } from '@/lib/utils'
 
@@ -49,5 +50,62 @@ export class WSDAPI {
   public include(listOfResources: string[]): string {
     // Utility function to use ?include=resource1,resource2,resource3 feature of the api
     return listOfResources.join(',')
+  }
+
+  // Below this are api endpoint wrappers
+  // In this order:
+  // users
+  // posts
+  // post-comments
+  public async users(filters?: APIQuery<'/v0/users/'>) {
+    return await this.client.GET('/v0/users/', { params: { query: filters } })
+  }
+
+  public async user(id: string, query?: APIQuery<'/v0/users/{id}/'>) {
+    return await this.client.GET('/v0/users/{id}/', { params: { path: { id }, query } })
+  }
+
+  public async me(query?: APIQuery<'/v0/users/me/'>) {
+    return await this.client.GET('/v0/users/me/', { params: { query } })
+  }
+
+  public async putMe(data: APIType<'UserRequest'>) {
+    return await this.client.PUT('/v0/users/me/', { body: data })
+  }
+
+  public async patchMe(data: APIType<'PatchedUserRequest'>) {
+    return await this.client.PATCH('/v0/users/me/', { body: data })
+  }
+
+  public async posts(filters?: APIQuery<'/v0/posts/'>) {
+    return await this.client.GET('/v0/posts/', { params: { query: filters } })
+  }
+
+  public async post(id: string, query?: APIQuery<'/v0/posts/{id}/'>) {
+    return await this.client.GET('/v0/posts/{id}/', { params: { path: { id }, query } })
+  }
+
+  public async deletePost(id: string) {
+    return await this.client.DELETE('/v0/posts/{id}/', { params: { path: { id } } })
+  }
+
+  public async putPost(id: string, data: APIType<'PostRequest'>) {
+    return await this.client.PUT('/v0/posts/{id}/', { params: { path: { id } }, body: data })
+  }
+
+  public async patchPost(id: string, data: APIType<'PatchedPostUpdateRequest'>) {
+    return await this.client.PATCH('/v0/posts/{id}/', { params: { path: { id } }, body: data })
+  }
+
+  public async upvotePost(id: string) {
+    return await this.client.POST('/v0/posts/{id}/upvote/', { params: { path: { id } } })
+  }
+
+  public async downvotePost(id: string) {
+    return await this.client.POST('/v0/posts/{id}/downvote/', { params: { path: { id } } })
+  }
+
+  public async unvotePost(id: string) {
+    return await this.client.POST('/v0/posts/{id}/unvote/', { params: { path: { id } } })
   }
 }

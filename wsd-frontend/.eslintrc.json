@@ -37,6 +37,7 @@
     "it": false
   },
   "rules": {
+    "newline-per-chained-call": "off",
     "react/no-unknown-property": 0,
     "@typescript-eslint/ban-ts-ignore": 0,
     "@typescript-eslint/ban-ts-comment": 0,

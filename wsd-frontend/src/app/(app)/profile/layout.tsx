@@ -34,7 +34,7 @@ export default async function ProfileLayout({ children }: { children: React.Reac
   ]
 
   return (
-    <div className="min-h-screen flex flex-col gap-1 items-center justify-center bg-gray-100 p-4">
+    <div className="min-h-screen flex flex-col gap-1 items-center justify-center p-4">
       {username && (
         <div className="flex flex-col justify-center items-center gap-1">
           <Avatar className="w-24 h-24">

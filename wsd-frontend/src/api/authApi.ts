@@ -35,7 +35,6 @@ export class WSD_AUTH_API {
       // Server error, we should handle this generically here
       console.error(err)
     }
-    console.log('INPUT: ', input)
     return Promise.resolve({ response, data, error })
   }
 

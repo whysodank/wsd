@@ -4,17 +4,2322 @@
  */
 
 export interface paths {
-  '/': { get: { parameters: { query: '' } } }
+  '/v0/post-comments/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * List Post Comments
+     * @description List post comments with optional filters
+     */
+    get: operations['post_comments_list']
+    put?: never
+    /**
+     * Create Post Comment
+     * @description Create a new post comment
+     */
+    post: operations['post_comments_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/post-comments/{id}/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Retrieve Post Comment
+     * @description Retrieve post comment by id
+     */
+    get: operations['post_comments_retrieve']
+    /**
+     * Put Post Comment
+     * @description Update an existing post comment by id
+     */
+    put: operations['post_comments_update']
+    post?: never
+    /**
+     * Delete Post Comment
+     * @description Delete an existing Post Comment by id
+     */
+    delete: operations['post_comments_destroy']
+    options?: never
+    head?: never
+    /**
+     * Patch Post Comment
+     * @description Partially update an existing post comment by id
+     */
+    patch: operations['post_comments_partial_update']
+    trace?: never
+  }
+  '/v0/post-comments/{id}/downvote/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Downvote Post Comment
+     * @description Cast an up vote to a post comment by id
+     */
+    post: operations['post_comments_downvote_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/post-comments/{id}/unvote/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Remove Post Comment Vote
+     * @description Remove vote from post comment by id
+     */
+    post: operations['post_comments_unvote_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/post-comments/{id}/upvote/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Upvote Post Comment
+     * @description Cast a down vote to a post comment by id
+     */
+    post: operations['post_comments_upvote_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/post-tags/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * List Post Tags
+     * @description List post tags with optional filters
+     */
+    get: operations['post_tags_list']
+    put?: never
+    /**
+     * Create Post Tag
+     * @description Create a new post tag
+     */
+    post: operations['post_tags_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/post-tags/{id}/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Retrieve Post Tag
+     * @description Retrieve post tag by id
+     */
+    get: operations['post_tags_retrieve']
+    /**
+     * Put Post Tag
+     * @description Update an existing post tag by id
+     */
+    put: operations['post_tags_update']
+    post?: never
+    /**
+     * Delete Post Tag
+     * @description Delete an existing Post Tag by id
+     */
+    delete: operations['post_tags_destroy']
+    options?: never
+    head?: never
+    /**
+     * Patch Post Tag
+     * @description Partially update an existing post tag by id
+     */
+    patch: operations['post_tags_partial_update']
+    trace?: never
+  }
+  '/v0/posts/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * List Posts
+     * @description List posts with optional filters
+     */
+    get: operations['posts_list']
+    put?: never
+    /**
+     * Create Post
+     * @description Create a new post
+     */
+    post: operations['posts_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/posts/{id}/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Retrieve Post
+     * @description Retrieve post by id
+     */
+    get: operations['posts_retrieve']
+    /**
+     * Put Post
+     * @description Update an existing post by id
+     */
+    put: operations['posts_update']
+    post?: never
+    /**
+     * Delete Post
+     * @description Delete an existing Post by id
+     */
+    delete: operations['posts_destroy']
+    options?: never
+    head?: never
+    /**
+     * Patch Post
+     * @description Partially update an existing post by id
+     */
+    patch: operations['posts_partial_update']
+    trace?: never
+  }
+  '/v0/posts/{id}/downvote/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Downvote Post
+     * @description Cast an up vote to a post by id
+     */
+    post: operations['posts_downvote_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/posts/{id}/unvote/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Remove Post Vote
+     * @description Remove vote from post by id
+     */
+    post: operations['posts_unvote_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/posts/{id}/upvote/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Upvote Post
+     * @description Cast a down vote to a post by id
+     */
+    post: operations['posts_upvote_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/users/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * List Users
+     * @description List users with optional filters
+     */
+    get: operations['users_list']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/users/{id}/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Retrieve User
+     * @description Retrieve user by id
+     */
+    get: operations['users_retrieve']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/users/me/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Retrieve Me
+     * @description Retrieve the current user
+     */
+    get: operations['users_me_retrieve']
+    /**
+     * Put Me
+     * @description Update the current user
+     */
+    put: operations['users_me_update']
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Patch Me
+     * @description Partially update the current user
+     */
+    patch: operations['users_me_partial_update']
+    trace?: never
+  }
 }
-
 export type webhooks = Record<string, never>
-
 export interface components {
-  schemas: { '': '' }
+  schemas: {
+    Forbidden: {
+      detail: string
+    }
+    /** @enum {unknown} */
+    NullEnum: null
+    PaginatedPostCommentList: {
+      /**
+       * @description Total number of items available.
+       * @example 1102
+       */
+      count: number
+      /**
+       * @description Number of results to return per page.
+       * @example 100
+       */
+      page_size: number
+      /**
+       * @description Total number of pages.
+       * @example 17
+       */
+      total_pages: number
+      results: components['schemas']['PostComment'][]
+    }
+    PaginatedPostList: {
+      /**
+       * @description Total number of items available.
+       * @example 1102
+       */
+      count: number
+      /**
+       * @description Number of results to return per page.
+       * @example 100
+       */
+      page_size: number
+      /**
+       * @description Total number of pages.
+       * @example 17
+       */
+      total_pages: number
+      results: components['schemas']['Post'][]
+    }
+    PaginatedPostTagList: {
+      /**
+       * @description Total number of items available.
+       * @example 1102
+       */
+      count: number
+      /**
+       * @description Number of results to return per page.
+       * @example 100
+       */
+      page_size: number
+      /**
+       * @description Total number of pages.
+       * @example 17
+       */
+      total_pages: number
+      results: components['schemas']['PostTag'][]
+    }
+    PaginatedPublicUserList: {
+      /**
+       * @description Total number of items available.
+       * @example 1102
+       */
+      count: number
+      /**
+       * @description Number of results to return per page.
+       * @example 100
+       */
+      page_size: number
+      /**
+       * @description Total number of pages.
+       * @example 17
+       */
+      total_pages: number
+      results: components['schemas']['PublicUser'][]
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PatchedPostCommentUpdateRequest: {
+      /**
+       * Format: uuid
+       * @description User who wrote this comment.
+       */
+      user?: string
+      /** @description The actual comment. */
+      body?: string
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PatchedPostTagUpdateRequest: {
+      /** @description The tag's name, the tag itself. */
+      name?: string
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PatchedPostUpdateRequest: {
+      /**
+       * Format: uuid
+       * @description User who posted this post.
+       */
+      user?: string
+      /** @description Title of the post. */
+      title?: string
+      /**
+       * Format: binary
+       * @description The post itself.
+       */
+      image?: string
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PatchedUserRequest: {
+      first_name?: string
+      last_name?: string
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    Post: {
+      /** Format: uuid */
+      readonly id: string
+      /** Format: date-time */
+      readonly created_at: string
+      /** Format: date-time */
+      readonly updated_at: string
+      /**
+       * Format: uuid
+       * @description User who posted this post.
+       */
+      user: string
+      /** @description Title of the post. */
+      title: string
+      /**
+       * Format: uri
+       * @description The post itself.
+       */
+      image: string
+      readonly tags: string[]
+      readonly vote: (components['schemas']['VoteEnum'] | components['schemas']['NullEnum']) | null
+      readonly positive_vote_count: number | null
+      readonly negative_vote_count: number | null
+      readonly comment_count: number | null
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PostComment: {
+      /** Format: uuid */
+      readonly id: string
+      /** Format: date-time */
+      readonly created_at: string
+      /** Format: date-time */
+      readonly updated_at: string
+      /**
+       * Format: uuid
+       * @description User who wrote this comment.
+       */
+      user: string
+      /**
+       * Format: uuid
+       * @description The post this comment is for.
+       */
+      post: string
+      /** @description The actual comment. */
+      body: string
+      readonly vote: (components['schemas']['VoteEnum'] | components['schemas']['NullEnum']) | null
+      readonly positive_vote_count: number | null
+      readonly negative_vote_count: number | null
+    }
+    PostCommentDestroyError: {
+      protected_elements: components['schemas']['ProtectedElement'][]
+    }
+    PostCommentError: {
+      readonly id: string[]
+      readonly created_at: string[]
+      readonly updated_at: string[]
+      readonly user: string[]
+      readonly post: string[]
+      readonly body: string[]
+      readonly vote: string[]
+      readonly positive_vote_count: string[]
+      readonly negative_vote_count: string[]
+      readonly non_field_errors: string[]
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PostCommentRequest: {
+      /**
+       * Format: uuid
+       * @description User who wrote this comment.
+       */
+      user: string
+      /**
+       * Format: uuid
+       * @description The post this comment is for.
+       */
+      post: string
+      /** @description The actual comment. */
+      body: string
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PostCommentUpdateRequest: {
+      /**
+       * Format: uuid
+       * @description User who wrote this comment.
+       */
+      user: string
+      /** @description The actual comment. */
+      body: string
+    }
+    PostDestroyError: {
+      protected_elements: components['schemas']['ProtectedElement'][]
+    }
+    PostError: {
+      readonly id: string[]
+      readonly created_at: string[]
+      readonly updated_at: string[]
+      readonly user: string[]
+      readonly title: string[]
+      readonly image: string[]
+      readonly tags: string[]
+      readonly vote: string[]
+      readonly positive_vote_count: string[]
+      readonly negative_vote_count: string[]
+      readonly comment_count: string[]
+      readonly non_field_errors: string[]
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PostRequest: {
+      /**
+       * Format: uuid
+       * @description User who posted this post.
+       */
+      user: string
+      /** @description Title of the post. */
+      title: string
+      /**
+       * Format: binary
+       * @description The post itself.
+       */
+      image: string
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PostTag: {
+      /** Format: uuid */
+      readonly id: string
+      /** Format: date-time */
+      readonly created_at: string
+      /** Format: date-time */
+      readonly updated_at: string
+      /** @description The tag's name, the tag itself. */
+      name: string
+    }
+    PostTagDestroyError: {
+      protected_elements: components['schemas']['ProtectedElement'][]
+    }
+    PostTagError: {
+      readonly id: string[]
+      readonly created_at: string[]
+      readonly updated_at: string[]
+      readonly name: string[]
+      readonly non_field_errors: string[]
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PostTagRequest: {
+      /** @description The tag's name, the tag itself. */
+      name: string
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PostTagUpdateRequest: {
+      /** @description The tag's name, the tag itself. */
+      name: string
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PostUpdateRequest: {
+      /**
+       * Format: uuid
+       * @description User who posted this post.
+       */
+      user: string
+      /** @description Title of the post. */
+      title: string
+      /**
+       * Format: binary
+       * @description The post itself.
+       */
+      image: string
+    }
+    ProtectedElement: {
+      /** Format: uuid */
+      readonly id: string
+      readonly type: string
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PublicUser: {
+      /** Format: uuid */
+      readonly id: string
+      /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+      readonly username: string
+      /**
+       * Active
+       * @description Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+       */
+      readonly is_active: boolean
+      /**
+       * Staff status
+       * @description Designates whether the user can log into this admin site.
+       */
+      readonly is_staff: boolean
+      /**
+       * Superuser status
+       * @description Designates that this user has all permissions without explicitly assigning them.
+       */
+      readonly is_superuser: boolean
+      /** Format: date-time */
+      readonly created_at: string
+      /** Format: date-time */
+      readonly updated_at: string
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    User: {
+      /** Format: uuid */
+      readonly id: string
+      /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+      readonly username: string
+      first_name?: string
+      last_name?: string
+      /**
+       * Email address
+       * Format: email
+       */
+      readonly email: string
+      /**
+       * Active
+       * @description Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
+       */
+      readonly is_active: boolean
+      /**
+       * Staff status
+       * @description Designates whether the user can log into this admin site.
+       */
+      readonly is_staff: boolean
+      /**
+       * Superuser status
+       * @description Designates that this user has all permissions without explicitly assigning them.
+       */
+      readonly is_superuser: boolean
+      /** Format: date-time */
+      readonly created_at: string
+      /** Format: date-time */
+      readonly updated_at: string
+    }
+    UserError: {
+      readonly id: string[]
+      readonly username: string[]
+      readonly first_name: string[]
+      readonly last_name: string[]
+      readonly email: string[]
+      readonly is_active: string[]
+      readonly is_staff: string[]
+      readonly is_superuser: string[]
+      readonly created_at: string[]
+      readonly updated_at: string[]
+      readonly non_field_errors: string[]
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    UserRequest: {
+      first_name?: string
+      last_name?: string
+    }
+    /**
+     * @description * `1` - Upvote
+     *     * `-1` - Downvote
+     * @enum {integer}
+     */
+    VoteEnum: 1 | -1
+  }
+  responses: never
+  parameters: never
+  requestBodies: never
+  headers: never
+  pathItems: never
 }
-
 export type $defs = Record<string, never>
-
 export interface operations {
-  '/': { '': '' }
+  post_comments_list: {
+    parameters: {
+      query?: {
+        created_at?: string
+        created_at__gt?: string
+        created_at__gte?: string
+        created_at__lt?: string
+        created_at__lte?: string
+        include?: 'user'
+        negative_vote_count?: number
+        negative_vote_count__gt?: number
+        negative_vote_count__gte?: number
+        negative_vote_count__lt?: number
+        negative_vote_count__lte?: number
+        ordering?:
+          | '-created_at'
+          | '-negative_vote_count'
+          | '-positive_vote_count'
+          | '-updated_at'
+          | 'created_at'
+          | 'negative_vote_count'
+          | 'positive_vote_count'
+          | 'updated_at'
+        /** @description A page number within the paginated result set. */
+        page?: number
+        /** @description Number of results to return per page. */
+        page_size?: number
+        positive_vote_count?: number
+        positive_vote_count__gt?: number
+        positive_vote_count__gte?: number
+        positive_vote_count__lt?: number
+        positive_vote_count__lte?: number
+        post?: string
+        /** @description A search term. */
+        search?: string
+        updated_at?: string
+        updated_at__gt?: string
+        updated_at__gte?: string
+        updated_at__lt?: string
+        updated_at__lte?: string
+        user?: string
+        /** @description * `1` - Upvote
+         *     * `-1` - Downvote */
+        vote?: -1 | 1
+        vote__isnull?: boolean
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedPostCommentList']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_comments_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PostCommentRequest']
+        'application/x-www-form-urlencoded': components['schemas']['PostCommentRequest']
+        'multipart/form-data': components['schemas']['PostCommentRequest']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostComment']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostCommentError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_comments_retrieve: {
+    parameters: {
+      query?: {
+        include?: 'user'
+      }
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Comment. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostComment']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_comments_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Comment. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PostCommentUpdateRequest']
+        'application/x-www-form-urlencoded': components['schemas']['PostCommentUpdateRequest']
+        'multipart/form-data': components['schemas']['PostCommentUpdateRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostComment']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostCommentError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_comments_destroy: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Comment. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostCommentDestroyError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_comments_partial_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Comment. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['PatchedPostCommentUpdateRequest']
+        'application/x-www-form-urlencoded': components['schemas']['PatchedPostCommentUpdateRequest']
+        'multipart/form-data': components['schemas']['PatchedPostCommentUpdateRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostComment']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostCommentError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_comments_downvote_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Comment. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  post_comments_unvote_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Comment. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  post_comments_upvote_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Comment. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  post_tags_list: {
+    parameters: {
+      query?: {
+        include?: string
+        ordering?: string
+        /** @description A page number within the paginated result set. */
+        page?: number
+        /** @description Number of results to return per page. */
+        page_size?: number
+        /** @description A search term. */
+        search?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedPostTagList']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_tags_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PostTagRequest']
+        'application/x-www-form-urlencoded': components['schemas']['PostTagRequest']
+        'multipart/form-data': components['schemas']['PostTagRequest']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostTag']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostTagError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_tags_retrieve: {
+    parameters: {
+      query?: {
+        include?: string
+      }
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Tag. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostTag']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_tags_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Tag. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PostTagUpdateRequest']
+        'application/x-www-form-urlencoded': components['schemas']['PostTagUpdateRequest']
+        'multipart/form-data': components['schemas']['PostTagUpdateRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostTag']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostTagError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_tags_destroy: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Tag. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostTagDestroyError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_tags_partial_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Tag. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['PatchedPostTagUpdateRequest']
+        'application/x-www-form-urlencoded': components['schemas']['PatchedPostTagUpdateRequest']
+        'multipart/form-data': components['schemas']['PatchedPostTagUpdateRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostTag']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostTagError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  posts_list: {
+    parameters: {
+      query?: {
+        comment_count?: number
+        comment_count__gt?: number
+        comment_count__gte?: number
+        comment_count__lt?: number
+        comment_count__lte?: number
+        created_at?: string
+        created_at__gt?: string
+        created_at__gte?: string
+        created_at__lt?: string
+        created_at__lte?: string
+        include?: 'tags' | 'tags,user' | 'user'
+        negative_vote_count?: number
+        negative_vote_count__gt?: number
+        negative_vote_count__gte?: number
+        negative_vote_count__lt?: number
+        negative_vote_count__lte?: number
+        ordering?:
+          | '-comment_count'
+          | '-created_at'
+          | '-negative_vote_count'
+          | '-positive_vote_count'
+          | '-updated_at'
+          | 'comment_count'
+          | 'created_at'
+          | 'negative_vote_count'
+          | 'positive_vote_count'
+          | 'updated_at'
+        /** @description A page number within the paginated result set. */
+        page?: number
+        /** @description Number of results to return per page. */
+        page_size?: number
+        positive_vote_count?: number
+        positive_vote_count__gt?: number
+        positive_vote_count__gte?: number
+        positive_vote_count__lt?: number
+        positive_vote_count__lte?: number
+        /** @description A search term. */
+        search?: string
+        title?: string
+        updated_at?: string
+        updated_at__gt?: string
+        updated_at__gte?: string
+        updated_at__lt?: string
+        updated_at__lte?: string
+        user?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedPostList']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  posts_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PostRequest']
+        'application/x-www-form-urlencoded': components['schemas']['PostRequest']
+        'multipart/form-data': components['schemas']['PostRequest']
+      }
+    }
+    responses: {
+      201: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Post']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  posts_retrieve: {
+    parameters: {
+      query?: {
+        include?: 'tags' | 'tags,user' | 'user'
+      }
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Post']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  posts_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['PostUpdateRequest']
+        'application/x-www-form-urlencoded': components['schemas']['PostUpdateRequest']
+        'multipart/form-data': components['schemas']['PostUpdateRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Post']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  posts_destroy: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostDestroyError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  posts_partial_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['PatchedPostUpdateRequest']
+        'application/x-www-form-urlencoded': components['schemas']['PatchedPostUpdateRequest']
+        'multipart/form-data': components['schemas']['PatchedPostUpdateRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Post']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  posts_downvote_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  posts_unvote_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  posts_upvote_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  users_list: {
+    parameters: {
+      query?: {
+        created_at?: string
+        created_at__gt?: string
+        created_at__gte?: string
+        created_at__lt?: string
+        created_at__lte?: string
+        include?: string
+        is_active?: boolean
+        is_staff?: boolean
+        is_superuser?: boolean
+        ordering?: string
+        /** @description A page number within the paginated result set. */
+        page?: number
+        /** @description Number of results to return per page. */
+        page_size?: number
+        post_comment_count?: number
+        post_comment_count__gt?: number
+        post_comment_count__gte?: number
+        post_comment_count__lt?: number
+        post_comment_count__lte?: number
+        post_count?: number
+        post_count__gt?: number
+        post_count__gte?: number
+        post_count__lt?: number
+        post_count__lte?: number
+        /** @description A search term. */
+        search?: string
+        updated_at?: string
+        updated_at__gt?: string
+        updated_at__gte?: string
+        updated_at__lt?: string
+        updated_at__lte?: string
+        username__icontains?: string
+        username__iexact?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedPublicUserList']
+        }
+      }
+    }
+  }
+  users_retrieve: {
+    parameters: {
+      query?: {
+        include?: string
+      }
+      header?: never
+      path: {
+        /** @description A UUID string identifying this User. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PublicUser']
+        }
+      }
+    }
+  }
+  users_me_retrieve: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['User']
+        }
+      }
+    }
+  }
+  users_me_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['UserRequest']
+        'application/x-www-form-urlencoded': components['schemas']['UserRequest']
+        'multipart/form-data': components['schemas']['UserRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['User']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UserError']
+        }
+      }
+    }
+  }
+  users_me_partial_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['PatchedUserRequest']
+        'application/x-www-form-urlencoded': components['schemas']['PatchedUserRequest']
+        'multipart/form-data': components['schemas']['PatchedUserRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['User']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UserError']
+        }
+      }
+    }
+  }
 }

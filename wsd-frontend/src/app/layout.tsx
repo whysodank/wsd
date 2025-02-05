@@ -29,7 +29,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         />
         {gaID && <GoogleAnalytics gaId={gaID} />}
       </head>
-      <body className="min-h-screen font-sans antialiased">
+      <body className="min-h-screen font-sans antialiased dark">
         {children}
         <Toaster />
       </body>
