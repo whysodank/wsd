@@ -1,18 +1,36 @@
+import Link from 'next/link'
+
 import * as Icons from 'lucide-react'
 
+import { Badge } from '@/components/shadcn/badge'
 import { Button } from '@/components/shadcn/button'
 import { FeedbackButtons } from '@/components/wsd/Meme/client'
 
-import { APIType } from '@/api'
-import { cn } from '@/lib/utils'
+import { APIType, Includes } from '@/api'
+import { cn, uuidV4toHEX } from '@/lib/utils'
 
-export async function Meme({ post }: { post: APIType<'Post'> }) {
+export async function Meme({
+  post,
+  withTags = false,
+  fullScreen = false,
+}: {
+  post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
+  withTags?: boolean
+  fullScreen?: boolean
+}) {
   return (
     <article
-      className={cn('shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md w-5/6', 'max-md:w-full')}
+      className={cn(
+        'shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md w-5/6 max-md:w-full',
+        fullScreen && 'max-w-full w-full'
+      )}
     >
       <div className="flex flex-col gap-2 p-4 max-md:p-2 max-md:py-0">
-        <h2 className="text-xl font-semibold">{post.title}</h2>
+        <h2 className="text-xl font-semibold">
+          <Link className="hover:underline" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
+            {post.title}
+          </Link>
+        </h2>
         <div className="relative w-full flex justify-center items-center bg-black overflow-hidden">
           <div
             className="absolute inset-0"
@@ -28,18 +46,40 @@ export async function Meme({ post }: { post: APIType<'Post'> }) {
           <img
             src={post.image}
             alt={post.title}
-            className="relative z-10 w-auto max-w-[80%] h-auto max-h-[750px] max-md:max-w-full"
+            className={cn(
+              'relative z-10 w-auto max-w-[80%] h-auto max-md:max-w-full',
+              fullScreen ? 'max-w-full w-full' : 'max-h-[750px]'
+            )}
             loading="lazy"
           />
         </div>
-        <div className="flex items-center gap-4">
-          <FeedbackButtons post={post} />
-          <Button
-            className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
-            aria-label="Share"
-          >
-            <Icons.Share2 size={20} />
-          </Button>
+        {withTags && (
+          <div className="flex flex-wrap gap-2">
+            {post.tags.map((tag) => (
+              <Badge key={tag.name} variant="outline" className="px-3 py-1 text-sm">
+                {tag.name}
+              </Badge>
+            ))}
+          </div>
+        )}
+        <div className="flex items-center justify-between gap-4">
+          <div className="flex items-center gap-4">
+            <FeedbackButtons post={post} />
+            <Button
+              className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+              aria-label="Share"
+            >
+              <Icons.Share2 size={20} />
+            </Button>
+          </div>
+          <div className="flex items-center gap-4">
+            <Button
+              className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+              aria-label="More"
+            >
+              <Icons.Ellipsis size={20} />
+            </Button>
+          </div>
         </div>
       </div>
     </article>

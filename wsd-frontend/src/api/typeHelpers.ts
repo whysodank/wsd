@@ -6,11 +6,12 @@ export type APIResponse<T extends keyof paths, TMethod extends keyof paths[T]> =
 export type APIType<T extends keyof components['schemas']> = components['schemas'][T]
 export type Includes<T, K extends keyof T, F> = Omit<T, K> & { [P in K]: F }
 
-export function includesType<T extends object, K extends keyof T, S extends keyof components['schemas']>(
-  obj: T,
-  _key: K,
-  _type: S
-): Includes<T, K, APIType<S>> {
+export function includesType<
+  T extends object,
+  K extends keyof T,
+  S extends keyof components['schemas'],
+  IsArray extends boolean = false,
+>(obj: T, _key: K, _type: S, _isArray?: IsArray): Includes<T, K, IsArray extends true ? APIType<S>[] : APIType<S>> {
   /**
    * This function is a type assertion function that allows you to assert
    * that a property of an object is of a certain type.
@@ -22,5 +23,6 @@ export function includesType<T extends object, K extends keyof T, S extends keyo
   // TS thinks it is a string uuid
   // we can do
   // entry = includesType(entry, 'author', 'Author') which automagically changes the type of entry.author to Author
-  return obj as unknown as Includes<T, K, APIType<S>>
+  // entry = includesType(entry, 'tags', 'Tag', true) makes entry.tags Tag[]
+  return obj as unknown as Includes<T, K, IsArray extends true ? APIType<S>[] : APIType<S>>
 }

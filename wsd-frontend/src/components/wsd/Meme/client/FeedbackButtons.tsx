@@ -1,16 +1,22 @@
 'use client'
 
+import Link from 'next/link'
+
 import { useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
-import { Button } from '@/components/shadcn/button'
+import { Button, buttonVariants } from '@/components/shadcn/button'
 
-import { APIType } from '@/api/typeHelpers'
+import { APIType, Includes } from '@/api/typeHelpers'
 import { useWSDAPI } from '@/lib/serverHooks'
-import { cn } from '@/lib/utils'
+import { cn, uuidV4toHEX } from '@/lib/utils'
 
-export default function FeedbackButtons({ post }: { post: APIType<'Post'> }) {
+export default function FeedbackButtons({
+  post,
+}: {
+  post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
+}) {
   const wsd = useWSDAPI()
   const [feedback, setFeedback] = useState<APIType<'VoteEnum'> | null>(post.vote)
   const [voteCount, setVoteCount] = useState((post.positive_vote_count || 0) - (post.negative_vote_count || 0))
@@ -53,12 +59,25 @@ export default function FeedbackButtons({ post }: { post: APIType<'Post'> }) {
       >
         <Icons.ArrowDown size={20} className={cn('h-5 w-5', feedback === -1 && 'text-destructive')} />
       </Button>
-      <Button
-        className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+      <Link
+        href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}
+        className={cn(
+          buttonVariants({
+            variant: 'default',
+            className:
+              'flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent',
+          })
+        )}
         aria-label="Comment"
       >
         <Icons.MessageCircle size={20} />
         <span>{post.comment_count}</span>
+      </Link>
+      <Button
+        className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+        aria-label="Bookmark"
+      >
+        <Icons.Heart size={20} />
       </Button>
     </>
   )

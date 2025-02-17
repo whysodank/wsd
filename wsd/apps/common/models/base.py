@@ -1,4 +1,3 @@
-from base64 import urlsafe_b64decode, urlsafe_b64encode
 from uuid import UUID, uuid4
 
 from django.db import models
@@ -20,15 +19,23 @@ class BaseModel(LifecycleModel):
         # This will be the unique url slug, not completely human readable but it is globally unique
         # We would preferably switch this guy into a generated field in postgres as soon as django supports it
         # instead of writing this inside a hook on application logic
-        self.slug = self._uuid2slug(self.id)
+        self.slug = self._uuid_to_hex(self.id)
 
     @staticmethod
-    def _uuid2slug(uuid):
-        return urlsafe_b64encode(uuid.bytes).rstrip(b"=").decode("ascii")
+    def _uuid_to_hex(value):
+        return str(value.hex)
 
     @staticmethod
-    def _slug2uuid(slug):
-        return UUID(bytes=urlsafe_b64decode(slug + "=="))
+    def _hex_to_uuid(slug):
+        return UUID(int=int(slug, 16))
+
+    @classmethod
+    def get_from_hex(cls, hex):  # NOQA
+        return cls.objects.get(id=cls._hex_to_uuid(hex))
+
+    @property
+    def hex(self):
+        return self._uuid_to_hex(self.id)
 
     def __default_repr(self):
         return self.REPR.format(self=self)

@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import _ from 'lodash'
 
-import { LONG_DATE_FORMAT, SHORT_DATE_FORMAT } from '@/lib/constants'
+import { LONG_DATE_FORMAT, SHORT_DATETIME_FORMAT, SHORT_DATE_FORMAT } from '@/lib/constants'
 
 import { type ClassValue, clsx } from 'clsx'
 import { format } from 'date-fns'
@@ -179,6 +179,10 @@ export function longFormattedDate(date?: Date) {
 
 export function shortFormattedDate(date?: Date) {
   return formattedDate(SHORT_DATE_FORMAT, date || new Date())
+}
+
+export function shortFormattedDateTime(date?: Date) {
+  return formattedDate(SHORT_DATETIME_FORMAT, date || new Date())
 }
 
 export function optionalDate(date?: string) {

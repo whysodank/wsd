@@ -52,6 +52,16 @@ export class WSDAPI {
     return listOfResources.join(',')
   }
 
+  public hasResults(
+    resource: undefined | { results: { length: number } }
+  ): resource is { results: { length: number } } {
+    return !!resource && resource.results.length > 0
+  }
+
+  public hasNoResult(resource: undefined | { results: { length: number } }) {
+    return resource && (resource.results.length || 0) === 0
+  }
+
   // Below this are api endpoint wrappers
   // In this order:
   // users
@@ -85,6 +95,10 @@ export class WSDAPI {
     return await this.client.GET('/v0/posts/{id}/', { params: { path: { id }, query } })
   }
 
+  public async createPost(data: APIType<'PostRequest'>) {
+    return await this.client.POST('/v0/posts/', { body: data })
+  }
+
   public async deletePost(id: string) {
     return await this.client.DELETE('/v0/posts/{id}/', { params: { path: { id } } })
   }
@@ -107,5 +121,41 @@ export class WSDAPI {
 
   public async unvotePost(id: string) {
     return await this.client.POST('/v0/posts/{id}/unvote/', { params: { path: { id } } })
+  }
+
+  public async comments(filters?: APIQuery<'/v0/post-comments/'>) {
+    return await this.client.GET('/v0/post-comments/', { params: { query: filters } })
+  }
+
+  public async comment(id: string, query?: APIQuery<'/v0/post-comments/{id}/'>) {
+    return await this.client.GET('/v0/post-comments/{id}/', { params: { path: { id }, query } })
+  }
+
+  public async createComment(data: APIType<'PostCommentRequest'>) {
+    return await this.client.POST('/v0/post-comments/', { body: data })
+  }
+
+  public async deleteComment(id: string) {
+    return await this.client.DELETE('/v0/post-comments/{id}/', { params: { path: { id } } })
+  }
+
+  public async putComment(id: string, data: APIType<'PostCommentRequest'>) {
+    return await this.client.PUT('/v0/post-comments/{id}/', { params: { path: { id } }, body: data })
+  }
+
+  public async patchComment(id: string, data: APIType<'PatchedPostCommentUpdateRequest'>) {
+    return await this.client.PATCH('/v0/post-comments/{id}/', { params: { path: { id } }, body: data })
+  }
+
+  public async upvoteComment(id: string) {
+    return await this.client.POST('/v0/post-comments/{id}/upvote/', { params: { path: { id } } })
+  }
+
+  public async downvoteComment(id: string) {
+    return await this.client.POST('/v0/post-comments/{id}/downvote/', { params: { path: { id } } })
+  }
+
+  public async unvoteComment(id: string) {
+    return await this.client.POST('/v0/post-comments/{id}/unvote/', { params: { path: { id } } })
   }
 }

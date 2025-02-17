@@ -42,8 +42,8 @@ class PostViewSet(BaseModelViewSet):
 
     def get_queryset(self):
         qs = Post.objects.annotate(
-            positive_vote_count=Count("votes", filter=Q(votes__body=PostVote.VoteType.UPVOTE)),
-            negative_vote_count=Count("votes", filter=Q(votes__body=PostVote.VoteType.DOWNVOTE)),
+            positive_vote_count=Count("votes", filter=Q(votes__body=PostVote.VoteType.UPVOTE), distinct=True),
+            negative_vote_count=Count("votes", filter=Q(votes__body=PostVote.VoteType.DOWNVOTE), distinct=True),
             comment_count=Count("comments"),
         )
         qs = self.annotate_vote(qs, self.request)

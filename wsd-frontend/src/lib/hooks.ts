@@ -59,6 +59,10 @@ export function useFormState<T>(initialState: T) {
   const [formState, setFormState] = useState<T>(initialState)
   const [formErrors, setFormErrors] = useState<Partial<Record<keyof T, string[]>> & { non_field_errors?: string[] }>()
 
+  function resetFormState() {
+    setFormState(initialState)
+  }
+
   type InputEventType = React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
 
   function handleFormState<K extends keyof T, HandlerInputType>({
@@ -97,5 +101,6 @@ export function useFormState<T>(initialState: T) {
     handleFormStateValue,
     handleFormStateEvent,
     handleFormStateOnClick,
+    resetFormState,
   }
 }
