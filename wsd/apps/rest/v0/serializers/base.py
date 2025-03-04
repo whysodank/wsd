@@ -110,7 +110,9 @@ def s(serializer):
                 serializer_class = import_string(serializer)
             except ImportError:
                 serializer_class = import_string(prefix + serializer)
-            return serializer_class(*serializer_args, read_only=True, required=False, **serializer_kwargs)
+            serializer_kwargs.setdefault("read_only", True)
+            serializer_kwargs.setdefault("required", False)
+            return serializer_class(*serializer_args, **serializer_kwargs)
 
         return serializer_returning_inner_function
 

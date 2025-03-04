@@ -16,20 +16,28 @@ class TagQuerySet(models.QuerySet):
         return list(self.all().values_list("name", flat=True))
 
     def get_tag(self, **kwargs):
-        return self.get_or_create(**kwargs)[0]
+        return self.create(**kwargs)
+
+    def create(self, **kwargs):
+        if tag := self.filter(name=kwargs.get("name")).first():  # NOQA
+            return tag
+        return super().create(**kwargs)
+
+    def bulk_create(self, objs, **kwargs):
+        return self.filter(id__in=[self.get_tag(name=obj.name).id for obj in objs])
 
 
 class TagManager(Manager.from_queryset(TagQuerySet)):
     def from_list(self, tag_list):
-        tag_objects = [self.model(name=tag) for tag in tag_list]
-        return self.model.objects.bulk_create(tag_objects, ignore_conflicts=True)
+        tag_ids = [self.get_tag(name=tag).id for tag in tag_list]
+        return self.filter(pk__in=tag_ids)  # NOQA
 
 
 @lru_cache(maxsize=None)
 def create_tag_class(klass):
     class Tag(BaseModel):
         objects = TagManager()
-        REPR = "{self.name}"
+        REPR = "<Tag: {self.name}>"
         name = models.CharField(
             max_length=100,
             verbose_name=_("Name"),
@@ -37,6 +45,16 @@ def create_tag_class(klass):
             validators=[RegexValidator(TAG_NAME_REGEX, TAG_NAME_REGEX_ERROR_MESSAGE)],
             unique=True,
         )
+
+        def save(self, *args, **kwargs):
+            if tag := self.__class__.objects.filter(name=self.name).first():  # NOQA
+                return tag
+            return super().save(*args, **kwargs)
+
+        def __len__(self):
+            # Hack for length validators to work on this,
+            # Required for tags.drf TagSerializer
+            return len(self.name)
 
         class Meta:
             abstract = True

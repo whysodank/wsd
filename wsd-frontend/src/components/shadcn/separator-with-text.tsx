@@ -1,6 +1,6 @@
 export function SeparatorWithText({ text }: { text: string }) {
   return (
-    <div className="relative">
+    <div className="relative w-full">
       <div className="absolute inset-0 flex items-center">
         <span className="w-full border-t" />
       </div>

@@ -151,20 +151,6 @@ paths:
         schema:
           type: string
           format: uuid
-      - in: query
-        name: vote
-        schema:
-          type: integer
-          enum:
-          - -1
-          - 1
-        description: |-
-          * `1` - Upvote
-          * `-1` - Downvote
-      - in: query
-        name: vote__isnull
-        schema:
-          type: boolean
       tags:
       - post-comments
       security:
@@ -1653,10 +1639,6 @@ components:
             ]
         }
       properties:
-        user:
-          type: string
-          format: uuid
-          description: User who wrote this comment.
         body:
           type: string
           minLength: 1
@@ -1691,8 +1673,6 @@ components:
         name:
           type: string
           minLength: 1
-          description: The tag's name, the tag itself.
-          pattern: ^[a-zA-Z0-9_.-]*$
           maxLength: 100
     PatchedPostUpdateRequest:
       type: object
@@ -1721,10 +1701,6 @@ components:
             ]
         }
       properties:
-        user:
-          type: string
-          format: uuid
-          description: User who posted this post.
         title:
           type: string
           minLength: 1
@@ -1733,7 +1709,13 @@ components:
         image:
           type: string
           format: binary
-          description: The post itself.
+          description: Image(jpeg, jpg, png, gif, webp) in base64 format
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 100
     PatchedUserRequest:
       type: object
       description: |-
@@ -1809,6 +1791,7 @@ components:
         user:
           type: string
           format: uuid
+          readOnly: true
           description: User who posted this post.
         title:
           type: string
@@ -1817,13 +1800,12 @@ components:
         image:
           type: string
           format: uri
-          description: The post itself.
+          description: Image(jpeg, jpg, png, gif, webp) in base64 format
         tags:
           type: array
           items:
             type: string
-            format: uuid
-          readOnly: true
+            maxLength: 100
         vote:
           readOnly: true
           nullable: true
@@ -1896,6 +1878,7 @@ components:
         user:
           type: string
           format: uuid
+          readOnly: true
           description: User who wrote this comment.
         post:
           type: string
@@ -2028,10 +2011,6 @@ components:
             ]
         }
       properties:
-        user:
-          type: string
-          format: uuid
-          description: User who wrote this comment.
         post:
           type: string
           format: uuid
@@ -2043,7 +2022,6 @@ components:
       required:
       - body
       - post
-      - user
     PostCommentUpdateRequest:
       type: object
       description: |-
@@ -2071,17 +2049,12 @@ components:
             ]
         }
       properties:
-        user:
-          type: string
-          format: uuid
-          description: User who wrote this comment.
         body:
           type: string
           minLength: 1
           description: The actual comment.
       required:
       - body
-      - user
     PostDestroyError:
       type: object
       properties:
@@ -2194,10 +2167,6 @@ components:
             ]
         }
       properties:
-        user:
-          type: string
-          format: uuid
-          description: User who posted this post.
         title:
           type: string
           minLength: 1
@@ -2206,11 +2175,17 @@ components:
         image:
           type: string
           format: binary
-          description: The post itself.
+          description: Image(jpeg, jpg, png, gif, webp) in base64 format
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 100
       required:
       - image
+      - tags
       - title
-      - user
     PostTag:
       type: object
       description: |-
@@ -2252,8 +2227,6 @@ components:
           readOnly: true
         name:
           type: string
-          description: The tag's name, the tag itself.
-          pattern: ^[a-zA-Z0-9_.-]*$
           maxLength: 100
       required:
       - created_at
@@ -2333,8 +2306,6 @@ components:
         name:
           type: string
           minLength: 1
-          description: The tag's name, the tag itself.
-          pattern: ^[a-zA-Z0-9_.-]*$
           maxLength: 100
       required:
       - name
@@ -2368,8 +2339,6 @@ components:
         name:
           type: string
           minLength: 1
-          description: The tag's name, the tag itself.
-          pattern: ^[a-zA-Z0-9_.-]*$
           maxLength: 100
       required:
       - name
@@ -2400,10 +2369,6 @@ components:
             ]
         }
       properties:
-        user:
-          type: string
-          format: uuid
-          description: User who posted this post.
         title:
           type: string
           minLength: 1
@@ -2412,11 +2377,17 @@ components:
         image:
           type: string
           format: binary
-          description: The post itself.
+          description: Image(jpeg, jpg, png, gif, webp) in base64 format
+        tags:
+          type: array
+          items:
+            type: string
+            minLength: 1
+            maxLength: 100
       required:
       - image
+      - tags
       - title
-      - user
     ProtectedElement:
       type: object
       properties:

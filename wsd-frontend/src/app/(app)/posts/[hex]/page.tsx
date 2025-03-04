@@ -72,29 +72,31 @@ export default async function PostPage({
           <div className="w-4/5 min-h-[130vh]">
             <Meme post={post_} withTags fullScreen />
             <Separator className="max-sm:w-[calc(100%-8px)] w-full max-w-full" />
-            <Overlay breakpoint="md">
-              <OverlayTrigger>
-                <Button variant="ghost" className="px-0 hover:bg-transparent">
-                  <p className="font-medium text-muted-foreground hover:underline">Ordering: {currentOrdering}</p>
-                </Button>
-              </OverlayTrigger>
-              <OverlayContent align="start" side="bottom">
-                <OverlayTitle className="hidden">Ordering</OverlayTitle>
-                <div className="flex flex-col">
-                  {getKeys(orderingLabels).map((key) => (
-                    <OverlayClose key={key} asChild>
-                      <Link
-                        href={newOrderingHref(key)}
-                        className={cn(buttonVariants({ variant: 'ghost', className: 'w-full justify-start' }))}
-                        scroll={false}
-                      >
-                        {orderingLabels[key]}
-                      </Link>
-                    </OverlayClose>
-                  ))}
-                </div>
-              </OverlayContent>
-            </Overlay>
+            {wsd.hasResults(comments) && (
+              <Overlay breakpoint="md">
+                <OverlayTrigger>
+                  <Button variant="ghost" className="px-0 hover:bg-transparent">
+                    <p className="font-medium text-muted-foreground hover:underline">Ordering: {currentOrdering}</p>
+                  </Button>
+                </OverlayTrigger>
+                <OverlayContent align="start" side="bottom">
+                  <OverlayTitle className="hidden">Ordering</OverlayTitle>
+                  <div className="flex flex-col">
+                    {getKeys(orderingLabels).map((key) => (
+                      <OverlayClose key={key} asChild>
+                        <Link
+                          href={newOrderingHref(key)}
+                          className={cn(buttonVariants({ variant: 'ghost', className: 'w-full justify-start' }))}
+                          scroll={false}
+                        >
+                          {orderingLabels[key]}
+                        </Link>
+                      </OverlayClose>
+                    ))}
+                  </div>
+                </OverlayContent>
+              </Overlay>
+            )}
             {wsd.hasNoResult(comments) && (
               <div className="flex w-full justify-center items-center p-4 text-muted-foreground">
                 Be the first one to comment!

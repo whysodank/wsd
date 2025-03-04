@@ -7,6 +7,9 @@ export async function LeftColumn() {
   return (
     <div className="w-full">
       <div className="pb-4 flex flex-col gap-1">
+        <CategoryLink href={{ pathname: 'categories/home' }} icon={<Icons.Home size={16} />}>
+          Home
+        </CategoryLink>
         <CategoryLink href={{ pathname: 'categories/hot' }} icon={<Icons.Flame size={16} />}>
           Hot
         </CategoryLink>
@@ -15,6 +18,9 @@ export async function LeftColumn() {
         </CategoryLink>
         <CategoryLink href={{ pathname: 'categories/conversational' }} icon={<Icons.MessagesSquare size={16} />}>
           Conversational
+        </CategoryLink>
+        <CategoryLink href={{ pathname: 'categories/recent ' }} icon={<Icons.Clock size={16} />}>
+          Recent
         </CategoryLink>
         <Separator />
         <CategoryLink href={{ pathname: 'categories/geek' }} icon={<Icons.Glasses size={16} />}>

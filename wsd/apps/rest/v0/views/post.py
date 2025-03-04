@@ -1,5 +1,6 @@
 from apps.core.models import Post, PostVote
 from apps.rest.utils.filters import make_filters
+from apps.rest.utils.permissions import IsSuperUser, ReadOnly, is_owner, prevent_actions
 from apps.rest.utils.schema_helpers import fake_serializer
 from apps.rest.v0.serializers import PostSerializer
 from django.db.models import Count, IntegerField, OuterRef, Q, Subquery, Value
@@ -16,6 +17,12 @@ class PostViewSet(BaseModelViewSet):
     endpoint = "posts"
     model = Post
     serializer_class = PostSerializer
+
+    permission_classes = [
+        IsSuperUser
+        | (IsAuthenticated & (is_owner("user") | prevent_actions("update", "partial_update", "destroy")))
+        | ReadOnly
+    ]
 
     declared_filters = {
         # "vote": ChoiceFilter(choices=PostVote.VoteType.choices),
@@ -57,9 +64,9 @@ class PostViewSet(BaseModelViewSet):
             queryset = queryset.annotate(vote=Subquery(user_vote, output_field=IntegerField(null=True)))
         return queryset
 
-    @django_to_drf_validation_error
+    # @django_to_drf_validation_error
     def perform_create(self, serializer):
-        serializer.save(author=self.request.user)
+        serializer.save(user=self.request.user)
 
     @extend_schema(
         summary=f"Upvote Post",

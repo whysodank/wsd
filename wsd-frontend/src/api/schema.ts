@@ -465,11 +465,6 @@ export interface components {
      *         ]
      *     } */
     PatchedPostCommentUpdateRequest: {
-      /**
-       * Format: uuid
-       * @description User who wrote this comment.
-       */
-      user?: string
       /** @description The actual comment. */
       body?: string
     }
@@ -497,7 +492,6 @@ export interface components {
      *         ]
      *     } */
     PatchedPostTagUpdateRequest: {
-      /** @description The tag's name, the tag itself. */
       name?: string
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
@@ -524,18 +518,14 @@ export interface components {
      *         ]
      *     } */
     PatchedPostUpdateRequest: {
-      /**
-       * Format: uuid
-       * @description User who posted this post.
-       */
-      user?: string
       /** @description Title of the post. */
       title?: string
       /**
        * Format: binary
-       * @description The post itself.
+       * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
       image?: string
+      tags?: string[]
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -598,15 +588,15 @@ export interface components {
        * Format: uuid
        * @description User who posted this post.
        */
-      user: string
+      readonly user: string
       /** @description Title of the post. */
       title: string
       /**
        * Format: uri
-       * @description The post itself.
+       * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
       image: string
-      readonly tags: string[]
+      tags: string[]
       readonly vote: (components['schemas']['VoteEnum'] | components['schemas']['NullEnum']) | null
       readonly positive_vote_count: number | null
       readonly negative_vote_count: number | null
@@ -646,7 +636,7 @@ export interface components {
        * Format: uuid
        * @description User who wrote this comment.
        */
-      user: string
+      readonly user: string
       /**
        * Format: uuid
        * @description The post this comment is for.
@@ -699,11 +689,6 @@ export interface components {
     PostCommentRequest: {
       /**
        * Format: uuid
-       * @description User who wrote this comment.
-       */
-      user: string
-      /**
-       * Format: uuid
        * @description The post this comment is for.
        */
       post: string
@@ -734,11 +719,6 @@ export interface components {
      *         ]
      *     } */
     PostCommentUpdateRequest: {
-      /**
-       * Format: uuid
-       * @description User who wrote this comment.
-       */
-      user: string
       /** @description The actual comment. */
       body: string
     }
@@ -783,18 +763,14 @@ export interface components {
      *         ]
      *     } */
     PostRequest: {
-      /**
-       * Format: uuid
-       * @description User who posted this post.
-       */
-      user: string
       /** @description Title of the post. */
       title: string
       /**
        * Format: binary
-       * @description The post itself.
+       * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
       image: string
+      tags: string[]
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -826,7 +802,6 @@ export interface components {
       readonly created_at: string
       /** Format: date-time */
       readonly updated_at: string
-      /** @description The tag's name, the tag itself. */
       name: string
     }
     PostTagDestroyError: {
@@ -863,7 +838,6 @@ export interface components {
      *         ]
      *     } */
     PostTagRequest: {
-      /** @description The tag's name, the tag itself. */
       name: string
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
@@ -890,7 +864,6 @@ export interface components {
      *         ]
      *     } */
     PostTagUpdateRequest: {
-      /** @description The tag's name, the tag itself. */
       name: string
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
@@ -917,18 +890,14 @@ export interface components {
      *         ]
      *     } */
     PostUpdateRequest: {
-      /**
-       * Format: uuid
-       * @description User who posted this post.
-       */
-      user: string
       /** @description Title of the post. */
       title: string
       /**
        * Format: binary
-       * @description The post itself.
+       * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
       image: string
+      tags: string[]
     }
     ProtectedElement: {
       /** Format: uuid */
@@ -1134,10 +1103,6 @@ export interface operations {
         updated_at__lt?: string
         updated_at__lte?: string
         user?: string
-        /** @description * `1` - Upvote
-         *     * `-1` - Downvote */
-        vote?: -1 | 1
-        vote__isnull?: boolean
       }
       header?: never
       path?: never

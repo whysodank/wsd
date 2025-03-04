@@ -2,13 +2,14 @@ import Link from 'next/link'
 
 import * as Icons from 'lucide-react'
 
-import { Button } from '@/components/shadcn/button'
+import { Button, buttonVariants } from '@/components/shadcn/button'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/shadcn/sheet'
 import { MobileNav } from '@/components/wsd/Header/MobileNav'
 import { AdvancedSearch } from '@/components/wsd/Header/client'
 
 import config from '@/config'
 import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { cn } from '@/lib/utils'
 
 export async function Header() {
   const wsd = sUseWSDAPI()
@@ -27,17 +28,28 @@ export async function Header() {
             <AdvancedSearch />
           </div>
         </div>
-        <div className="xl:w-1/6 flex justify-end">
+        <div className="xl:w-1/6 flex justify-end gap-2">
           {(await wsd.isAuthenticated()) ? (
-            <Link prefetch={true} href={{ pathname: '/profile/details' }}>
-              <Button
-                variant="ghost"
-                className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 gap-2"
+            <>
+              <Link
+                href={{ pathname: `/create-post/` }}
+                prefetch={true}
+                className={cn(buttonVariants({ variant: 'ghost', className: 'max-md:hidden flex gap-2' }))}
+                aria-label="New Post"
               >
-                <Icons.User className="h-6 w-6" />
-                <span className="max-xl:hidden">Profile</span>
-              </Button>
-            </Link>
+                <Icons.Plus size={20} className="h-6 w-6" />
+                <span className="max-xl:hidden">New Post</span>
+              </Link>
+              <Link prefetch={true} href={{ pathname: '/profile/details' }}>
+                <Button
+                  variant="ghost"
+                  className="px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 gap-2"
+                >
+                  <Icons.User className="h-6 w-6" />
+                  <span className="max-xl:hidden">Profile</span>
+                </Button>
+              </Link>
+            </>
           ) : (
             <>
               <div className="hidden lg:contents">

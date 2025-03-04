@@ -27,3 +27,4 @@ memoization==0.4.0
 pyuwsgi==2.0.26
 ipython==8.29.0
 ipdb==0.13.13
+drf-extra-fields==3.7.0
