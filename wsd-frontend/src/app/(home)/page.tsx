@@ -14,7 +14,7 @@ export default async function Home() {
     <div className="flex flex-col gap-2 items-center">
       {data?.results.map((post) => (
         <div className="contents" key={post.id}>
-          <Meme post={includesType(includesType({ ...post }, 'user', 'User'), 'tags', 'PostTag', true)} />
+          <Meme post={includesType(includesType({ ...post }, 'user', 'User'), 'tags', 'PostTag', true)} withTags />
           <Separator className="max-sm:w-[calc(100%-8px)] w-5/6" />
         </div>
       ))}
