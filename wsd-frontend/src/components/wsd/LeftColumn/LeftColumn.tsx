@@ -1,5 +1,6 @@
 import * as Icons from 'lucide-react'
 
+import { RawSVGIcon } from '@/components/shadcn/raw-svg-icon'
 import { Separator } from '@/components/shadcn/separator'
 import CategoryLink from '@/components/wsd/CategoryLink'
 
@@ -35,7 +36,7 @@ export async function LeftColumn() {
             // TODO: we probably should use an html parser here so that we don't kill the front-end
             // in case we mess up some icon svg in the admin panel
             // html-react-parser && dompurify
-            icon={<div className="w-4 h-4" dangerouslySetInnerHTML={{ __html: category.icon }} />}
+            icon={<RawSVGIcon svg={category.icon} />}
           >
             {category.name}
           </CategoryLink>

@@ -1,4 +1,6 @@
-export function SeparatorWithText({ text }: { text: string }) {
+'use server'
+
+export async function SeparatorWithText({ text }: { text: string }) {
   return (
     <div className="relative w-full">
       <div className="absolute inset-0 flex items-center">

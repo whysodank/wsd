@@ -12,15 +12,17 @@ import _ from 'lodash'
 import { Button } from '@/components/shadcn/button'
 import FileInputButton from '@/components/shadcn/file-input-button'
 import { Input } from '@/components/shadcn/input'
+import { RawSVGIcon } from '@/components/shadcn/raw-svg-icon'
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/shadcn/select'
 
+import { APIType } from '@/api'
 import { useFormState } from '@/lib/hooks'
 import { useWSDAPI } from '@/lib/serverHooks'
 import { fileToBase64, uuidV4toHEX } from '@/lib/utils'
 
 import { Tag, TagInput } from 'emblor'
 
-export default function NewPostForm({ categories }: { categories: { name: string; value: string }[] }) {
+export default function NewPostForm({ categories }: { categories: APIType<'PostCategory'>[] }) {
   const wsd = useWSDAPI()
   const router = useRouter()
 
@@ -92,8 +94,11 @@ export default function NewPostForm({ categories }: { categories: { name: string
               <SelectContent>
                 <SelectGroup>
                   {categories.map((category) => (
-                    <SelectItem value={category.value} key={category.value}>
-                      {category.name}
+                    <SelectItem value={category.id} key={category.name}>
+                      <div className="flex flex-row gap-2 items-center">
+                        <RawSVGIcon svg={category.icon} />
+                        {category.name}
+                      </div>
                     </SelectItem>
                   ))}
                 </SelectGroup>
