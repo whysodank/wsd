@@ -66,6 +66,8 @@ export class WSDAPI {
   // In this order:
   // users
   // posts
+  // post-categories
+  // post-tags
   // post-comments
   public async users(filters?: APIQuery<'/v0/users/'>) {
     return await this.client.GET('/v0/users/', { params: { query: filters } })
@@ -123,39 +125,55 @@ export class WSDAPI {
     return await this.client.POST('/v0/posts/{id}/unvote/', { params: { path: { id } } })
   }
 
-  public async comments(filters?: APIQuery<'/v0/post-comments/'>) {
+  public async postCategories(filters?: APIQuery<'/v0/post-categories/'>) {
+    return await this.client.GET('/v0/post-categories/', { params: { query: filters } })
+  }
+
+  public async postCategory(id: string, query?: APIQuery<'/v0/post-categories/{id}/'>) {
+    return await this.client.GET('/v0/post-categories/{id}/', { params: { path: { id }, query } })
+  }
+
+  public async postTags(filters?: APIQuery<'/v0/post-tags/'>) {
+    return await this.client.GET('/v0/post-tags/', { params: { query: filters } })
+  }
+
+  public async postTag(id: string, query?: APIQuery<'/v0/post-tags/'>) {
+    return await this.client.GET('/v0/post-tags/{id}/', { params: { path: { id }, query } })
+  }
+
+  public async postComments(filters?: APIQuery<'/v0/post-comments/'>) {
     return await this.client.GET('/v0/post-comments/', { params: { query: filters } })
   }
 
-  public async comment(id: string, query?: APIQuery<'/v0/post-comments/{id}/'>) {
+  public async postComment(id: string, query?: APIQuery<'/v0/post-comments/{id}/'>) {
     return await this.client.GET('/v0/post-comments/{id}/', { params: { path: { id }, query } })
   }
 
-  public async createComment(data: APIType<'PostCommentRequest'>) {
+  public async createPostComment(data: APIType<'PostCommentRequest'>) {
     return await this.client.POST('/v0/post-comments/', { body: data })
   }
 
-  public async deleteComment(id: string) {
+  public async deletePostComment(id: string) {
     return await this.client.DELETE('/v0/post-comments/{id}/', { params: { path: { id } } })
   }
 
-  public async putComment(id: string, data: APIType<'PostCommentRequest'>) {
+  public async putPostComment(id: string, data: APIType<'PostCommentRequest'>) {
     return await this.client.PUT('/v0/post-comments/{id}/', { params: { path: { id } }, body: data })
   }
 
-  public async patchComment(id: string, data: APIType<'PatchedPostCommentUpdateRequest'>) {
+  public async patchPostComment(id: string, data: APIType<'PatchedPostCommentUpdateRequest'>) {
     return await this.client.PATCH('/v0/post-comments/{id}/', { params: { path: { id } }, body: data })
   }
 
-  public async upvoteComment(id: string) {
+  public async upvotePostComment(id: string) {
     return await this.client.POST('/v0/post-comments/{id}/upvote/', { params: { path: { id } } })
   }
 
-  public async downvoteComment(id: string) {
+  public async downvotePostComment(id: string) {
     return await this.client.POST('/v0/post-comments/{id}/downvote/', { params: { path: { id } } })
   }
 
-  public async unvoteComment(id: string) {
+  public async unvotePostComment(id: string) {
     return await this.client.POST('/v0/post-comments/{id}/unvote/', { params: { path: { id } } })
   }
 }

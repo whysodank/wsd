@@ -6,6 +6,7 @@ from django_lifecycle import BEFORE_CREATE, LifecycleModel, hook
 
 
 class BaseModel(LifecycleModel):
+    STR = None
     REPR = "{self.__class__.__name__}(id={self.id})"
     FIELDS = ["id", "slug", "created_at", "updated_at"]
 
@@ -40,6 +41,9 @@ class BaseModel(LifecycleModel):
     def __default_repr(self):
         return self.REPR.format(self=self)
 
+    def __default_str(self):
+        return self.STR.format(self=self) if self.STR else self.__default_repr()
+
     def update(self, **kwargs):
         skip_hooks = kwargs.pop("_skip_hooks", False)
         for key, val in kwargs.items():
@@ -53,7 +57,8 @@ class BaseModel(LifecycleModel):
     def as_queryset(self):
         return self.__class__.objects.filter(id=self.id)
 
-    __repr__ = __str__ = __default_repr
+    __repr__ = __default_repr
+    __str__ = __default_str
 
     class Meta:
         abstract = True

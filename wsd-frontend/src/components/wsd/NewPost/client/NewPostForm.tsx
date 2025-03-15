@@ -2,6 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 
+import * as React from 'react'
 import { SetStateAction, useState } from 'react'
 
 import * as Icons from 'lucide-react'
@@ -11,6 +12,7 @@ import _ from 'lodash'
 import { Button } from '@/components/shadcn/button'
 import FileInputButton from '@/components/shadcn/file-input-button'
 import { Input } from '@/components/shadcn/input'
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/shadcn/select'
 
 import { useFormState } from '@/lib/hooks'
 import { useWSDAPI } from '@/lib/serverHooks'
@@ -18,7 +20,7 @@ import { fileToBase64, uuidV4toHEX } from '@/lib/utils'
 
 import { Tag, TagInput } from 'emblor'
 
-export default function NewPostForm() {
+export default function NewPostForm({ categories }: { categories: { name: string; value: string }[] }) {
   const wsd = useWSDAPI()
   const router = useRouter()
 
@@ -48,10 +50,12 @@ export default function NewPostForm() {
     setFormErrors: setPostErrors,
   } = useFormState<{
     title: string
+    category: string
     image: string
     tags: string[]
   }>({
     title: '',
+    category: '',
     image: '',
     tags: [],
   })
@@ -80,6 +84,25 @@ export default function NewPostForm() {
             onChange={handlePostStateEvent('title')}
             errorText={postErrors?.title?.join('\n')}
           />
+          <>
+            <Select value={postState.category} onValueChange={handlePostStateValue('category')} name="category">
+              <SelectTrigger className="w-full">
+                <SelectValue placeholder="Category" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  {categories.map((category) => (
+                    <SelectItem value={category.value} key={category.value}>
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            {postErrors?.category?.join('\n') && (
+              <span className="text-sm text-destructive whitespace-pre-line">{postErrors?.category?.join('\n')}</span>
+            )}
+          </>
           <div className="border-2 border-dashed rounded-lg p-12 text-center">
             <div className="flex flex-col items-center gap-4">
               <div className="p-4 bg-muted rounded-full">

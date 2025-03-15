@@ -4,7 +4,7 @@ from apps.rest.utils.permissions import IsSuperUser, ReadOnly, is_owner, prevent
 from apps.rest.utils.schema_helpers import fake_serializer
 from apps.rest.v0.serializers import PostSerializer
 from django.db.models import Count, IntegerField, OuterRef, Q, Subquery, Value
-from django_filters import NumberFilter
+from django_filters import BooleanFilter, ChoiceFilter, NumberFilter
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
@@ -25,8 +25,8 @@ class PostViewSet(BaseModelViewSet):
     ]
 
     declared_filters = {
-        # "vote": ChoiceFilter(choices=PostVote.VoteType.choices),
-        # "vote__isnull": BooleanFilter(field_name="vote", lookup_expr="isnull"),
+        "vote": ChoiceFilter(choices=PostVote.VoteType.choices),
+        "vote__isnull": BooleanFilter(field_name="vote", lookup_expr="isnull"),
         **make_filters("positive_vote_count", NumberFilter, ["exact", "gt", "gte", "lt", "lte"]),
         **make_filters("negative_vote_count", NumberFilter, ["exact", "gt", "gte", "lt", "lte"]),
         **make_filters("comment_count", NumberFilter, ["exact", "gt", "gte", "lt", "lte"]),
@@ -37,6 +37,8 @@ class PostViewSet(BaseModelViewSet):
         "title": ["exact"],
         "created_at": ["exact", "gt", "gte", "lt", "lte"],
         "updated_at": ["exact", "gt", "gte", "lt", "lte"],
+        "tags": ["exact", "isnull"],
+        "category": ["exact", "isnull"],
     }
 
     ordering_fields = [
@@ -46,6 +48,17 @@ class PostViewSet(BaseModelViewSet):
         "negative_vote_count",
         "comment_count",
     ]
+
+    update_schema = fake_serializer(
+        name="PostUpdateSerializer",
+        base=PostSerializer,
+        remove_fields=["category"],
+    )
+
+    crud_extend_default_schema = {
+        "update": {"request": update_schema},
+        "partial_update": {"request": update_schema},
+    }
 
     def get_queryset(self):
         qs = Post.objects.annotate(
@@ -64,7 +77,7 @@ class PostViewSet(BaseModelViewSet):
             queryset = queryset.annotate(vote=Subquery(user_vote, output_field=IntegerField(null=True)))
         return queryset
 
-    # @django_to_drf_validation_error
+    @django_to_drf_validation_error
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
 

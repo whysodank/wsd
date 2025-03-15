@@ -61,7 +61,7 @@ export default async function PostPage({
   if (!_.isUndefined(postId)) {
     const { data: post } = await wsd.post(postId, { include: 'tags,user' })
     if (!_.isUndefined(post)) {
-      const { data: comments } = await wsd.comments({
+      const { data: comments } = await wsd.postComments({
         post: post.id,
         include: 'user',
         ordering: searchParams?.ordering || 'positive_vote_count',

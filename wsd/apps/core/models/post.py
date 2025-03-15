@@ -12,6 +12,8 @@ from ume import average_hash, colorhash, cryptographic_hash, dhash, get_text_fro
 
 @track_events()
 class Post(BaseModel):
+    REPR = "<Post: {self.title}>"
+    STR = "{self.title}"
     objects = PostQuerySet.as_manager()
     # DO NOT CHANGE HASH_SIZE, HASH_TEXT_SIZE, BINBITS_SIZE, or BINBITS_HEX_SIZE
     HASH_SIZE = 8
@@ -22,7 +24,6 @@ class Post(BaseModel):
     EXTRACTED_TEXT_FIELDS = ["extracted_text_raw", "extracted_text_normalized"]
     POST_DIRECTORY = "posts"
     EXTRACTED_TEXT_MAX_LENGTH = 10000
-    REPR = "{self.title}"
 
     # Post related fields
     user = models.ForeignKey(
@@ -37,12 +38,20 @@ class Post(BaseModel):
         verbose_name=_("Title"),
         help_text=_("Title of the post."),
     )
+    category = models.ForeignKey(
+        "core.PostCategory",
+        on_delete=models.SET_NULL,
+        related_name="posts",
+        null=True,
+        blank=True,
+        help_text=_("Category of the post."),
+    )
     image = models.ImageField(
         upload_to=POST_DIRECTORY,
         verbose_name=_("Image"),
         help_text=_("The post itself."),
     )
-    tags = tags()
+    tags = tags(related_name="posts")
 
     # Feedback from the user
     comments = comments()

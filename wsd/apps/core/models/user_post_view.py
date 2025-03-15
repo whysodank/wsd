@@ -7,6 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 @track_events()
 class UserPostView(BaseModel):
+    REPR = "<UserPostView: {self.post} by {self.user}>"
     user = models.ForeignKey(
         get_user_model(),
         on_delete=models.CASCADE,

@@ -12,6 +12,8 @@ VOTE_CLASS_ATTRIBUTE = "vote_class"
 @lru_cache(maxsize=None)
 def create_vote_class(klass, name):
     class Vote(BaseModel):
+        REPR = "<{self.__class__.__name__}: {self.post} by {self.user}>"
+
         class VoteType(models.IntegerChoices):
             UPVOTE = 1, _("Upvote")
             DOWNVOTE = -1, _("Downvote")

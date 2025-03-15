@@ -4,6 +4,46 @@
  */
 
 export interface paths {
+  '/v0/post-categories/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * List Post Categories
+     * @description List post categories with optional filters
+     */
+    get: operations['post_categories_list']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/post-categories/{id}/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Retrieve Post Category
+     * @description Retrieve post category by id
+     */
+    get: operations['post_categories_retrieve']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/v0/post-comments/': {
     parameters: {
       query?: never
@@ -369,6 +409,24 @@ export interface components {
     }
     /** @enum {unknown} */
     NullEnum: null
+    PaginatedPostCategoryList: {
+      /**
+       * @description Total number of items available.
+       * @example 1102
+       */
+      count: number
+      /**
+       * @description Number of results to return per page.
+       * @example 100
+       */
+      page_size: number
+      /**
+       * @description Total number of pages.
+       * @example 17
+       */
+      total_pages: number
+      results: components['schemas']['PostCategory'][]
+    }
     PaginatedPostCommentList: {
       /**
        * @description Total number of items available.
@@ -596,11 +654,56 @@ export interface components {
        * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
       image: string
+      /**
+       * Format: uuid
+       * @description Category of the post.
+       */
+      category?: string | null
       tags: string[]
       readonly vote: (components['schemas']['VoteEnum'] | components['schemas']['NullEnum']) | null
       readonly positive_vote_count: number | null
       readonly negative_vote_count: number | null
       readonly comment_count: number | null
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PostCategory: {
+      /** Format: uuid */
+      readonly id: string
+      /** Format: date-time */
+      readonly created_at: string
+      /** Format: date-time */
+      readonly updated_at: string
+      /** @description Name of the category. */
+      readonly name: string
+      /**
+       * Slug/Handle
+       * @description Slug/Handle of the category.
+       */
+      readonly handle: string
+      /** @description Icon for the category, in svg format. */
+      readonly icon: string
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -732,6 +835,7 @@ export interface components {
       readonly user: string[]
       readonly title: string[]
       readonly image: string[]
+      readonly category: string[]
       readonly tags: string[]
       readonly vote: string[]
       readonly positive_vote_count: string[]
@@ -770,6 +874,11 @@ export interface components {
        * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
       image: string
+      /**
+       * Format: uuid
+       * @description Category of the post.
+       */
+      category?: string | null
       tags: string[]
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
@@ -1062,6 +1171,88 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  post_categories_list: {
+    parameters: {
+      query?: {
+        include?: string
+        ordering?: string
+        /** @description A page number within the paginated result set. */
+        page?: number
+        /** @description Number of results to return per page. */
+        page_size?: number
+        /** @description A search term. */
+        search?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedPostCategoryList']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  post_categories_retrieve: {
+    parameters: {
+      query?: {
+        include?: string
+      }
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post Category. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PostCategory']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
   post_comments_list: {
     parameters: {
       query?: {
@@ -1731,6 +1922,8 @@ export interface operations {
   posts_list: {
     parameters: {
       query?: {
+        category?: string
+        category__isnull?: boolean
         comment_count?: number
         comment_count__gt?: number
         comment_count__gte?: number
@@ -1741,7 +1934,7 @@ export interface operations {
         created_at__gte?: string
         created_at__lt?: string
         created_at__lte?: string
-        include?: 'tags' | 'tags,user' | 'user'
+        include?: 'category' | 'tags' | 'tags,category' | 'tags,user' | 'tags,user,category' | 'user' | 'user,category'
         negative_vote_count?: number
         negative_vote_count__gt?: number
         negative_vote_count__gte?: number
@@ -1769,6 +1962,8 @@ export interface operations {
         positive_vote_count__lte?: number
         /** @description A search term. */
         search?: string
+        tags?: string[]
+        tags__isnull?: boolean
         title?: string
         updated_at?: string
         updated_at__gt?: string
@@ -1776,6 +1971,10 @@ export interface operations {
         updated_at__lt?: string
         updated_at__lte?: string
         user?: string
+        /** @description * `1` - Upvote
+         *     * `-1` - Downvote */
+        vote?: -1 | 1
+        vote__isnull?: boolean
       }
       header?: never
       path?: never
@@ -1859,7 +2058,7 @@ export interface operations {
   posts_retrieve: {
     parameters: {
       query?: {
-        include?: 'tags' | 'tags,user' | 'user'
+        include?: 'category' | 'tags' | 'tags,category' | 'tags,user' | 'tags,user,category' | 'user' | 'user,category'
       }
       header?: never
       path: {

@@ -7,6 +7,8 @@ from django.utils.translation import gettext_lazy as _
 
 @track_events()
 class OriginalSourceClaim(BaseModel):
+    REPR = "<Claim: {self.post} by {self.user}>"
+    STR = "Claim on {self.post} by {self.user}"
     COMMENT_MAX_LENGTH = 1000
 
     class OriginalSourceClaimStatus(models.TextChoices):
@@ -49,6 +51,7 @@ class OriginalSourceClaim(BaseModel):
     def approve(self):
         self.update(status=self.OriginalSourceClaimStatus.APPROVED)
         self.post.update(original_source=self.source)
+        self.post.reposts.update(original_source=self.source)
 
     def reject(self):
         self.update(status=self.OriginalSourceClaimStatus.REJECTED)

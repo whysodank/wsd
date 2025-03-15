@@ -7,7 +7,7 @@ from django.utils.translation import gettext_lazy as _
 
 @track_events()
 class User(UserVoteMixin, AbstractUser, BaseModel):
-    REPR = "{self.username}"
+    REPR = "<User: {self.username}>"
 
     class Meta:
         verbose_name = _("User")

@@ -31,7 +31,7 @@ export default function NewCommentForm({
 
   async function handleCommentSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
-    const data = await wsd.createComment({ body: commentState.comment, post: post.id })
+    const data = await wsd.createPostComment({ body: commentState.comment, post: post.id })
     if (data.response.ok) {
       setCommentErrors({})
       resetCommentState()

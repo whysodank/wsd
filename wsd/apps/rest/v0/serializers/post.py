@@ -35,6 +35,7 @@ class PostSerializer(BaseModelSerializer):
             "user",
             "title",
             "image",
+            "category",
             "tags",
             "vote",
             "positive_vote_count",
@@ -54,4 +55,5 @@ class PostSerializer(BaseModelSerializer):
         relational_fields = {
             "tags": s("PostTagSerializer")(many=True),
             "user": s("PublicUserSerializer")(),
+            "category": s("PostCategorySerializer")(),
         }

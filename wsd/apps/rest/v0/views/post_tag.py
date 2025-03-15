@@ -8,3 +8,4 @@ class PostTagViewSet(BaseModelViewSet):
     endpoint = "post-tags"
     model = PostTag
     serializer_class = PostTagSerializer
+    disallowed_methods = ["create", "update", "partial_update", "destroy"]

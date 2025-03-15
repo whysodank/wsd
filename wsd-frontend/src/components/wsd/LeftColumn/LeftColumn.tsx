@@ -3,7 +3,12 @@ import * as Icons from 'lucide-react'
 import { Separator } from '@/components/shadcn/separator'
 import CategoryLink from '@/components/wsd/CategoryLink'
 
+import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+
 export async function LeftColumn() {
+  const wsd = sUseWSDAPI()
+  const { data: postCategoriesData } = await wsd.postCategories()
+  const categories = postCategoriesData?.results || []
   return (
     <div className="w-full">
       <div className="pb-4 flex flex-col gap-1">
@@ -23,24 +28,18 @@ export async function LeftColumn() {
           Recent
         </CategoryLink>
         <Separator />
-        <CategoryLink href={{ pathname: 'categories/geek' }} icon={<Icons.Glasses size={16} />}>
-          Geek
-        </CategoryLink>
-        <CategoryLink href={{ pathname: 'categories/gaming' }} icon={<Icons.Gamepad2 size={16} />}>
-          Gaming
-        </CategoryLink>
-        <CategoryLink href={{ pathname: 'categories/pets' }} icon={<Icons.Dog size={16} />}>
-          Pets
-        </CategoryLink>
-        <CategoryLink href={{ pathname: 'categories/rage' }} icon={<Icons.Angry size={16} />}>
-          Rage
-        </CategoryLink>
-        <CategoryLink href={{ pathname: 'categories/dank' }} icon={<Icons.Clock9 size={16} />}>
-          Dank
-        </CategoryLink>
-        <CategoryLink href={{ pathname: 'categories/wholesome' }} icon={<Icons.Cloud size={16} />}>
-          Wholesome
-        </CategoryLink>
+        {categories.map((category) => (
+          <CategoryLink
+            href={{ pathname: `categories/${category.handle}` }}
+            key={category.handle}
+            // TODO: we probably should use an html parser here so that we don't kill the front-end
+            // in case we mess up some icon svg in the admin panel
+            // html-react-parser && dompurify
+            icon={<div className="w-4 h-4" dangerouslySetInnerHTML={{ __html: category.icon }} />}
+          >
+            {category.name}
+          </CategoryLink>
+        ))}
       </div>
     </div>
   )

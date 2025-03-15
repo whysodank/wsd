@@ -37,7 +37,7 @@ class TagManager(Manager.from_queryset(TagQuerySet)):
 def create_tag_class(klass):
     class Tag(BaseModel):
         objects = TagManager()
-        REPR = "<Tag: {self.name}>"
+        REPR = "<{self.__class__.__name__}: {self.name}>"
         name = models.CharField(
             max_length=100,
             verbose_name=_("Name"),
@@ -78,7 +78,7 @@ def create_object_tag_class(klass, name):
     klass_name = f"{klass.__name__}ObjectTag"
 
     class ObjectTag(BaseModel):
-        REPR = f'{klass_name}(tag="{{self.tag}}", post="{{self.post}}")'
+        REPR = f"<{klass_name}: {{self.post}} tagged {{self.tag}}>"
         tag = models.ForeignKey(
             create_tag_class(klass),
             on_delete=models.CASCADE,
@@ -127,12 +127,15 @@ class TagMaker:
         tag_class, tag_object_class = create_tag_class(cls), create_object_tag_class(cls, name)
         setattr(cls, self.tag_class_attribute_name, tag_class)
         setattr(cls, self.tag_through_class_attribute_name, tag_object_class)
-        m2m_field = models.ManyToManyField(tag_class, through=tag_object_class, blank=True)
+        m2m_field = models.ManyToManyField(
+            tag_class, through=tag_object_class, blank=True, related_name=self.related_name
+        )
         m2m_field.contribute_to_class(cls, name)
 
 
-def tags(tag_class_attribute_name="tag_class", tag_through_class_attribute_name="tag_through_class"):
+def tags(related_name, tag_class_attribute_name="tag_class", tag_through_class_attribute_name="tag_through_class"):
     tag_maker = TagMaker(
+        related_name=related_name,
         tag_class_attribute_name=tag_class_attribute_name,
         tag_through_class_attribute_name=tag_through_class_attribute_name,
     )

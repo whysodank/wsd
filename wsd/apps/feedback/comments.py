@@ -13,6 +13,7 @@ COMMENT_CLASS_ATTRIBUTE = "comment_class"
 @lru_cache(maxsize=None)
 def create_comment_class(klass, name, comment_min_length=0, comment_max_length=1000):
     class Comment(BaseModel):
+        REPR = "<{self.__class__.__name__}: {self.post} by {self.user}>"
         COMMENT_MIN_LENGTH = comment_min_length
         COMMENT_MAX_LENGTH = comment_max_length
 

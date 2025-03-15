@@ -9,6 +9,7 @@ class BaseAdmin(DjangoObjectActions, ModelAdmin):
     search_fields = []
     update_readonly_fields = []
     create_readonly_fields = []
+    global_readonly_fields = []
     list_filter = []
     autocomplete_list_filter = []
     list_display = []
@@ -16,6 +17,9 @@ class BaseAdmin(DjangoObjectActions, ModelAdmin):
     object_fieldsets = []
     meta_fieldsets = [[META_FIELDS, _("Meta")]]
     safe_m2m_fields = []
+    create_force_field_as_current_user = []
+    update_force_field_as_current_user = []
+    global_force_field_as_current_user = []
 
     @staticmethod
     def make_fieldset_field(*fields, name):
@@ -30,7 +34,7 @@ class BaseAdmin(DjangoObjectActions, ModelAdmin):
 
     def get_readonly_fields(self, request, obj=None):
         update, create, base = self.update_readonly_fields, self.create_readonly_fields, BaseModel.FIELDS
-        return update + base if obj else create + base
+        return (update + base if obj else create + base) + self.global_readonly_fields
 
     def get_list_display(self, request):
         return self.list_display + BaseModel.FIELDS
@@ -48,3 +52,10 @@ class BaseAdmin(DjangoObjectActions, ModelAdmin):
         else:
             form_field = super().formfield_for_manytomany(db_field, request, **kwargs)
         return form_field
+
+    def save_model(self, request, obj, form, change):
+        fields = self.update_force_field_as_current_user if change else self.create_force_field_as_current_user
+        fields = fields + self.global_force_field_as_current_user
+        for field in fields:
+            setattr(obj, field, request.user)
+        return super().save_model(request, obj, form, change)

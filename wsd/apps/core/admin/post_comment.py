@@ -11,3 +11,6 @@ class PostCommentAdmin(BaseAdmin):
     autocomplete_list_filter = ["user", "post"]
     list_display = ["user", "post"]
     object_fieldsets = [[["user", "post", "body"], _("Comment")]]
+    create_force_field_as_current_user = ["user"]
+    update_readonly_fields = ["body", "post"]
+    global_readonly_fields = ["user"]

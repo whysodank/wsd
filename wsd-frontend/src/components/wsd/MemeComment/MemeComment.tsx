@@ -22,7 +22,7 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
     return async () => {
       if (feedback === vote) {
         setFeedback(null)
-        await wsd.unvoteComment(comment.id)
+        await wsd.unvotePostComment(comment.id)
         setVoteCount((prev) => prev - vote)
       } else {
         setFeedback(vote)
@@ -30,9 +30,9 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
           setVoteCount((prev) => prev - feedback)
         }
         if (vote === 1) {
-          await wsd.upvoteComment(comment.id)
+          await wsd.upvotePostComment(comment.id)
         } else {
-          await wsd.downvoteComment(comment.id)
+          await wsd.downvotePostComment(comment.id)
         }
         setVoteCount((prev) => prev + vote)
       }

@@ -29,7 +29,6 @@ export const CategoryLink = React.forwardRef<
         {icon}
         <span>{children}</span>
       </div>
-      <small className="text-right break-normal">{Math.floor(Math.random() * 100) + 1}</small>
     </Link>
   )
 })

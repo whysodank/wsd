@@ -49,6 +49,7 @@ class PostCommentViewSet(BaseModelViewSet):
         base=PostCommentSerializer,
         remove_fields=["post"],
     )
+
     crud_extend_default_schema = {
         "update": {"request": update_schema},
         "partial_update": {"request": update_schema},

@@ -4,6 +4,103 @@ info:
   version: 0.1.0
   description: WSD API
 paths:
+  /v0/post-categories/:
+    get:
+      operationId: post_categories_list
+      description: List post categories with optional filters
+      summary: List Post Categories
+      parameters:
+      - in: query
+        name: include
+        schema:
+          type: string
+        explode: false
+        style: form
+      - in: query
+        name: ordering
+        schema:
+          type: string
+        explode: false
+        style: form
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      tags:
+      - post-categories
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedPostCategoryList'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+  /v0/post-categories/{id}/:
+    get:
+      operationId: post_categories_retrieve
+      description: Retrieve post category by id
+      summary: Retrieve Post Category
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post Category.
+        required: true
+      - in: query
+        name: include
+        schema:
+          type: string
+        explode: false
+        style: form
+      tags:
+      - post-categories
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PostCategory'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /v0/post-comments/:
     get:
       operationId: post_comments_list
@@ -748,6 +845,15 @@ paths:
       summary: List Posts
       parameters:
       - in: query
+        name: category
+        schema:
+          type: string
+          format: uuid
+      - in: query
+        name: category__isnull
+        schema:
+          type: boolean
+      - in: query
         name: comment_count
         schema:
           type: number
@@ -797,9 +903,13 @@ paths:
         schema:
           type: string
           enum:
+          - category
           - tags
+          - tags,category
           - tags,user
+          - tags,user,category
           - user
+          - user,category
         explode: false
         style: form
       - in: query
@@ -878,6 +988,19 @@ paths:
         schema:
           type: string
       - in: query
+        name: tags
+        schema:
+          type: array
+          items:
+            type: string
+            format: uuid
+        explode: true
+        style: form
+      - in: query
+        name: tags__isnull
+        schema:
+          type: boolean
+      - in: query
         name: title
         schema:
           type: string
@@ -911,6 +1034,20 @@ paths:
         schema:
           type: string
           format: uuid
+      - in: query
+        name: vote
+        schema:
+          type: integer
+          enum:
+          - -1
+          - 1
+        description: |-
+          * `1` - Upvote
+          * `-1` - Downvote
+      - in: query
+        name: vote__isnull
+        schema:
+          type: boolean
       tags:
       - posts
       security:
@@ -993,9 +1130,13 @@ paths:
         schema:
           type: string
           enum:
+          - category
           - tags
+          - tags,category
           - tags,user
+          - tags,user,category
           - user
+          - user,category
         explode: false
         style: form
       tags:
@@ -1516,6 +1657,30 @@ components:
     NullEnum:
       enum:
       - null
+    PaginatedPostCategoryList:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of items available.
+          example: 1102
+        page_size:
+          type: integer
+          description: Number of results to return per page.
+          example: 100
+        total_pages:
+          type: integer
+          description: Total number of pages.
+          example: 17
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/PostCategory'
+      required:
+      - count
+      - page_size
+      - total_pages
+      - results
     PaginatedPostCommentList:
       type: object
       properties:
@@ -1801,6 +1966,11 @@ components:
           type: string
           format: uri
           description: Image(jpeg, jpg, png, gif, webp) in base64 format
+        category:
+          type: string
+          format: uuid
+          nullable: true
+          description: Category of the post.
         tags:
           type: array
           items:
@@ -1836,6 +2006,66 @@ components:
       - updated_at
       - user
       - vote
+    PostCategory:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        name:
+          type: string
+          readOnly: true
+          description: Name of the category.
+        handle:
+          type: string
+          readOnly: true
+          title: Slug/Handle
+          description: Slug/Handle of the category.
+          pattern: ^[-a-zA-Z0-9_]+$
+        icon:
+          type: string
+          readOnly: true
+          description: Icon for the category, in svg format.
+      required:
+      - created_at
+      - handle
+      - icon
+      - id
+      - name
+      - updated_at
     PostComment:
       type: object
       description: |-
@@ -2097,6 +2327,11 @@ components:
           items:
             type: string
           readOnly: true
+        category:
+          type: array
+          items:
+            type: string
+          readOnly: true
         tags:
           type: array
           items:
@@ -2128,6 +2363,7 @@ components:
             type: string
           readOnly: true
       required:
+      - category
       - comment_count
       - created_at
       - id
@@ -2176,6 +2412,11 @@ components:
           type: string
           format: binary
           description: Image(jpeg, jpg, png, gif, webp) in base64 format
+        category:
+          type: string
+          format: uuid
+          nullable: true
+          description: Category of the post.
         tags:
           type: array
           items:

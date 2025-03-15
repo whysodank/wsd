@@ -1,4 +1,5 @@
 from .post import PostSerializer
+from .post_category import PostCategorySerializer
 from .post_comment import PostCommentSerializer
 from .post_tag import PostTagSerializer
 from .user import PublicUserSerializer, UserSerializer
@@ -9,4 +10,5 @@ __all__ = [
     "PostSerializer",
     "PostTagSerializer",
     "PostCommentSerializer",
+    "PostCategorySerializer",
 ]
