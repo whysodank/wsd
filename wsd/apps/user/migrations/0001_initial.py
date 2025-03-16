@@ -1,6 +1,6 @@
 import uuid
 
-import apps.feedback.user
+import apps.feedback
 import django.contrib.auth.models
 import django.contrib.auth.validators
 import django.db.models.deletion
@@ -129,7 +129,7 @@ class Migration(migrations.Migration):
                 "verbose_name_plural": "Users",
             },
             bases=(
-                apps.feedback.user.UserVoteMixin,
+                apps.feedback.UserVoteMixin,
                 django_lifecycle.mixins.LifecycleModelMixin,
                 models.Model,
             ),

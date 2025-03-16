@@ -619,49 +619,6 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
-    post:
-      operationId: post_tags_create
-      description: Create a new post tag
-      summary: Create Post Tag
-      tags:
-      - post-tags
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PostTagRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PostTagRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PostTagRequest'
-        required: true
-      security:
-      - tokenAuth: []
-      - basicAuth: []
-      - cookieAuth: []
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostTag'
-          description: ''
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostTagError'
-          description: ''
-        '401':
-          description: No response body
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Forbidden'
-          description: ''
   /v0/post-tags/{id}/:
     get:
       operationId: post_tags_retrieve
@@ -702,148 +659,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
-    put:
-      operationId: post_tags_update
-      description: Update an existing post tag by id
-      summary: Put Post Tag
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this Post Tag.
-        required: true
-      tags:
-      - post-tags
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PostTagUpdateRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PostTagUpdateRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PostTagUpdateRequest'
-        required: true
-      security:
-      - tokenAuth: []
-      - basicAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostTag'
-          description: ''
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostTagError'
-          description: ''
-        '401':
-          description: No response body
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Forbidden'
-          description: ''
-    patch:
-      operationId: post_tags_partial_update
-      description: Partially update an existing post tag by id
-      summary: Patch Post Tag
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this Post Tag.
-        required: true
-      tags:
-      - post-tags
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/PatchedPostTagUpdateRequest'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/PatchedPostTagUpdateRequest'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/PatchedPostTagUpdateRequest'
-      security:
-      - tokenAuth: []
-      - basicAuth: []
-      - cookieAuth: []
-      responses:
-        '200':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostTag'
-          description: ''
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostTagError'
-          description: ''
-        '401':
-          description: No response body
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Forbidden'
-          description: ''
-    delete:
-      operationId: post_tags_destroy
-      description: Delete an existing Post Tag by id
-      summary: Delete Post Tag
-      parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-          format: uuid
-        description: A UUID string identifying this Post Tag.
-        required: true
-      tags:
-      - post-tags
-      security:
-      - tokenAuth: []
-      - basicAuth: []
-      - cookieAuth: []
-      responses:
-        '204':
-          description: No response body
-        '400':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PostTagDestroyError'
-          description: ''
-        '401':
-          description: No response body
-        '403':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Forbidden'
-          description: ''
   /v0/posts/:
     get:
       operationId: posts_list
       description: List posts with optional filters
       summary: List Posts
       parameters:
+      - in: query
+        name: bookmarked
+        schema:
+          type: boolean
       - in: query
         name: category
         schema:
@@ -1296,11 +1121,59 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
+  /v0/posts/{id}/bookmark/:
+    post:
+      operationId: posts_bookmark_create
+      description: Bookmark an post by id
+      summary: Bookmark Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
   /v0/posts/{id}/downvote/:
     post:
       operationId: posts_downvote_create
       description: Cast an up vote to a post by id
       summary: Downvote Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
+  /v0/posts/{id}/unbookmark/:
+    post:
+      operationId: posts_unbookmark_create
+      description: Remove bookmark from post by id
+      summary: Remove Post Bookmark
       parameters:
       - in: path
         name: id
@@ -1808,37 +1681,6 @@ components:
           type: string
           minLength: 1
           description: The actual comment.
-    PatchedPostTagUpdateRequest:
-      type: object
-      description: |-
-        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
-        read only.
-
-        GET /api/v1/people/5/
-        {
-            "id": 5,
-            "first_name": "John",
-            "last_name": "Doe",
-            "labels": [7]
-        }
-
-        GET /api/v1/people/5/?include=labels
-        {
-            "id": 5,
-            "first_name": "John",
-            "last_name": "Doe",
-            "labels": [
-                {
-                    "id": 7,
-                    "name": "label-name"
-                }
-            ]
-        }
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 100
     PatchedPostUpdateRequest:
       type: object
       description: |-
@@ -1982,6 +1824,9 @@ components:
           oneOf:
           - $ref: '#/components/schemas/VoteEnum'
           - $ref: '#/components/schemas/NullEnum'
+        bookmarked:
+          type: boolean
+          readOnly: true
         positive_vote_count:
           type: integer
           readOnly: true
@@ -1995,6 +1840,7 @@ components:
           readOnly: true
           nullable: true
       required:
+      - bookmarked
       - comment_count
       - created_at
       - id
@@ -2342,6 +2188,11 @@ components:
           items:
             type: string
           readOnly: true
+        bookmarked:
+          type: array
+          items:
+            type: string
+          readOnly: true
         positive_vote_count:
           type: array
           items:
@@ -2363,6 +2214,7 @@ components:
             type: string
           readOnly: true
       required:
+      - bookmarked
       - category
       - comment_count
       - created_at
@@ -2474,115 +2326,6 @@ components:
       - id
       - name
       - updated_at
-    PostTagDestroyError:
-      type: object
-      properties:
-        protected_elements:
-          type: array
-          items:
-            $ref: '#/components/schemas/ProtectedElement'
-      required:
-      - protected_elements
-    PostTagError:
-      type: object
-      properties:
-        id:
-          type: array
-          items:
-            type: string
-          readOnly: true
-        created_at:
-          type: array
-          items:
-            type: string
-          readOnly: true
-        updated_at:
-          type: array
-          items:
-            type: string
-          readOnly: true
-        name:
-          type: array
-          items:
-            type: string
-          readOnly: true
-        non_field_errors:
-          type: array
-          items:
-            type: string
-          readOnly: true
-      required:
-      - created_at
-      - id
-      - name
-      - non_field_errors
-      - updated_at
-    PostTagRequest:
-      type: object
-      description: |-
-        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
-        read only.
-
-        GET /api/v1/people/5/
-        {
-            "id": 5,
-            "first_name": "John",
-            "last_name": "Doe",
-            "labels": [7]
-        }
-
-        GET /api/v1/people/5/?include=labels
-        {
-            "id": 5,
-            "first_name": "John",
-            "last_name": "Doe",
-            "labels": [
-                {
-                    "id": 7,
-                    "name": "label-name"
-                }
-            ]
-        }
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 100
-      required:
-      - name
-    PostTagUpdateRequest:
-      type: object
-      description: |-
-        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
-        read only.
-
-        GET /api/v1/people/5/
-        {
-            "id": 5,
-            "first_name": "John",
-            "last_name": "Doe",
-            "labels": [7]
-        }
-
-        GET /api/v1/people/5/?include=labels
-        {
-            "id": 5,
-            "first_name": "John",
-            "last_name": "Doe",
-            "labels": [
-                {
-                    "id": 7,
-                    "name": "label-name"
-                }
-            ]
-        }
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 100
-      required:
-      - name
     PostUpdateRequest:
       type: object
       description: |-

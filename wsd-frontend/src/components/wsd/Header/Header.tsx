@@ -33,7 +33,7 @@ export async function Header() {
             <AdvancedSearch />
           </div>
         </div>
-        <div className="xl:w-1/6 flex justify-end gap-2 items-center">
+        <div className="xl:w-1/6 flex justify-end gap-1 items-center">
           {(await wsd.isAuthenticated()) ? (
             <>
               <Link
@@ -49,6 +49,23 @@ export async function Header() {
                 aria-label="New Post"
               >
                 <Icons.Plus size={20} className="h-6 w-6" />
+              </Link>
+              <Link
+                href={{ pathname: `/notifications/` }}
+                prefetch={true}
+                className={cn(
+                  buttonVariants({
+                    variant: 'ghost',
+                    size: 'sm',
+                    className: 'max-md:hidden flex gap-2 h-10 w-10 rounded-full p-2',
+                  })
+                )}
+                aria-label="New Post"
+              >
+                <div className="relative">
+                  <Icons.Bell size={20} />
+                  <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-red-600 border" />
+                </div>
               </Link>
               <Link
                 prefetch={true}

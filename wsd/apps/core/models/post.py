@@ -1,7 +1,7 @@
 from apps.common.models.base import BaseModel
 from apps.common.utils import track_events
 from apps.core.querysets import PostQuerySet
-from apps.feedback import comments, votes
+from apps.feedback import bookmarks, comments, votes
 from apps.tags import tags
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -56,6 +56,7 @@ class Post(BaseModel):
     # Feedback from the user
     comments = comments()
     votes = votes()
+    bookmarked_users = bookmarks(related_name="bookmarked_posts")
 
     # Reposts
     initial = models.ForeignKey(

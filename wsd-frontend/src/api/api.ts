@@ -130,6 +130,14 @@ export class WSDAPI {
     return await this.client.POST('/v0/posts/{id}/unvote/', { params: { path: { id } } })
   }
 
+  public async bookmarkPost(id: string) {
+    return await this.client.POST('/v0/posts/{id}/bookmark/', { params: { path: { id } } })
+  }
+
+  public async unbookmarkPost(id: string) {
+    return await this.client.POST('/v0/posts/{id}/unbookmark/', { params: { path: { id } } })
+  }
+
   public async postCategories(filters?: APIQuery<'/v0/post-categories/'>) {
     return await this.client.GET('/v0/post-categories/', { params: { query: filters } })
   }

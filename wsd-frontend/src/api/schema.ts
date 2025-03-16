@@ -173,11 +173,7 @@ export interface paths {
      */
     get: operations['post_tags_list']
     put?: never
-    /**
-     * Create Post Tag
-     * @description Create a new post tag
-     */
-    post: operations['post_tags_create']
+    post?: never
     delete?: never
     options?: never
     head?: never
@@ -196,24 +192,12 @@ export interface paths {
      * @description Retrieve post tag by id
      */
     get: operations['post_tags_retrieve']
-    /**
-     * Put Post Tag
-     * @description Update an existing post tag by id
-     */
-    put: operations['post_tags_update']
+    put?: never
     post?: never
-    /**
-     * Delete Post Tag
-     * @description Delete an existing Post Tag by id
-     */
-    delete: operations['post_tags_destroy']
+    delete?: never
     options?: never
     head?: never
-    /**
-     * Patch Post Tag
-     * @description Partially update an existing post tag by id
-     */
-    patch: operations['post_tags_partial_update']
+    patch?: never
     trace?: never
   }
   '/v0/posts/': {
@@ -272,6 +256,26 @@ export interface paths {
     patch: operations['posts_partial_update']
     trace?: never
   }
+  '/v0/posts/{id}/bookmark/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Bookmark Post
+     * @description Bookmark an post by id
+     */
+    post: operations['posts_bookmark_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/v0/posts/{id}/downvote/': {
     parameters: {
       query?: never
@@ -286,6 +290,26 @@ export interface paths {
      * @description Cast an up vote to a post by id
      */
     post: operations['posts_downvote_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/posts/{id}/unbookmark/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Remove Post Bookmark
+     * @description Remove bookmark from post by id
+     */
+    post: operations['posts_unbookmark_create']
     delete?: never
     options?: never
     head?: never
@@ -549,32 +573,6 @@ export interface components {
      *             }
      *         ]
      *     } */
-    PatchedPostTagUpdateRequest: {
-      name?: string
-    }
-    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
-     *     read only.
-     *
-     *     GET /api/v1/people/5/
-     *     {
-     *         "id": 5,
-     *         "first_name": "John",
-     *         "last_name": "Doe",
-     *         "labels": [7]
-     *     }
-     *
-     *     GET /api/v1/people/5/?include=labels
-     *     {
-     *         "id": 5,
-     *         "first_name": "John",
-     *         "last_name": "Doe",
-     *         "labels": [
-     *             {
-     *                 "id": 7,
-     *                 "name": "label-name"
-     *             }
-     *         ]
-     *     } */
     PatchedPostUpdateRequest: {
       /** @description Title of the post. */
       title?: string
@@ -661,6 +659,7 @@ export interface components {
       category?: string | null
       tags: string[]
       readonly vote: (components['schemas']['VoteEnum'] | components['schemas']['NullEnum']) | null
+      readonly bookmarked: boolean
       readonly positive_vote_count: number | null
       readonly negative_vote_count: number | null
       readonly comment_count: number | null
@@ -838,6 +837,7 @@ export interface components {
       readonly category: string[]
       readonly tags: string[]
       readonly vote: string[]
+      readonly bookmarked: string[]
       readonly positive_vote_count: string[]
       readonly negative_vote_count: string[]
       readonly comment_count: string[]
@@ -911,68 +911,6 @@ export interface components {
       readonly created_at: string
       /** Format: date-time */
       readonly updated_at: string
-      name: string
-    }
-    PostTagDestroyError: {
-      protected_elements: components['schemas']['ProtectedElement'][]
-    }
-    PostTagError: {
-      readonly id: string[]
-      readonly created_at: string[]
-      readonly updated_at: string[]
-      readonly name: string[]
-      readonly non_field_errors: string[]
-    }
-    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
-     *     read only.
-     *
-     *     GET /api/v1/people/5/
-     *     {
-     *         "id": 5,
-     *         "first_name": "John",
-     *         "last_name": "Doe",
-     *         "labels": [7]
-     *     }
-     *
-     *     GET /api/v1/people/5/?include=labels
-     *     {
-     *         "id": 5,
-     *         "first_name": "John",
-     *         "last_name": "Doe",
-     *         "labels": [
-     *             {
-     *                 "id": 7,
-     *                 "name": "label-name"
-     *             }
-     *         ]
-     *     } */
-    PostTagRequest: {
-      name: string
-    }
-    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
-     *     read only.
-     *
-     *     GET /api/v1/people/5/
-     *     {
-     *         "id": 5,
-     *         "first_name": "John",
-     *         "last_name": "Doe",
-     *         "labels": [7]
-     *     }
-     *
-     *     GET /api/v1/people/5/?include=labels
-     *     {
-     *         "id": 5,
-     *         "first_name": "John",
-     *         "last_name": "Doe",
-     *         "labels": [
-     *             {
-     *                 "id": 7,
-     *                 "name": "label-name"
-     *             }
-     *         ]
-     *     } */
-    PostTagUpdateRequest: {
       name: string
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
@@ -1686,54 +1624,6 @@ export interface operations {
       }
     }
   }
-  post_tags_create: {
-    parameters: {
-      query?: never
-      header?: never
-      path?: never
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['PostTagRequest']
-        'application/x-www-form-urlencoded': components['schemas']['PostTagRequest']
-        'multipart/form-data': components['schemas']['PostTagRequest']
-      }
-    }
-    responses: {
-      201: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PostTag']
-        }
-      }
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PostTagError']
-        }
-      }
-      /** @description No response body */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Forbidden']
-        }
-      }
-    }
-  }
   post_tags_retrieve: {
     parameters: {
       query?: {
@@ -1773,155 +1663,10 @@ export interface operations {
       }
     }
   }
-  post_tags_update: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /** @description A UUID string identifying this Post Tag. */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['PostTagUpdateRequest']
-        'application/x-www-form-urlencoded': components['schemas']['PostTagUpdateRequest']
-        'multipart/form-data': components['schemas']['PostTagUpdateRequest']
-      }
-    }
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PostTag']
-        }
-      }
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PostTagError']
-        }
-      }
-      /** @description No response body */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Forbidden']
-        }
-      }
-    }
-  }
-  post_tags_destroy: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /** @description A UUID string identifying this Post Tag. */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: never
-    responses: {
-      /** @description No response body */
-      204: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PostTagDestroyError']
-        }
-      }
-      /** @description No response body */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Forbidden']
-        }
-      }
-    }
-  }
-  post_tags_partial_update: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /** @description A UUID string identifying this Post Tag. */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: {
-      content: {
-        'application/json': components['schemas']['PatchedPostTagUpdateRequest']
-        'application/x-www-form-urlencoded': components['schemas']['PatchedPostTagUpdateRequest']
-        'multipart/form-data': components['schemas']['PatchedPostTagUpdateRequest']
-      }
-    }
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PostTag']
-        }
-      }
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PostTagError']
-        }
-      }
-      /** @description No response body */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Forbidden']
-        }
-      }
-    }
-  }
   posts_list: {
     parameters: {
       query?: {
+        bookmarked?: boolean
         category?: string
         category__isnull?: boolean
         comment_count?: number
@@ -2240,7 +1985,63 @@ export interface operations {
       }
     }
   }
+  posts_bookmark_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   posts_downvote_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  posts_unbookmark_create: {
     parameters: {
       query?: never
       header?: never

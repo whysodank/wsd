@@ -9,6 +9,7 @@ from .base import BaseModelSerializer, s
 class PostSerializer(BaseModelSerializer):
     image = Base64ImageField(help_text=f"Image({', '.join(Base64ImageField.ALLOWED_TYPES)}) in base64 format")
     vote = serializers.ChoiceField(choices=PostVote.VoteType.choices, required=False, read_only=True, allow_null=True)
+    bookmarked = serializers.BooleanField(required=False, read_only=True)
     positive_vote_count = serializers.IntegerField(
         required=False,
         read_only=True,
@@ -38,6 +39,7 @@ class PostSerializer(BaseModelSerializer):
             "category",
             "tags",
             "vote",
+            "bookmarked",
             "positive_vote_count",
             "negative_vote_count",
             "comment_count",
@@ -48,6 +50,7 @@ class PostSerializer(BaseModelSerializer):
             "created_at",
             "updated_at",
             "vote",
+            "bookmarked",
             "positive_vote_count",
             "negative_vote_count",
             "comment_count",

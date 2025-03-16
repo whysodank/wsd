@@ -1,9 +1,9 @@
-from apps.core.models import Post, PostVote
+from apps.core.models import Post, PostBookmark, PostVote
 from apps.rest.utils.filters import make_filters
 from apps.rest.utils.permissions import IsSuperUser, ReadOnly, is_owner, prevent_actions
 from apps.rest.utils.schema_helpers import fake_serializer
 from apps.rest.v0.serializers import PostSerializer
-from django.db.models import Count, IntegerField, OuterRef, Q, Subquery, Value
+from django.db.models import BooleanField, Count, Exists, IntegerField, OuterRef, Q, Subquery, Value
 from django_filters import BooleanFilter, ChoiceFilter, NumberFilter
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
@@ -27,6 +27,7 @@ class PostViewSet(BaseModelViewSet):
     declared_filters = {
         "vote": ChoiceFilter(choices=PostVote.VoteType.choices),
         "vote__isnull": BooleanFilter(field_name="vote", lookup_expr="isnull"),
+        "bookmarked": BooleanFilter(field_name="bookmarked"),
         **make_filters("positive_vote_count", NumberFilter, ["exact", "gt", "gte", "lt", "lte"]),
         **make_filters("negative_vote_count", NumberFilter, ["exact", "gt", "gte", "lt", "lte"]),
         **make_filters("comment_count", NumberFilter, ["exact", "gt", "gte", "lt", "lte"]),
@@ -67,6 +68,7 @@ class PostViewSet(BaseModelViewSet):
             comment_count=Count("comments"),
         )
         qs = self.annotate_vote(qs, self.request)
+        qs = self.annotate_bookmarked(qs, self.request)
         return qs
 
     @staticmethod
@@ -75,6 +77,14 @@ class PostViewSet(BaseModelViewSet):
         if request and request.user and request.user.is_authenticated:
             user_vote = PostVote.objects.filter(post=OuterRef("pk"), user=request.user).values("body")[:1]
             queryset = queryset.annotate(vote=Subquery(user_vote, output_field=IntegerField(null=True)))
+        return queryset
+
+    @staticmethod
+    def annotate_bookmarked(queryset, request):
+        queryset = queryset.annotate(bookmarked=Value(False, output_field=BooleanField()))
+        if request and request.user and request.user.is_authenticated:
+            user_bookmark = PostBookmark.objects.filter(post=OuterRef("pk"), user=request.user)
+            queryset = queryset.annotate(bookmarked=Exists(user_bookmark))
         return queryset
 
     @django_to_drf_validation_error
@@ -130,4 +140,38 @@ class PostViewSet(BaseModelViewSet):
     @django_to_drf_validation_error
     def unvote(self, *args, **kwargs):
         self.request.user.unvote(self.get_object())
+        return Response(status=204)
+
+    @extend_schema(
+        summary=f"Bookmark Post",
+        description=f"Bookmark an post by id",
+        responses={204: None, 401: None},
+    )
+    @action(
+        detail=True,
+        methods=["POST"],
+        url_path="bookmark",
+        serializer_class=fake_serializer("BookmarkPost", dont_initialize=True),
+        permission_classes=[IsAuthenticated],
+    )
+    @django_to_drf_validation_error
+    def bookmark(self, *args, **kwargs):
+        self.request.user.bookmark(self.get_object())
+        return Response(status=204)
+
+    @extend_schema(
+        summary=f"Remove Post Bookmark",
+        description=f"Remove bookmark from post by id",
+        responses={204: None, 401: None},
+    )
+    @action(
+        detail=True,
+        methods=["POST"],
+        url_path="unbookmark",
+        serializer_class=fake_serializer("UnbookmarkPost", dont_initialize=True),
+        permission_classes=[IsAuthenticated],
+    )
+    @django_to_drf_validation_error
+    def unbookmark(self, *args, **kwargs):
+        self.request.user.unbookmark(self.get_object())
         return Response(status=204)

@@ -10,6 +10,9 @@ from django.utils.translation import gettext_lazy as _
 TAG_NAME_REGEX = r"^[a-zA-Z0-9_.-]*$"
 TAG_NAME_REGEX_ERROR_MESSAGE = "Tags can only contain letters, numbers, - and _."
 
+TAG_CLASS_ATTRIBUTE = "tag_class"
+TAGS_THROUGH_CLASS_ATTRIBUTE = "tag_through_class"
+
 
 class TagQuerySet(models.QuerySet):
     def to_list(self):
@@ -125,18 +128,19 @@ class TagMaker:
 
     def contribute_to_class(self, cls, name):
         tag_class, tag_object_class = create_tag_class(cls), create_object_tag_class(cls, name)
-        setattr(cls, self.tag_class_attribute_name, tag_class)
-        setattr(cls, self.tag_through_class_attribute_name, tag_object_class)
+        setattr(cls, TAG_CLASS_ATTRIBUTE, tag_class)
+        setattr(cls, TAGS_THROUGH_CLASS_ATTRIBUTE, tag_object_class)
         m2m_field = models.ManyToManyField(
-            tag_class, through=tag_object_class, blank=True, related_name=self.related_name
+            tag_class,
+            verbose_name=tag_class._meta.verbose_name_plural,  # NOQA
+            through=tag_object_class,
+            blank=True,
+            related_name=self.related_name,
+            help_text=f"{tag_class._meta.verbose_name_plural} related to {cls._meta.verbose_name}",  # NOQA
         )
         m2m_field.contribute_to_class(cls, name)
 
 
-def tags(related_name, tag_class_attribute_name="tag_class", tag_through_class_attribute_name="tag_through_class"):
-    tag_maker = TagMaker(
-        related_name=related_name,
-        tag_class_attribute_name=tag_class_attribute_name,
-        tag_through_class_attribute_name=tag_through_class_attribute_name,
-    )
+def tags(related_name):
+    tag_maker = TagMaker(related_name=related_name)
     return tag_maker

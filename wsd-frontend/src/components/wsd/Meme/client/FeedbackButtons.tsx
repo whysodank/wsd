@@ -20,6 +20,12 @@ export default function FeedbackButtons({
   const wsd = useWSDAPI()
   const [feedback, setFeedback] = useState<APIType<'VoteEnum'> | null>(post.vote)
   const [voteCount, setVoteCount] = useState((post.positive_vote_count || 0) - (post.negative_vote_count || 0))
+  const [isBookmarked, setIsBookmarked] = useState<boolean>(post.bookmarked)
+
+  async function handleBookmark() {
+    setIsBookmarked(!isBookmarked)
+    await (isBookmarked ? wsd.unbookmarkPost.bind(wsd) : wsd.bookmarkPost.bind(wsd))(post.id)
+  }
 
   function handleVote(vote: APIType<'VoteEnum'>) {
     return async function () {
@@ -54,18 +60,18 @@ export default function FeedbackButtons({
     <>
       <Button
         onClick={handleVote(1)}
-        className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+        className="flex items-center p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
         aria-label="Upvote"
       >
-        <Icons.ArrowUp size={20} className={cn('h-5 w-5', feedback === 1 && 'text-green-500')} />
+        <Icons.ArrowBigUp size={24} className={cn(feedback === 1 && 'text-green-500 fill-green-500')} />
       </Button>
       <span className="font-medium text-gray-500">{voteCount}</span>
       <Button
         onClick={handleVote(-1)}
-        className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+        className="flex items-center p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
         aria-label="Downvote"
       >
-        <Icons.ArrowDown size={20} className={cn('h-5 w-5', feedback === -1 && 'text-destructive')} />
+        <Icons.ArrowBigDown size={24} className={cn(feedback === -1 && 'text-destructive fill-destructive')} />
       </Button>
       <Link
         href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}
@@ -82,10 +88,13 @@ export default function FeedbackButtons({
         <span>{post.comment_count}</span>
       </Link>
       <Button
-        className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+        onClick={handleBookmark}
+        className={cn(
+          'flex items-center p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent'
+        )}
         aria-label="Bookmark"
       >
-        <Icons.Heart size={20} />
+        <Icons.Heart size={20} className={cn(isBookmarked && 'fill-primary text-primary')} />
       </Button>
     </>
   )

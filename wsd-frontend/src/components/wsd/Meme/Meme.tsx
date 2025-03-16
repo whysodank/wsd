@@ -25,7 +25,7 @@ export async function Meme({
         fullScreen && 'max-w-full w-full'
       )}
     >
-      <div className="flex flex-col gap-2 p-4 max-md:p-2 max-md:py-0">
+      <div className="flex flex-col gap-1 p-4 max-md:p-2 max-md:py-0">
         <h2 className="text-xl font-semibold">
           <Link className="hover:underline" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
             {post.title}

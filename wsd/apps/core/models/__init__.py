@@ -7,6 +7,7 @@ PostComment = Post.comment_class
 PostCommentVote = PostComment.vote_class
 PostVote = Post.vote_class
 PostTag = Post.tag_class
+PostBookmark = Post.bookmark_class
 
 __all__ = [
     "Post",
@@ -17,4 +18,5 @@ __all__ = [
     "UserPostView",
     "PostTag",
     "PostCategory",
+    "PostBookmark",
 ]
