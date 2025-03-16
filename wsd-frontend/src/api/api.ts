@@ -23,6 +23,11 @@ export class WSDAPI {
     return response?.ok
   }
 
+  getCurrentUser = async (): Promise<APIType<'User'> | undefined> => {
+    const { data: userData } = await this.me()
+    return userData
+  }
+
   fetch = async (input: RequestInfo, init?: RequestInit | undefined): Promise<Response> => {
     const sessionToken = await getLazyValueAsync<string | null>(this.sessionToken)
     const csrfToken = await getLazyValueAsync<string | null>(this.csrfToken)

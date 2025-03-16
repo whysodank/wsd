@@ -49,7 +49,10 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
   return (
     <article className="flex flex-row gap-2 p-4 rounded-lg bg-background w-full">
       <Avatar className="w-12 h-12 border rounded-full border-muted-foreground">
-        <AvatarImage src={`https://robohash.org/${comment.user.username}/?size=96x96`} alt={comment.user.username} />
+        <AvatarImage
+          src={`https://robohash.org/wsd-${comment.user.username}/?size=96x96`}
+          alt={comment.user.username}
+        />
         <AvatarFallback>{Array.from(comment.user.username)[0]}</AvatarFallback>
       </Avatar>
       <div className="flex flex-col gap-1 w-full">

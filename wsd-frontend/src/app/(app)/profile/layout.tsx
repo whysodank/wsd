@@ -38,7 +38,7 @@ export default async function ProfileLayout({ children }: { children: React.Reac
       {username && (
         <div className="flex flex-col justify-center items-center gap-1">
           <Avatar className="w-24 h-24">
-            <AvatarImage src={`https://robohash.org/${username}/?size=96x96`} alt={username} />
+            <AvatarImage src={`https://robohash.org/wsd-${username}/?size=96x96`} alt={username} />
             <AvatarFallback>{Array.from(username)[0]}</AvatarFallback>
           </Avatar>
           <Link href={{ pathname: '/users/username' }} className="hover:underline">
