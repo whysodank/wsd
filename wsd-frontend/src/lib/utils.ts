@@ -145,15 +145,17 @@ export function runMiddlewareIfPathMatches(path: RegExp, exemptNextPaths: boolea
       const wellKnownPatterns = [/^\/.well-known/]
       const publicPatterns = [
         // TODO: read the src/public directory and generate this list
-        /android-chrome-192x192.png/,
-        /android-chrome-512x512.png/,
-        /apple-touch-icon.png/,
+        // icons
+        /apple-icon.png/,
         /favicon.ico/,
-        /favicon-16x16.png/,
-        /favicon-32x32.png/,
+        /icon.png/,
+        /icon.svg/,
+        /web-app-manifest-192x192.png/,
+        /web-app-manifest-512x512.png/,
+        // meta
         /robots.txt/,
         /humans.txt/,
-        /site.webmanifest/,
+        /manifest.json/,
       ]
 
       const ignoredPatterns = [...nextPatterns, ...wellKnownPatterns, ...publicPatterns]

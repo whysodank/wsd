@@ -23,7 +23,7 @@ export async function Emails() {
           {emails.map((email) => (
             <li key={email.email} className="flex items-center justify-between py-2 px-3 border rounded">
               <div className="flex items-center gap-2">
-                <span>{email.email}</span>
+                <span className="max-xs:text-sm">{email.email}</span>
                 {email.verified ? (
                   <Badge variant="secondary" className="p-0.5">
                     <Icons.Check className="w-3 h-3" />

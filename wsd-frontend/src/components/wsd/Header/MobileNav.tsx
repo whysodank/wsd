@@ -6,6 +6,7 @@ import { Separator } from '@/components/shadcn/separator'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/shadcn/sheet'
 import LeftColumn from '@/components/wsd/LeftColumn'
 
+import config from '@/config'
 import { cn } from '@/lib/utils'
 
 export async function MobileNav() {
@@ -24,7 +25,10 @@ export async function MobileNav() {
       </SheetTrigger>
       <SheetContent side="left" className="px-2">
         <SheetHeader>
-          <SheetTitle className="absolute left-4 top-3 rounded-sm opacity-70">WSD</SheetTitle>
+          <SheetTitle className="absolute left-4 top-3 rounded-sm opacity-70 flex flex-row gap-2 align-center">
+            <Icons.Shell size={24} />
+            {config.name}
+          </SheetTitle>
           <SheetDescription className="hidden">Categories</SheetDescription>
           <Separator className="!mt-4" />
         </SheetHeader>

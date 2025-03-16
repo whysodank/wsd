@@ -19,7 +19,10 @@ export async function Header() {
       <div className="container flex h-14 items-center max-md:px-4 gap-2">
         <div className="xl:w-1/6">
           <Link prefetch={true} href={{ pathname: '/' }} className="items-center gap-2 hidden xl:flex">
-            <span className="hidden font-bold lg:inline-block">{config.name}</span>
+            <span className="hidden font-bold lg:flex gap-2 flex-row">
+              <Icons.Shell size={24} />
+              {config.name}
+            </span>
           </Link>
           <MobileNav />
         </div>

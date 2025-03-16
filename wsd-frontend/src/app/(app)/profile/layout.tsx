@@ -46,7 +46,7 @@ export default async function ProfileLayout({ children }: { children: React.Reac
           </Link>
         </div>
       )}
-      <div className="flex flex-col justify-center items-center mb-36">
+      <div className="flex flex-col justify-center items-center mb-36 w-full">
         <Card className="w-full max-w-xl">
           <CardContent className="p-6 flex flex-col gap-4">
             <Tabs>

@@ -13,25 +13,25 @@ export async function LeftColumn() {
   return (
     <div className="w-full">
       <div className="pb-4 flex flex-col gap-1">
-        <CategoryLink href={{ pathname: 'categories/home' }} icon={<Icons.Home size={16} />}>
+        <CategoryLink href={{ pathname: '/feed/home' }} icon={<Icons.Home size={16} />}>
           Home
         </CategoryLink>
-        <CategoryLink href={{ pathname: 'categories/hot' }} icon={<Icons.Flame size={16} />}>
+        <CategoryLink href={{ pathname: '/feed/hot' }} icon={<Icons.Flame size={16} />}>
           Hot
         </CategoryLink>
-        <CategoryLink href={{ pathname: 'categories/trending' }} icon={<Icons.TrendingUp size={16} />}>
+        <CategoryLink href={{ pathname: '/feed/trending' }} icon={<Icons.TrendingUp size={16} />}>
           Trending
         </CategoryLink>
-        <CategoryLink href={{ pathname: 'categories/conversational' }} icon={<Icons.MessagesSquare size={16} />}>
+        <CategoryLink href={{ pathname: '/feed/conversational' }} icon={<Icons.MessagesSquare size={16} />}>
           Conversational
         </CategoryLink>
-        <CategoryLink href={{ pathname: 'categories/recent ' }} icon={<Icons.Clock size={16} />}>
+        <CategoryLink href={{ pathname: '/feed/recent ' }} icon={<Icons.Clock size={16} />}>
           Recent
         </CategoryLink>
         <Separator />
         {categories.map((category) => (
           <CategoryLink
-            href={{ pathname: `categories/${category.handle}` }}
+            href={{ pathname: `/categories/${category.handle}` }}
             key={category.handle}
             // TODO: we probably should use an html parser here so that we don't kill the front-end
             // in case we mess up some icon svg in the admin panel

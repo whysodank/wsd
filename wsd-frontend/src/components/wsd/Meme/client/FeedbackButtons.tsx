@@ -23,22 +23,30 @@ export default function FeedbackButtons({
 
   function handleVote(vote: APIType<'VoteEnum'>) {
     return async function () {
+      let newVoteCount = voteCount
+      let newFeedback
+
       if (feedback === vote) {
-        setFeedback(null)
+        newFeedback = null
         await wsd.unvotePost(post.id)
-        setVoteCount((prev) => prev - vote)
+        newVoteCount -= vote
       } else {
-        setFeedback(vote)
+        newFeedback = vote
         if (feedback !== null) {
-          setVoteCount((prev) => prev - feedback)
+          newVoteCount -= feedback
         }
+
         if (vote === 1) {
           await wsd.upvotePost(post.id)
         } else {
           await wsd.downvotePost(post.id)
         }
-        setVoteCount((prev) => prev + vote)
+
+        newVoteCount += vote
       }
+
+      setFeedback(newFeedback)
+      setVoteCount(newVoteCount)
     }
   }
 

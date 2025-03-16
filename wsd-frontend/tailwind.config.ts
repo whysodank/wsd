@@ -1,6 +1,6 @@
 import type { Config } from 'tailwindcss'
 
-const screens = ['sm', 'md', 'lg', 'xl', '2xl']
+const screens = ['xs', 'sm', 'md', 'lg', 'xl', '2xl']
 const displayUtilities = [
   'hidden',
   'block',
@@ -29,10 +29,15 @@ const config = {
       center: true,
       padding: '2rem',
       screens: {
+        xs: '420px',
         '2xl': '1400px',
       },
     },
     extend: {
+      screens: {
+        xs: '420px',
+        '2xl': '1400px',
+      },
       fontFamily: {
         code: ['monospace'],
       },

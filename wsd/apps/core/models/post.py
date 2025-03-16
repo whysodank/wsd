@@ -81,6 +81,11 @@ class Post(BaseModel):
         null=True,
         blank=True,
     )
+    is_original = models.BooleanField(
+        default=False,
+        verbose_name=_("Is Original"),
+        help_text=_("Whether this post is made by the user uploading it or not."),
+    )
 
     # Image hash values for the image
     cryptographic_hash = models.CharField(
@@ -155,7 +160,10 @@ class Post(BaseModel):
     @hook(AFTER_CREATE, priority=1)
     def check_if_repost(self):
         post_model = self.__class__
-        self.update(initial=post_model.objects.get_initial(self), is_repost=post_model.objects.is_repost(self))
+        initial = post_model.objects.get_initial(self)
+        is_repost = post_model.objects.is_repost(self)
+        is_original = False if is_repost else self.is_original
+        self.update(initial=initial, is_repost=is_repost, is_original=is_original)
 
     class Meta:
         verbose_name = _("Post")

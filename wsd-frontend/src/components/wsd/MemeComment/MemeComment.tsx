@@ -20,69 +20,85 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
 
   function handleVote(vote: APIType<'VoteEnum'>) {
     return async () => {
+      let newVoteCount = voteCount
+      let newFeedback
+
       if (feedback === vote) {
-        setFeedback(null)
+        newFeedback = null
         await wsd.unvotePostComment(comment.id)
-        setVoteCount((prev) => prev - vote)
+        newVoteCount -= vote
       } else {
-        setFeedback(vote)
+        newFeedback = vote
         if (feedback !== null) {
-          setVoteCount((prev) => prev - feedback)
+          newVoteCount -= feedback
         }
+
         if (vote === 1) {
           await wsd.upvotePostComment(comment.id)
         } else {
           await wsd.downvotePostComment(comment.id)
         }
-        setVoteCount((prev) => prev + vote)
+        newVoteCount += vote
       }
+
+      setFeedback(newFeedback)
+      setVoteCount(newVoteCount)
     }
   }
 
   return (
-    <article className="flex flex-col gap-2 p-4 rounded-lg bg-background w-full">
-      <div className="flex items-center gap-2">
-        <Avatar className="w-8 h-8">
-          <AvatarImage src={`https://robohash.org/${comment.user.username}/?size=96x96`} alt={comment.user.username} />
-          <AvatarFallback>{Array.from(comment.user.username)[0]}</AvatarFallback>
-        </Avatar>
-        <Link
-          href={`/users/${uuidV4toHEX(comment.user.id)}`}
-          className="text-sm font-semibold hover:underline text-foreground"
-        >
-          {comment.user.username}
-        </Link>
-        <div className="text-sm text-gray-500">
-          <span>{shortFormattedDateTime(new Date(comment.created_at))}</span>
-        </div>
-      </div>
-      <p className="text-sm text-muted-foreground px-4 whitespace-pre-line">{comment.body}</p>
-      <div className="flex items-center justify-between mt-2">
-        <div className="flex items-center gap-1">
-          <Button
-            onClick={handleVote(1)}
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground"
-            aria-label="Upvote"
+    <article className="flex flex-row gap-2 p-4 rounded-lg bg-background w-full">
+      <Avatar className="w-12 h-12 border rounded-full border-muted-foreground">
+        <AvatarImage src={`https://robohash.org/${comment.user.username}/?size=96x96`} alt={comment.user.username} />
+        <AvatarFallback>{Array.from(comment.user.username)[0]}</AvatarFallback>
+      </Avatar>
+      <div className="flex flex-col gap-1 w-full">
+        <div className="flex items-center gap-2">
+          <Link
+            href={`/users/${uuidV4toHEX(comment.user.id)}`}
+            className="text-sm font-semibold hover:underline text-foreground"
           >
-            <Icons.ArrowUp size={20} className={cn('h-5 w-5', feedback === 1 && 'text-green-500')} />
-          </Button>
-          <span className="text-sm font-medium text-muted-foreground min-w-[20px] text-center">{voteCount}</span>
-          <Button
-            onClick={handleVote(-1)}
-            variant="ghost"
-            size="icon"
-            className="text-muted-foreground"
-            aria-label="Downvote"
-          >
-            <Icons.ArrowDown size={20} className={cn('h-5 w-5', feedback === -1 && 'text-destructive')} />
-          </Button>
+            {comment.user.username}
+          </Link>
+          <div className="text-sm text-gray-500">
+            <span>{shortFormattedDateTime(new Date(comment.created_at))}</span>
+          </div>
         </div>
-        <div className="flex items-center gap-1">
-          <Button variant="ghost" size="icon" className="text-muted-foreground" aria-label="More options">
-            <Icons.MoreHorizontal size={18} />
-          </Button>
+        <p className="text-sm text-muted-foreground whitespace-pre-line">{comment.body}</p>
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1">
+            <Button
+              variant="link"
+              size="sm"
+              className="px-0 hover:text-accent-foreground hover:no-underline text-muted-foreground"
+            >
+              Reply
+            </Button>
+            <Button
+              onClick={handleVote(1)}
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground hover:bg-transparent px-2"
+              aria-label="Upvote"
+            >
+              <Icons.ArrowUp size={20} className={cn('h-5 w-5', feedback === 1 && 'text-green-500')} />
+            </Button>
+            <span className="text-sm font-medium text-muted-foreground min-w-[20px] text-center">{voteCount}</span>
+            <Button
+              onClick={handleVote(-1)}
+              variant="ghost"
+              size="sm"
+              className="text-muted-foreground hover:bg-transparent px-2"
+              aria-label="Downvote"
+            >
+              <Icons.ArrowDown size={20} className={cn('h-5 w-5', feedback === -1 && 'text-destructive')} />
+            </Button>
+          </div>
+          <div className="flex items-center gap-1">
+            <Button variant="ghost" size="icon" className="text-muted-foreground" aria-label="More options">
+              <Icons.MoreHorizontal size={18} />
+            </Button>
+          </div>
         </div>
       </div>
     </article>
