@@ -1,3 +1,5 @@
+// Can't make this server component for some reason -- is it because the Memes component loads the memes in the
+// frontend? Because of the infinite scroll?
 import Link from 'next/link'
 
 import * as Icons from 'lucide-react'
@@ -9,7 +11,7 @@ import { FeedbackButtons } from '@/components/wsd/Meme/client'
 import { APIType, Includes } from '@/api'
 import { cn, uuidV4toHEX } from '@/lib/utils'
 
-export async function Meme({
+export function Meme({
   post,
   withTags = false,
   fullScreen = false,
@@ -27,7 +29,7 @@ export async function Meme({
     >
       <div className="flex flex-col gap-1 p-4 max-md:p-2 max-md:py-0">
         <h2 className="text-xl font-semibold">
-          <Link className="hover:underline" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
+          <Link className="hover:underline break-word" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
             {post.title}
           </Link>
         </h2>
@@ -47,7 +49,7 @@ export async function Meme({
             src={post.image}
             alt={post.title}
             className={cn(
-              'relative z-10 w-auto max-w-[80%] h-auto max-md:max-w-full',
+              'relative z-10 lg:w-5/6 max-w-[80%] h-auto max-md:max-w-full',
               fullScreen ? 'max-w-full w-full' : 'max-h-[900px]'
             )}
             loading="lazy"

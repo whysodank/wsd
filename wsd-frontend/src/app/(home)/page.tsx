@@ -1,7 +1,15 @@
 import Memes from '@/components/wsd/Memes'
 
 import { APIQuery } from '@/api'
+import config from '@/config'
+import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
 
 export default async function Home({ searchParams }: { searchParams?: APIQuery<'/v0/posts/'> }) {
-  return <Memes query={searchParams} />
+  const wsd = sUseWSDAPI()
+  const { data } = await wsd.posts({
+    ...searchParams,
+    page_size: config.ux.defaultPostPerPage,
+    include: 'tags,user,category',
+  })
+  return <Memes query={searchParams} initialPosts={data?.results || []} />
 }

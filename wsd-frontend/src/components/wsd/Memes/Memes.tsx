@@ -1,27 +1,88 @@
+'use client'
+
+import Link from 'next/link'
+
+import { useEffect, useState } from 'react'
+
+import { buttonVariants } from '@/components/shadcn/button'
 import { Separator } from '@/components/shadcn/separator'
+import { Skeleton } from '@/components/shadcn/skeleton'
 import Meme from '@/components/wsd/Meme'
 
-import { APIQuery, includesType } from '@/api'
+import { APIQuery, APIType } from '@/api'
+import { includesType as includes } from '@/api/typeHelpers'
 import config from '@/config'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { useWSDAPI } from '@/lib/serverHooks'
+import { cn } from '@/lib/utils'
 
-export { includesType } from '@/api/typeHelpers'
+import { useInView } from 'react-intersection-observer'
 
-export async function Memes({ query }: { query?: Omit<APIQuery<'/v0/posts/'>, 'include'> }) {
-  const wsd = sUseWSDAPI()
+export function Memes({
+  query,
+  initialPosts,
+}: {
+  query?: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>
+  initialPosts?: APIType<'Post'>[]
+}) {
+  const wsd = useWSDAPI()
+
   const defaultQuery = { page_size: config.ux.defaultPostPerPage }
   const alwaysQuery = { include: 'tags,user,category' }
-  const userQuery = { ...defaultQuery, ...query, ...alwaysQuery }
-  const { data } = await wsd.posts(userQuery as APIQuery<'/v0/posts/'>)
+
+  const [posts, setPosts] = useState<APIType<'Post'>[]>(initialPosts || [])
+  const [page, setPage] = useState(initialPosts ? 1 : 2)
+  const [loading, setLoading] = useState(false)
+  const [hasMore, setHasMore] = useState(true)
+
+  const { ref: loaderRef, inView } = useInView({ threshold: 1 })
+
+  const fetchPosts = async (pageNum: number) => {
+    setLoading(true)
+    const fullQuery = {
+      ...defaultQuery,
+      ...query,
+      ...alwaysQuery,
+      page: pageNum,
+    } as APIQuery<'/v0/posts/'>
+
+    const { data: postsData } = await wsd.posts(fullQuery)
+    setPosts((prev) => [...prev, ...(postsData?.results || [])])
+    setHasMore(page !== postsData?.total_pages)
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    fetchPosts(page)
+  }, [page]) // eslint-disable-line react-hooks/exhaustive-deps -- We rerender on page change, fetchPosts is not needed
+
+  useEffect(() => {
+    if (inView && hasMore && !loading) {
+      setPage((prev) => prev + 1)
+    }
+  }, [inView, hasMore, loading])
 
   return (
-    <div className="flex flex-col gap-2 items-center min-w-[840px]">
-      {data?.results?.map((post) => (
+    <div className="flex flex-col gap-2 items-center md:min-w-[840px] w-full">
+      {posts.map((post) => (
         <div className="contents" key={post.id}>
-          <Meme post={includesType(includesType({ ...post }, 'user', 'User'), 'tags', 'PostTag', true)} withTags />
+          <Meme post={includes(includes({ ...post }, 'user', 'User'), 'tags', 'PostTag', true)} withTags />
           <Separator className="max-sm:w-[calc(100%-8px)] w-5/6" />
         </div>
       ))}
+      {loading && (
+        <div className="w-5/6 max-md:w-full p-4">
+          <Skeleton className="w-full h-1 rounded-md" />
+        </div>
+      )}
+      {!loading && !hasMore && (
+        <div className="w-5/6 max-md:w-full p-4 flex flex-col items-center justify-center gap-2">
+          <p>There are no more memes, maybe try changing filters?</p>
+          <Link href={{ pathname: '/create-post/' }} className={cn(buttonVariants({ variant: 'default' }))}>
+            Or maybe post your own?
+          </Link>
+        </div>
+      )}
+      <div ref={loaderRef} className="h-10 w-full" />
     </div>
   )
 }
