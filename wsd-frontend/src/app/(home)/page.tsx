@@ -1,23 +1,7 @@
-import { Separator } from '@/components/shadcn/separator'
-import Meme from '@/components/wsd/Meme'
+import Memes from '@/components/wsd/Memes'
 
-import { includesType } from '@/api'
-import config from '@/config'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { APIQuery } from '@/api'
 
-export { includesType } from '@/api/typeHelpers'
-
-export default async function Home() {
-  const wsd = sUseWSDAPI()
-  const { data } = await wsd.posts({ page_size: config.ux.defaultPostPerPage, include: 'tags,user' })
-  return (
-    <div className="flex flex-col gap-2 items-center">
-      {data?.results.map((post) => (
-        <div className="contents" key={post.id}>
-          <Meme post={includesType(includesType({ ...post }, 'user', 'User'), 'tags', 'PostTag', true)} withTags />
-          <Separator className="max-sm:w-[calc(100%-8px)] w-5/6" />
-        </div>
-      ))}
-    </div>
-  )
+export default async function Home({ searchParams }: { searchParams?: APIQuery<'/v0/posts/'> }) {
+  return <Memes query={searchParams} />
 }

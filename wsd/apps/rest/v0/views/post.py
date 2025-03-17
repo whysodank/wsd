@@ -40,6 +40,8 @@ class PostViewSet(BaseModelViewSet):
         "updated_at": ["exact", "gt", "gte", "lt", "lte"],
         "tags": ["exact", "isnull"],
         "category": ["exact", "isnull"],
+        "category__handle": ["exact"],
+        "is_repost": ["exact"],
     }
 
     ordering_fields = [
