@@ -9,33 +9,35 @@ import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
 export async function LeftColumn() {
   const wsd = sUseWSDAPI()
   const { data: postCategoriesData } = await wsd.postCategories()
+
+  function getQuickFilterHREF(params: { [key: string]: string }) {
+    return { pathname: '/', query: params }
+  }
+
   const categories = postCategoriesData?.results || []
   return (
     <div className="w-full">
       <div className="pb-4 flex flex-col gap-1">
-        <CategoryLink href={{ pathname: '/feed/home' }} icon={<Icons.Home size={20} />}>
+        <CategoryLink href={getQuickFilterHREF({ feed: 'home' })} icon={<Icons.Home size={20} />}>
           Home
         </CategoryLink>
-        <CategoryLink href={{ pathname: '/feed/hot' }} icon={<Icons.Flame size={20} />}>
+        <CategoryLink href={getQuickFilterHREF({ feed: 'hot' })} icon={<Icons.Flame size={20} />}>
           Hot
         </CategoryLink>
-        <CategoryLink href={{ pathname: '/feed/trending' }} icon={<Icons.TrendingUp size={20} />}>
+        <CategoryLink href={getQuickFilterHREF({ feed: 'trending' })} icon={<Icons.TrendingUp size={20} />}>
           Trending
         </CategoryLink>
-        <CategoryLink href={{ pathname: '/feed/conversational' }} icon={<Icons.MessagesSquare size={24} />}>
+        <CategoryLink href={getQuickFilterHREF({ feed: 'conversational' })} icon={<Icons.MessagesSquare size={24} />}>
           Conversational
         </CategoryLink>
-        <CategoryLink href={{ pathname: '/feed/recent ' }} icon={<Icons.Clock size={20} />}>
+        <CategoryLink href={getQuickFilterHREF({ feed: 'recent' })} icon={<Icons.Clock size={20} />}>
           Recent
         </CategoryLink>
         <Separator />
         {categories.map((category) => (
           <CategoryLink
-            href={{ pathname: `/categories/${category.handle}` }}
+            href={getQuickFilterHREF({ category__handle: category.handle })}
             key={category.handle}
-            // TODO: we probably should use an html parser here so that we don't kill the front-end
-            // in case we mess up some icon svg in the admin panel
-            // html-react-parser && dompurify
             icon={<RawSVGIcon svg={category.icon} />}
           >
             {category.name}

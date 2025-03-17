@@ -52,7 +52,7 @@ export default async function PostPage({
     '-negative_vote_count': 'Most Disliked',
   }
 
-  function newOrderingHref(ordering: APIQuery<'/v0/post-comments/'>['ordering']) {
+  function newOrderingHREF(ordering: APIQuery<'/v0/post-comments/'>['ordering']) {
     return { pathname: `/posts/${params.hex}`, query: { ...searchParams, ordering } }
   }
 
@@ -85,7 +85,7 @@ export default async function PostPage({
                     {getKeys(orderingLabels).map((key) => (
                       <OverlayClose key={key} asChild>
                         <Link
-                          href={newOrderingHref(key)}
+                          href={newOrderingHREF(key)}
                           className={cn(buttonVariants({ variant: 'ghost', className: 'w-full justify-start' }))}
                           scroll={false}
                         >

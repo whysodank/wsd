@@ -1,8 +1,11 @@
 'use client'
 
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 import { useEffect, useState } from 'react'
+
+import _ from 'lodash'
 
 import { buttonVariants } from '@/components/shadcn/button'
 import { Separator } from '@/components/shadcn/separator'
@@ -20,17 +23,20 @@ import { useInView } from 'react-intersection-observer'
 export function Memes({
   query,
   initialPosts,
+  hasMorePages,
 }: {
   query?: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>
   initialPosts?: APIType<'Post'>[]
+  hasMorePages?: boolean
 }) {
   const wsd = useWSDAPI()
+  const searchParams = useSearchParams()
 
   const defaultQuery = { page_size: config.ux.defaultPostPerPage }
   const alwaysQuery = { include: 'tags,user,category' }
 
   const [posts, setPosts] = useState<APIType<'Post'>[]>(initialPosts || [])
-  const [page, setPage] = useState(initialPosts ? 1 : 2)
+  const [page, setPage] = useState(initialPosts && hasMorePages ? 2 : 1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
 
@@ -46,13 +52,27 @@ export function Memes({
     } as APIQuery<'/v0/posts/'>
 
     const { data: postsData } = await wsd.posts(fullQuery)
-    setPosts((prev) => [...prev, ...(postsData?.results || [])])
+    setPosts((prev) => {
+      const newPosts = [...prev, ...(postsData?.results || [])]
+      return _.uniqBy(newPosts, 'id')
+    })
     setHasMore(page !== postsData?.total_pages)
     setLoading(false)
   }
 
   useEffect(() => {
-    fetchPosts(page)
+    setPage(1)
+    setPosts([])
+    fetchPosts(1)
+  }, [searchParams])
+
+  useEffect(() => {
+    if (initialPosts && hasMorePages) {
+      fetchPosts(page)
+    } else {
+      setHasMore(false)
+      setLoading(false)
+    }
   }, [page]) // eslint-disable-line react-hooks/exhaustive-deps -- We rerender on page change, fetchPosts is not needed
 
   useEffect(() => {

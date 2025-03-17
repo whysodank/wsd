@@ -11,5 +11,11 @@ export default async function Home({ searchParams }: { searchParams?: APIQuery<'
     page_size: config.ux.defaultPostPerPage,
     include: 'tags,user,category',
   })
-  return <Memes query={searchParams} initialPosts={data?.results || []} />
+  return (
+    <Memes
+      query={searchParams}
+      initialPosts={data?.results || []}
+      hasMorePages={Boolean(data?.total_pages && data.total_pages > 1)}
+    />
+  )
 }
