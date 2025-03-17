@@ -2,19 +2,19 @@ import Link from 'next/link'
 
 import * as Icons from 'lucide-react'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar'
 import { Button, buttonVariants } from '@/components/shadcn/button'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/shadcn/sheet'
 import { MobileNav } from '@/components/wsd/Header/MobileNav'
-import { AdvancedSearch } from '@/components/wsd/Header/client'
+import UserAvatar from '@/components/wsd/UserAvatar'
 
+import { APIType } from '@/api'
 import config from '@/config'
 import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
 import { cn } from '@/lib/utils'
 
 export async function Header() {
   const wsd = sUseWSDAPI()
-  const currentUser = await wsd.getCurrentUser()
+  const user = (await wsd.getCurrentUser()) as APIType<'User'>
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-primary">
@@ -29,9 +29,7 @@ export async function Header() {
           <MobileNav />
         </div>
         <div className="flex flex-1 items-center justify-between gap-2 md:justify-center lg:w-1/2">
-          <div className="w-3/4 max-md:w-full md:flex-none">
-            <AdvancedSearch />
-          </div>
+          <div className="w-3/4 max-md:w-full md:flex-none"></div>
         </div>
         <div className="xl:w-1/6 flex justify-end gap-1 items-center">
           {(await wsd.isAuthenticated()) ? (
@@ -77,13 +75,7 @@ export async function Header() {
                   })
                 )}
               >
-                <Avatar className="w-8 h-8">
-                  <AvatarImage
-                    src={`https://robohash.org/wsd-${currentUser?.username}/?size=96x96`}
-                    alt={currentUser?.username}
-                  />
-                  <AvatarFallback>{Array.from(currentUser?.username || '')[0]}</AvatarFallback>
-                </Avatar>
+                <UserAvatar user={user} className="w-8 h-8" />
               </Link>
             </>
           ) : (

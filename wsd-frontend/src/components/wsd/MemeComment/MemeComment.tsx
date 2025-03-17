@@ -6,8 +6,8 @@ import { useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar'
 import { Button } from '@/components/shadcn/button'
+import UserAvatar from '@/components/wsd/UserAvatar'
 
 import type { APIType, Includes } from '@/api'
 import { useWSDAPI } from '@/lib/serverHooks'
@@ -48,13 +48,7 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
 
   return (
     <article className="flex flex-row gap-2 p-4 rounded-lg bg-background w-full">
-      <Avatar className="w-12 h-12 border rounded-full border-muted-foreground">
-        <AvatarImage
-          src={`https://robohash.org/wsd-${comment.user.username}/?size=96x96`}
-          alt={comment.user.username}
-        />
-        <AvatarFallback>{Array.from(comment.user.username)[0]}</AvatarFallback>
-      </Avatar>
+      <UserAvatar user={comment.user} className="w-12 h-12" />
       <div className="flex flex-col gap-1 w-full">
         <div className="flex items-center gap-2">
           <Link
@@ -84,7 +78,7 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
               className="text-muted-foreground hover:bg-transparent px-2"
               aria-label="Upvote"
             >
-              <Icons.ArrowUp size={20} className={cn('h-5 w-5', feedback === 1 && 'text-green-500')} />
+              <Icons.ArrowBigUp size={20} className={cn(feedback === 1 && 'text-green-500 fill-green-500')} />
             </Button>
             <span className="text-sm font-medium text-muted-foreground min-w-[20px] text-center">{voteCount}</span>
             <Button
@@ -94,7 +88,7 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
               className="text-muted-foreground hover:bg-transparent px-2"
               aria-label="Downvote"
             >
-              <Icons.ArrowDown size={20} className={cn('h-5 w-5', feedback === -1 && 'text-destructive')} />
+              <Icons.ArrowBigDown size={20} className={cn(feedback === -1 && 'text-destructive fill-destructive')} />
             </Button>
           </div>
           <div className="flex items-center gap-1">

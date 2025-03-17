@@ -3,11 +3,12 @@ import Link from 'next/link'
 
 import * as Icons from 'lucide-react'
 
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/shadcn/avatar'
 import { Card, CardContent } from '@/components/shadcn/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/shadcn/tabs'
 import Logout from '@/components/wsd/Profile/Logout'
+import UserAvatar from '@/components/wsd/UserAvatar'
 
+import { APIType } from '@/api'
 import config from '@/config'
 import { getWSDMetadata } from '@/lib/metadata'
 import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
@@ -23,8 +24,8 @@ export default async function ProfileLayout({ children }: { children: React.Reac
   const wsd = sUseWSDAPI()
 
   const { data } = await wsd.auth.session()
-  const sessionData = data?.data as { user: { username: string } }
-  const username = sessionData?.user?.username
+  const sessionData = data?.data as { user: APIType<'User'> }
+  const user = sessionData?.user as APIType<'User'>
 
   const profileTabs = [
     { name: 'Profile', href: '/profile/details', icon: Icons.User },
@@ -35,17 +36,12 @@ export default async function ProfileLayout({ children }: { children: React.Reac
 
   return (
     <div className="min-h-screen flex flex-col gap-1 items-center justify-center p-4">
-      {username && (
-        <div className="flex flex-col justify-center items-center gap-1">
-          <Avatar className="w-24 h-24">
-            <AvatarImage src={`https://robohash.org/wsd-${username}/?size=96x96`} alt={username} />
-            <AvatarFallback>{Array.from(username)[0]}</AvatarFallback>
-          </Avatar>
-          <Link href={{ pathname: '/users/username' }} className="hover:underline">
-            {username}
-          </Link>
-        </div>
-      )}
+      <div className="flex flex-col justify-center items-center gap-1">
+        <UserAvatar user={user} className="w-24 h-24" />
+        <Link href={{ pathname: '/users/username' }} className="hover:underline">
+          {user.username}
+        </Link>
+      </div>
       <div className="flex flex-col justify-center items-center mb-36 w-full">
         <Card className="w-full max-w-xl">
           <CardContent className="p-6 flex flex-col gap-4">

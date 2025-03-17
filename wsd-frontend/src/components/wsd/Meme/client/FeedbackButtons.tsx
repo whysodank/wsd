@@ -94,7 +94,7 @@ export default function FeedbackButtons({
         )}
         aria-label="Bookmark"
       >
-        <Icons.Heart size={20} className={cn(isBookmarked && 'fill-primary text-primary')} />
+        <Icons.Heart size={20} className={cn(isBookmarked && 'text-blue-500 fill-blue-500')} />
       </Button>
     </div>
   )
