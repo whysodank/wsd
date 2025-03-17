@@ -13,19 +13,19 @@ export async function LeftColumn() {
   return (
     <div className="w-full">
       <div className="pb-4 flex flex-col gap-1">
-        <CategoryLink href={{ pathname: '/feed/home' }} icon={<Icons.Home size={16} />}>
+        <CategoryLink href={{ pathname: '/feed/home' }} icon={<Icons.Home size={20} />}>
           Home
         </CategoryLink>
-        <CategoryLink href={{ pathname: '/feed/hot' }} icon={<Icons.Flame size={16} />}>
+        <CategoryLink href={{ pathname: '/feed/hot' }} icon={<Icons.Flame size={20} />}>
           Hot
         </CategoryLink>
-        <CategoryLink href={{ pathname: '/feed/trending' }} icon={<Icons.TrendingUp size={16} />}>
+        <CategoryLink href={{ pathname: '/feed/trending' }} icon={<Icons.TrendingUp size={20} />}>
           Trending
         </CategoryLink>
-        <CategoryLink href={{ pathname: '/feed/conversational' }} icon={<Icons.MessagesSquare size={16} />}>
+        <CategoryLink href={{ pathname: '/feed/conversational' }} icon={<Icons.MessagesSquare size={24} />}>
           Conversational
         </CategoryLink>
-        <CategoryLink href={{ pathname: '/feed/recent ' }} icon={<Icons.Clock size={16} />}>
+        <CategoryLink href={{ pathname: '/feed/recent ' }} icon={<Icons.Clock size={20} />}>
           Recent
         </CategoryLink>
         <Separator />

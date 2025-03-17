@@ -57,7 +57,7 @@ export default function FeedbackButtons({
   }
 
   return (
-    <>
+    <div className="flex gap-1 flex-row items-center justify-center">
       <Button
         onClick={handleVote(1)}
         className="flex items-center p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
@@ -84,7 +84,7 @@ export default function FeedbackButtons({
         )}
         aria-label="Comment"
       >
-        <Icons.MessageCircle size={20} />
+        <Icons.MessageCircleMore size={20} />
         <span>{post.comment_count}</span>
       </Link>
       <Button
@@ -96,6 +96,6 @@ export default function FeedbackButtons({
       >
         <Icons.Heart size={20} className={cn(isBookmarked && 'fill-primary text-primary')} />
       </Button>
-    </>
+    </div>
   )
 }

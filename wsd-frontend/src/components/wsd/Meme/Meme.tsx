@@ -35,8 +35,8 @@ export async function Meme({
           <div
             className="absolute inset-0"
             style={{
-              // backgroundImage: `url(${post.image})`,
-              backgroundColor: 'black',
+              backgroundImage: `url(${post.image})`,
+              // backgroundColor: 'black',
               backgroundSize: 'cover',
               backgroundPosition: 'center',
               filter: 'blur(20px)',
@@ -48,7 +48,7 @@ export async function Meme({
             alt={post.title}
             className={cn(
               'relative z-10 w-auto max-w-[80%] h-auto max-md:max-w-full',
-              fullScreen ? 'max-w-full w-full' : 'max-h-[750px]'
+              fullScreen ? 'max-w-full w-full' : 'max-h-[900px]'
             )}
             loading="lazy"
           />
