@@ -59,23 +59,6 @@ def user_property(property_):
     return type(name, bases, attrs)
 
 
-def user_role_at_least(role):
-    def has_permission(self, request, view):  # NOQA
-        return request.user.role_is_at_least(role)
-
-    def has_object_permission(self, request, view, obj):  # NOQA
-        return request.user.role_is_at_least(role)
-
-    name = f"UserRoleAtLeastPermission(role={role})"
-    bases = (BasePermission,)
-    attrs = dict(
-        message=_(f"User role should be at least {role}"),
-        has_permission=has_permission,
-        has_object_permission=has_object_permission,
-    )
-    return type(name, bases, attrs)
-
-
 class IsAnonymous(BasePermission):
     """
     Custom permission to only allow access to unauthenticated users (anonymous).
