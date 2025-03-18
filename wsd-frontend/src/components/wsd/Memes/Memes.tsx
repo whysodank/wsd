@@ -15,6 +15,7 @@ import Meme from '@/components/wsd/Meme'
 import { APIQuery, APIType } from '@/api'
 import { includesType as includes } from '@/api/typeHelpers'
 import config from '@/config'
+import { useEffectAfterMount } from '@/lib/hooks'
 import { useWSDAPI } from '@/lib/serverHooks'
 import { cn } from '@/lib/utils'
 
@@ -60,7 +61,7 @@ export function Memes({
     setLoading(false)
   }
 
-  useEffect(() => {
+  useEffectAfterMount(() => {
     setPage(1)
     setPosts([])
     fetchPosts(1)

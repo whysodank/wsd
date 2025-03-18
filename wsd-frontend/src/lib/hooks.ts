@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { DependencyList, EffectCallback, useEffect, useRef, useState } from 'react'
 
 export function useElementAttribute<T extends HTMLElement, K extends keyof T>(attributeKey: K) {
   /**
@@ -103,4 +103,17 @@ export function useFormState<T>(initialState: T) {
     handleFormStateOnClick,
     resetFormState,
   }
+}
+
+export function useEffectAfterMount(effect: EffectCallback, deps: DependencyList) {
+  const isFirstRender = useRef(true)
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false
+      return
+    }
+    return effect()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, deps)
 }
