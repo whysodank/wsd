@@ -99,29 +99,31 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
               errorText={postErrors?.title?.join('\n')}
             />
           </div>
-          <div className="flex flex-col gap-2">
-            <Label htmlFor="postCategory">Category</Label>
-            <Select value={postState.category} onValueChange={handlePostStateValue('category')} name="category">
-              <SelectTrigger className="w-full" id="postCategory">
-                <SelectValue placeholder="Category" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectGroup>
-                  {categories.map((category) => (
-                    <SelectItem value={category.id} key={category.name}>
-                      <div className="flex flex-row gap-2 items-center">
-                        <RawSVGIcon svg={category.icon} />
-                        {category.name}
-                      </div>
-                    </SelectItem>
-                  ))}
-                </SelectGroup>
-              </SelectContent>
-            </Select>
-            {postErrors?.category?.join('\n') && (
-              <span className="text-sm text-destructive whitespace-pre-line">{postErrors?.category?.join('\n')}</span>
-            )}
-          </div>
+          {categories.length > 0 && (
+            <div className="flex flex-col gap-2">
+              <Label htmlFor="postCategory">Category</Label>
+              <Select value={postState.category} onValueChange={handlePostStateValue('category')} name="category">
+                <SelectTrigger className="w-full" id="postCategory">
+                  <SelectValue placeholder="Category" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    {categories.map((category) => (
+                      <SelectItem value={category.id} key={category.name}>
+                        <div className="flex flex-row gap-2 items-center">
+                          <RawSVGIcon svg={category.icon} />
+                          {category.name}
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+              {postErrors?.category?.join('\n') && (
+                <span className="text-sm text-destructive whitespace-pre-line">{postErrors?.category?.join('\n')}</span>
+              )}
+            </div>
+          )}
           <div className="flex flex-col gap-2">
             <Label htmlFor="postMedia" className="flex gap-2">
               <Icons.Shell size={16} />
