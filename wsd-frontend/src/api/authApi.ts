@@ -119,6 +119,13 @@ export class WSD_AUTH_API {
     })
   }
 
+  public async removeEmail(data: { email: string }) {
+    return await this.fetch('/account/email', {
+      method: 'DELETE',
+      body: JSON.stringify(data),
+    })
+  }
+
   public async resendVerificationEmail(data: { email: string }) {
     return await this.fetch('/account/email', {
       method: 'PUT',

@@ -52,6 +52,7 @@ export default function LoginForm() {
       toast('Login failed.')
     } else {
       router.push('/')
+      router.refresh()
       toast('Logged in successfully.')
     }
   }
@@ -75,7 +76,7 @@ export default function LoginForm() {
           <PasswordInput
             id="password"
             type="password"
-            placeholder="Set a new password"
+            placeholder="Enter your password"
             required
             value={loginState.password}
             onChange={handleLoginStateEvent('password')}

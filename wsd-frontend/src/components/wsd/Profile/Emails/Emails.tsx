@@ -5,6 +5,7 @@ import { Button } from '@/components/shadcn/button'
 import { Overlay, OverlayClose, OverlayContent, OverlayTrigger } from '@/components/shadcn/overlay'
 import {
   AddEmailForm,
+  DeleteEmailButton,
   MarkEmailPrimaryButton,
   ResendVerificationEmailButton,
 } from '@/components/wsd/Profile/Emails/client'
@@ -53,13 +54,18 @@ export async function Emails() {
                       </MarkEmailPrimaryButton>
                     )}
                     {!email.verified && (
-                      <ResendVerificationEmailButton
-                        variant="ghost"
-                        className="w-full justify-start"
-                        email={email.email}
-                      >
-                        Resend Verification Email
-                      </ResendVerificationEmailButton>
+                      <>
+                        <ResendVerificationEmailButton
+                          variant="ghost"
+                          className="w-full justify-start"
+                          email={email.email}
+                        >
+                          Resend Verification Email
+                        </ResendVerificationEmailButton>
+                        <DeleteEmailButton variant="ghost" className="w-full justify-start" email={email.email}>
+                          Delete Email
+                        </DeleteEmailButton>
+                      </>
                     )}
                   </OverlayClose>
                 </OverlayContent>

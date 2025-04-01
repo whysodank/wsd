@@ -8,8 +8,8 @@ export async function PasswordReset({ passwordResetKey }: { passwordResetKey: st
     <>
       <Card className="max-w-md w-full">
         <CardHeader className="flex flex-col gap-1">
-          <CardTitle className="text-2xl font-bold">Signup</CardTitle>
-          <CardDescription>Signup with your email or use an existing account</CardDescription>
+          <CardTitle className="text-2xl font-bold">Reset Password</CardTitle>
+          <CardDescription>Reset your existing password</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-2">
           <PasswordResetForm passwordResetKey={passwordResetKey} />

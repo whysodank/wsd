@@ -10,8 +10,8 @@
             <mj-text>{{ code }}</mj-text>
         {% else %}
             <mj-text>{% blocktranslate %}To confirm this is correct, click the button below.{% endblocktranslate %}</mj-text>
-            <mj-button href="{{ activate_url }}">Confirm Your email</mj-button>
-            <mj-text>If the button doesn't work you can copy and paste the url to your browser.</mj-text>
+            <mj-button href="{{ activate_url }}">{% blocktrans %}Confirm Your email{% endblocktrans %}</mj-button>
+            <mj-text>{% blocktrans %}If the button doesn't work you can copy and paste the url to your browser.{% endblocktrans %}</mj-text>
             <mj-text>{{ activate_url }}</mj-text>
         {% endif %}
     {% endautoescape %}

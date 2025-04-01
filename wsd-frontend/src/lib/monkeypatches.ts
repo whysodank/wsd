@@ -48,4 +48,5 @@ export function globalWSDAPI(window: Window) {
     () => Promise.resolve(getCookie(config.api.sessionCookieName) || null),
     () => Promise.resolve(getCookie(config.api.csrfTokenCookieName) || null)
   )
+  return window.wsd
 }

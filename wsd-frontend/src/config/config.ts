@@ -5,7 +5,7 @@ const RAW = Object.freeze({
   name: process.env.NEXT_PUBLIC_WSD__NAME,
   domain: process.env.NEXT_PUBLIC_WSD__DOMAIN,
   api: {
-    baseUrl: process.env.NEXT_PUBLIC_WSD__API__BASE_URL,
+    baseURL: process.env.NEXT_PUBLIC_WSD__API__BASE_URL,
     authBaseURL: process.env.NEXT_PUBLIC_WSD__API__AUTH_BASE_URL,
   },
   devtools: {
@@ -21,12 +21,13 @@ export const config = Object.freeze({
   domain: stringConfig({ name: 'domain', value: RAW.domain }),
   url: `https://${stringConfig({ name: 'domain', value: RAW.domain })}`,
   api: {
-    baseURL: stringConfig({ name: 'api.baseURL', value: RAW.api.baseUrl }),
+    baseURL: stringConfig({ name: 'api.baseURL', value: RAW.api.baseURL }),
     authBaseURL: stringConfig({ name: 'api.authBaseURL', value: RAW.api.authBaseURL }),
     sessionCookieName: 'sessionid',
     sessionTokenHeaderName: 'X-Session-Token',
     csrfTokenCookieName: 'csrftoken',
     csrfTokenHeaderName: 'X-CSRFToken',
+    csrfTokenPostKey: 'csrfmiddlewaretoken',
   },
   ux: {
     defaultPostPerPage: 10, // It's infinite scroll, so this is how much we fetch per scroll

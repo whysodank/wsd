@@ -16,6 +16,7 @@ export default function LogoutButton(props: Omit<React.ComponentPropsWithoutRef<
   async function handleLogout() {
     await wsd.auth.logout()
     router.push('/')
+    router.refresh()
     toast('Successfully logged out.')
   }
 

@@ -14,11 +14,7 @@ export async function PasswordResetEmailSent() {
         </CardHeader>
         <CardContent className="text-muted-foreground">
           If you don't see the email, please check your spam folder. If you still don't see an email you can go through
-          the{' '}
-          <Link href={{ pathname: '/auth/forgot-password' }} className="underline">
-            password resetting
-          </Link>{' '}
-          process again to resend the email.
+          the password resetting process again to resend the email.
         </CardContent>
       </Card>
       <div className="flex justify-center items-center gap-2">

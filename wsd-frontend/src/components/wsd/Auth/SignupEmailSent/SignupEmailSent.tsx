@@ -14,11 +14,7 @@ export async function SignupEmailSent() {
         </CardHeader>
         <CardContent className="text-muted-foreground">
           If you don't see the email, please check your spam folder. If you still don't see an email you can go through
-          the{' '}
-          <Link href={{ pathname: '/auth/signup' }} className="underline">
-            signup
-          </Link>{' '}
-          process again to resend the email.
+          the signup process again to resend the email.
         </CardContent>
       </Card>
       <div className="flex justify-center items-center gap-2">
