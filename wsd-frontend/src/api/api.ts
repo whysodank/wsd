@@ -23,6 +23,11 @@ export class WSDAPI {
     return response?.ok
   }
 
+  signupCompleted = async () => {
+    const { data } = await this.auth.session()
+    return data?.data?.user?.signup_completed || false
+  }
+
   getCurrentUser = async (): Promise<APIType<'User'> | undefined> => {
     const { data: userData } = await this.me()
     return userData
@@ -88,6 +93,10 @@ export class WSDAPI {
 
   public async putMe(data: APIType<'UserRequest'>) {
     return await this.client.PUT('/v0/users/me/', { body: data })
+  }
+
+  public async completeSignup(data: APIType<'UserCompleteSignupRequest'>) {
+    return await this.client.POST('/v0/users/me/complete-signup/', { body: data })
   }
 
   public async patchMe(data: APIType<'PatchedUserRequest'>) {

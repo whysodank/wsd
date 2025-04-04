@@ -1,13 +1,18 @@
 from apps.core.models import PostComment, PostCommentVote
 from apps.rest.utils.filters import make_filters
-from apps.rest.utils.permissions import IsSuperUser, ReadOnly, is_owner, prevent_actions
+from apps.rest.utils.permissions import (
+    IsAuthenticatedANDSignupCompleted,
+    IsSuperUser,
+    ReadOnly,
+    is_owner,
+    prevent_actions,
+)
 from apps.rest.utils.schema_helpers import fake_serializer
 from apps.rest.v0.serializers import PostCommentSerializer
 from django.db.models import CharField, Count, OuterRef, Q, Subquery, Value
 from django_filters import NumberFilter
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .base import BaseModelViewSet, django_to_drf_validation_error
@@ -21,7 +26,10 @@ class PostCommentViewSet(BaseModelViewSet):
 
     permission_classes = [
         IsSuperUser
-        | (IsAuthenticated & (is_owner("user") | prevent_actions("update", "partial_update", "destroy")))
+        | (
+            IsAuthenticatedANDSignupCompleted
+            & (is_owner("user") | prevent_actions("update", "partial_update", "destroy"))
+        )
         | ReadOnly
     ]
 
@@ -85,7 +93,7 @@ class PostCommentViewSet(BaseModelViewSet):
         methods=["POST"],
         url_path="upvote",
         serializer_class=fake_serializer("UpvotePostComment", dont_initialize=True),
-        permission_classes=[IsAuthenticated],
+        permission_classes=[IsAuthenticatedANDSignupCompleted],
     )
     @django_to_drf_validation_error
     def upvote(self, *args, **kwargs):
@@ -102,7 +110,7 @@ class PostCommentViewSet(BaseModelViewSet):
         methods=["POST"],
         url_path="downvote",
         serializer_class=fake_serializer("DownvotePostComment", dont_initialize=True),
-        permission_classes=[IsAuthenticated],
+        permission_classes=[IsAuthenticatedANDSignupCompleted],
     )
     @django_to_drf_validation_error
     def downvote(self, *args, **kwargs):
@@ -119,7 +127,7 @@ class PostCommentViewSet(BaseModelViewSet):
         methods=["POST"],
         url_path="unvote",
         serializer_class=fake_serializer("UnvotePostComment", dont_initialize=True),
-        permission_classes=[IsAuthenticated],
+        permission_classes=[IsAuthenticatedANDSignupCompleted],
     )
     @django_to_drf_validation_error
     def unvote(self, *args, **kwargs):

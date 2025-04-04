@@ -6,7 +6,11 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-from wsd.monkeypatches import monkeypatch_accept_self_signed_certs, monkeypatch_drf_spectacular
+from wsd.monkeypatches import (
+    monkeypatch_accept_self_signed_certs,
+    monkeypatch_allauth_username_email_login,
+    monkeypatch_drf_spectacular,
+)
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "wsd.settings")
 
@@ -14,3 +18,5 @@ monkeypatch_drf_spectacular()
 monkeypatch_accept_self_signed_certs()
 
 application = get_wsgi_application()
+
+monkeypatch_allauth_username_email_login()  # Requires apps to be loaded

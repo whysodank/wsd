@@ -1,13 +1,18 @@
 from apps.core.models import Post, PostBookmark, PostVote
 from apps.rest.utils.filters import make_filters
-from apps.rest.utils.permissions import IsSuperUser, ReadOnly, is_owner, prevent_actions
+from apps.rest.utils.permissions import (
+    IsAuthenticatedANDSignupCompleted,
+    IsSuperUser,
+    ReadOnly,
+    is_owner,
+    prevent_actions,
+)
 from apps.rest.utils.schema_helpers import fake_serializer
 from apps.rest.v0.serializers import PostSerializer
 from django.db.models import BooleanField, Count, Exists, IntegerField, OuterRef, Q, Subquery, Value
 from django_filters import BooleanFilter, ChoiceFilter, NumberFilter
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
-from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
 from .base import BaseModelViewSet, django_to_drf_validation_error
@@ -20,7 +25,10 @@ class PostViewSet(BaseModelViewSet):
 
     permission_classes = [
         IsSuperUser
-        | (IsAuthenticated & (is_owner("user") | prevent_actions("update", "partial_update", "destroy")))
+        | (
+            IsAuthenticatedANDSignupCompleted
+            & (is_owner("user") | prevent_actions("update", "partial_update", "destroy"))
+        )
         | ReadOnly
     ]
 
@@ -103,7 +111,7 @@ class PostViewSet(BaseModelViewSet):
         methods=["POST"],
         url_path="upvote",
         serializer_class=fake_serializer("UpvotePost", dont_initialize=True),
-        permission_classes=[IsAuthenticated],
+        permission_classes=[IsAuthenticatedANDSignupCompleted],
     )
     @django_to_drf_validation_error
     def upvote(self, *args, **kwargs):
@@ -120,7 +128,7 @@ class PostViewSet(BaseModelViewSet):
         methods=["POST"],
         url_path="downvote",
         serializer_class=fake_serializer("DownvotePost", dont_initialize=True),
-        permission_classes=[IsAuthenticated],
+        permission_classes=[IsAuthenticatedANDSignupCompleted],
     )
     @django_to_drf_validation_error
     def downvote(self, *args, **kwargs):
@@ -137,7 +145,7 @@ class PostViewSet(BaseModelViewSet):
         methods=["POST"],
         url_path="unvote",
         serializer_class=fake_serializer("UnvotePost", dont_initialize=True),
-        permission_classes=[IsAuthenticated],
+        permission_classes=[IsAuthenticatedANDSignupCompleted],
     )
     @django_to_drf_validation_error
     def unvote(self, *args, **kwargs):
@@ -154,7 +162,7 @@ class PostViewSet(BaseModelViewSet):
         methods=["POST"],
         url_path="bookmark",
         serializer_class=fake_serializer("BookmarkPost", dont_initialize=True),
-        permission_classes=[IsAuthenticated],
+        permission_classes=[IsAuthenticatedANDSignupCompleted],
     )
     @django_to_drf_validation_error
     def bookmark(self, *args, **kwargs):
@@ -171,7 +179,7 @@ class PostViewSet(BaseModelViewSet):
         methods=["POST"],
         url_path="unbookmark",
         serializer_class=fake_serializer("UnbookmarkPost", dont_initialize=True),
-        permission_classes=[IsAuthenticated],
+        permission_classes=[IsAuthenticatedANDSignupCompleted],
     )
     @django_to_drf_validation_error
     def unbookmark(self, *args, **kwargs):

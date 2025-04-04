@@ -2,10 +2,6 @@ import re
 from functools import wraps
 from itertools import combinations
 
-from django.contrib.admin import action as action_
-from django.db.transaction import atomic
-from django_object_actions import takes_instance_or_queryset
-
 
 def noop(*a, **kw):
     pass
@@ -146,12 +142,20 @@ def all_combinations(options):
     return [list(comb) for r in range(1, len(options) + 1) for comb in combinations(options, r)]
 
 
-def action(description):
+def check_required_keys(obj, conditions):
     """
-    ModelAdmin method decorator to mark a method as both list and detail action.
+    Check if the object has exactly one of the required key groups.
+    Used when a function can take multiple different sets of arguments but only some of them make sense together.
+    For instance, a function that can take either "a" or "b and c" but not both at the same time,
+    and at least one set is required.
     """
+    matching_conditions = [
+        name
+        for name, keys in conditions.items()
+        if all(obj.get(key) is not None for key in keys) and all(key in keys or obj[key] is None for key in obj)
+    ]
 
-    def decorator(func):
-        return atomic(takes_instance_or_queryset(action_(description=description)(func)))
+    if len(matching_conditions) != 1:
+        raise ValueError(f"Object keys do not match exactly one required condition. {conditions}")
 
-    return decorator
+    return matching_conditions[0]

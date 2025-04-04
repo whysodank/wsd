@@ -424,6 +424,26 @@ export interface paths {
     patch: operations['users_me_partial_update']
     trace?: never
   }
+  '/v0/users/me/complete-signup/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Complete Signup
+     * @description Complete the signup process for the current user
+     */
+    post: operations['users_me_complete_signup_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
 }
 export type webhooks = Record<string, never>
 export interface components {
@@ -1053,6 +1073,40 @@ export interface components {
       readonly created_at: string
       /** Format: date-time */
       readonly updated_at: string
+      readonly signup_completed: string
+    }
+    UserCompleteSignupError: {
+      readonly username: string[]
+      readonly password: string[]
+      readonly non_field_errors: string[]
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    UserCompleteSignupRequest: {
+      /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+      username: string
+      password: string
     }
     UserError: {
       readonly id: string[]
@@ -1065,6 +1119,7 @@ export interface components {
       readonly is_superuser: string[]
       readonly created_at: string[]
       readonly updated_at: string[]
+      readonly signup_completed: string[]
       readonly non_field_errors: string[]
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
@@ -1668,6 +1723,7 @@ export interface operations {
       query?: {
         bookmarked?: boolean
         category?: string
+        category__handle?: string
         category__isnull?: boolean
         comment_count?: number
         comment_count__gt?: number
@@ -1680,6 +1736,7 @@ export interface operations {
         created_at__lt?: string
         created_at__lte?: string
         include?: 'category' | 'tags' | 'tags,category' | 'tags,user' | 'tags,user,category' | 'user' | 'user,category'
+        is_repost?: boolean
         negative_vote_count?: number
         negative_vote_count__gt?: number
         negative_vote_count__gte?: number
@@ -2283,6 +2340,39 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['UserError']
+        }
+      }
+    }
+  }
+  users_me_complete_signup_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody: {
+      content: {
+        'application/json': components['schemas']['UserCompleteSignupRequest']
+        'application/x-www-form-urlencoded': components['schemas']['UserCompleteSignupRequest']
+        'multipart/form-data': components['schemas']['UserCompleteSignupRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['User']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['UserCompleteSignupError']
         }
       }
     }

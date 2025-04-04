@@ -1,14 +1,26 @@
+from contextlib import contextmanager
 from uuid import UUID, uuid4
 
-from django.db import models
-from django.utils.translation import gettext_lazy as _
-from django_lifecycle import BEFORE_CREATE, LifecycleModel, hook
+from django.db import models, transaction
+from django.utils.translation import gettext as _
+from django_lifecycle import (
+    AFTER_CREATE,
+    AFTER_SAVE,
+    AFTER_UPDATE,
+    BEFORE_CREATE,
+    BEFORE_SAVE,
+    BEFORE_UPDATE,
+    LifecycleModelMixin,
+    hook,
+)
 
 
-class BaseModel(LifecycleModel):
+class BaseModel(LifecycleModelMixin, models.Model):
     STR = None
     REPR = "{self.__class__.__name__}(id={self.id})"
     FIELDS = ["id", "slug", "created_at", "updated_at"]
+
+    _skip_full_clean = False
 
     id = models.UUIDField(primary_key=True, db_index=True, editable=False, default=uuid4, verbose_name=_("ID"))
     slug = models.SlugField(db_index=True, null=True, blank=True, verbose_name=_("Slug"))
@@ -21,6 +33,36 @@ class BaseModel(LifecycleModel):
         # We would preferably switch this guy into a generated field in postgres as soon as django supports it
         # instead of writing this inside a hook on application logic
         self.slug = self._uuid_to_hex(self.id)
+
+    @transaction.atomic
+    def save(self, *args, **kwargs):
+        skip_hooks = kwargs.pop("skip_hooks", False)
+        save = super().save
+
+        if skip_hooks:
+            save(*args, **kwargs)
+            return
+
+        self._clear_watched_fk_model_cache()
+        is_new = self._state.adding
+
+        if is_new:
+            self._run_hooked_methods(BEFORE_CREATE, **kwargs)
+        else:
+            self._run_hooked_methods(BEFORE_UPDATE, **kwargs)
+
+        self._run_hooked_methods(BEFORE_SAVE, **kwargs)
+        if not self._skip_full_clean:
+            self.full_clean()
+        save(*args, **kwargs)
+        self._run_hooked_methods(AFTER_SAVE, **kwargs)
+
+        if is_new:
+            self._run_hooked_methods(AFTER_CREATE, **kwargs)
+        else:
+            self._run_hooked_methods(AFTER_UPDATE, **kwargs)
+
+        transaction.on_commit(self._reset_initial_state)
 
     @staticmethod
     def _uuid_to_hex(value):
@@ -50,12 +92,31 @@ class BaseModel(LifecycleModel):
             setattr(self, key, val)
         return self.save(skip_hooks=skip_hooks, update_fields=kwargs.keys())
 
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        return super().save(*args, **kwargs)
-
     def as_queryset(self):
         return self.__class__.objects.filter(id=self.id)
+
+    @contextmanager
+    def skip_full_clean(self):
+        original_value = self._skip_full_clean
+        self._skip_full_clean = True
+        try:
+            yield
+        finally:
+            self._skip_full_clean = original_value
+
+    @contextmanager
+    def skip_field_validators(self, *field_names):
+        original_validators = {}
+        for field_name in field_names:
+            field = self._meta.get_field(field_name)
+            original_validators[field_name] = field.validators
+            field.validators = []
+        try:
+            yield
+        finally:
+            for field_name, validators in original_validators.items():
+                field = self._meta.get_field(field_name)
+                field.validators = validators
 
     __repr__ = __default_repr
     __str__ = __default_str

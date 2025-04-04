@@ -72,3 +72,14 @@ class IsAnonymous(BasePermission):
 class IsSuperUser(BasePermission):
     def has_permission(self, request, view):
         return bool(request.user and request.user.is_superuser)
+
+
+class IsAuthenticatedANDSignupCompleted(BasePermission):
+    """
+    Custom permission to only allow access to authenticated users who have completed signup.
+    """
+
+    def has_permission(self, request, view):
+        # Check if the user is authenticated and has completed signup
+        user = request.user
+        return bool(user and user.is_authenticated and getattr(user, user.SIGNUP_COMPLETED_FIELD, False))

@@ -11,6 +11,7 @@ DEBUG = config.DEBUG
 SECRET_KEY = config.SECRET_KEY
 ALLOWED_HOSTS = config.ALLOWED_HOSTS
 PROTOCOL = "https" if not DEBUG else "http"
+PROTOCOL = "https"
 
 # Application definition
 WSD_APPS_FIRST = [
@@ -28,6 +29,7 @@ THIRD_PARTY_APPS = [
     "admin_auto_filters",
     "django_filters",
     "django_object_actions",
+    "more_admin_filters",
     # Auth libraries
     "allauth",
     "allauth.headless",
@@ -66,6 +68,7 @@ MIDDLEWARE = [
     "apps.common.utils.media_whitenoise_middleware.MediaWhiteNoiseMiddleware",
     "django_hosts.middleware.HostsRequestMiddleware",
     "pghistory.middleware.HistoryMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     # "django.contrib.sessions.middleware.SessionMiddleware",
     "apps.core.middleware.session.CookieORHeaderSessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
@@ -136,18 +139,20 @@ AUTH_PASSWORD_VALIDATORS = [
 AUTH_USER_MODEL = "user.User"
 
 ACCOUNT_ADAPTER = "apps.core.backends.allauth.WSDAllauthAccountAdapter"
-ACCOUNT_EMAIL_REQUIRED = True
+SOCIALACCOUNT_ADAPTER = "apps.core.backends.allauth.WSDAllauthSocialAccountAdapter"
+HEADLESS_ADAPTER = "apps.core.backends.allauth.WSDAllauthHeadlessAccountAdapter"
+ACCOUNT_SIGNUP_FIELDS = ["email*", "username*"]
+ACCOUNT_LOGIN_METHODS = ["username", "email"]
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False
 ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False
-ACCOUNT_AUTHENTICATION_METHOD = "username_email"
 
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True
 SOCIALACCOUNT_STORE_TOKENS = True
 
 AUTHENTICATION_BACKENDS = [
-    "django.contrib.auth.backends.ModelBackend",
+    "apps.common.backends.auth.UsernameOREmailModelBackend",
     "allauth.account.auth_backends.AuthenticationBackend",
 ]
 HEADLESS_ONLY = True
@@ -171,6 +176,7 @@ SOCIALACCOUNT_PROVIDERS = {
             "access_type": "offline",
         },
         "OAUTH_PKCE_ENABLED": True,
+        "VERIFIED_EMAIL": True,
     },
     "microsoft": {
         "APPS": [
@@ -182,6 +188,7 @@ SOCIALACCOUNT_PROVIDERS = {
                 },
             },
         ],
+        "VERIFIED_EMAIL": True,
     },
     "reddit": {
         "APP": {
@@ -191,6 +198,7 @@ SOCIALACCOUNT_PROVIDERS = {
         "AUTH_PARAMS": {"duration": "permanent"},
         "SCOPE": ["identity"],
         "USER_AGENT": f"web:{config.OAUTH.REDDIT.CLIENT_ID}:0.1.0 (by /u/{config.OAUTH.REDDIT.APP_OWNER_USERNAME})",
+        "VERIFIED_EMAIL": True,
     },
     "discord": {
         "APP": {
@@ -198,6 +206,7 @@ SOCIALACCOUNT_PROVIDERS = {
             "secret": config.OAUTH.DISCORD.CLIENT_SECRET,
         },
         "SCOPE": ["identify", "email"],
+        "VERIFIED_EMAIL": True,
     },
     "github": {
         "APP": {
@@ -205,6 +214,7 @@ SOCIALACCOUNT_PROVIDERS = {
             "secret": config.OAUTH.GITHUB.CLIENT_SECRET,
         },
         "SCOPE": ["user"],
+        "VERIFIED_EMAIL": True,
     },
 }
 
@@ -225,7 +235,7 @@ USE_TZ = True
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-MEDIA_URL = f"http://{API_SUBDOMAIN}.{HOST}/media/"
+MEDIA_URL = f"{PROTOCOL}://{API_SUBDOMAIN}.{HOST}/media/"
 MEDIA_ROOT = BASE_DIR / "mediafiles"
 
 X_FRAME_OPTIONS = "SAMEORIGIN"

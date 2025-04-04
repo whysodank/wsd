@@ -675,6 +675,10 @@ paths:
           type: string
           format: uuid
       - in: query
+        name: category__handle
+        schema:
+          type: string
+      - in: query
         name: category__isnull
         schema:
           type: boolean
@@ -737,6 +741,10 @@ paths:
           - user,category
         explode: false
         style: form
+      - in: query
+        name: is_repost
+        schema:
+          type: boolean
       - in: query
         name: negative_vote_count
         schema:
@@ -1517,6 +1525,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserError'
+          description: ''
+  /v0/users/me/complete-signup/:
+    post:
+      operationId: users_me_complete_signup_create
+      description: Complete the signup process for the current user
+      summary: Complete Signup
+      tags:
+      - users
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserCompleteSignupRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/UserCompleteSignupRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/UserCompleteSignupRequest'
+        required: true
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserCompleteSignupError'
           description: ''
 components:
   schemas:
@@ -2526,6 +2570,9 @@ components:
           type: string
           format: date-time
           readOnly: true
+        signup_completed:
+          type: string
+          readOnly: true
       required:
       - created_at
       - email
@@ -2533,7 +2580,72 @@ components:
       - is_active
       - is_staff
       - is_superuser
+      - signup_completed
       - updated_at
+      - username
+    UserCompleteSignupError:
+      type: object
+      properties:
+        username:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        password:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        non_field_errors:
+          type: array
+          items:
+            type: string
+          readOnly: true
+      required:
+      - non_field_errors
+      - password
+      - username
+    UserCompleteSignupRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        username:
+          type: string
+          minLength: 1
+          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
+            only.
+          pattern: ^[\w.@+-]+$
+          maxLength: 150
+        password:
+          type: string
+          writeOnly: true
+          minLength: 1
+          maxLength: 128
+      required:
+      - password
       - username
     UserError:
       type: object
@@ -2588,6 +2700,11 @@ components:
           items:
             type: string
           readOnly: true
+        signup_completed:
+          type: array
+          items:
+            type: string
+          readOnly: true
         non_field_errors:
           type: array
           items:
@@ -2603,6 +2720,7 @@ components:
       - is_superuser
       - last_name
       - non_field_errors
+      - signup_completed
       - updated_at
       - username
     UserRequest:

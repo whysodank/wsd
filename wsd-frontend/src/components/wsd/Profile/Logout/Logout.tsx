@@ -1,4 +1,4 @@
-import { LogoutButton } from '@/components/wsd/Profile/Logout/client'
+import LogoutButton from '@/components/wsd/LogoutButton'
 
 export async function Logout() {
   return (
