@@ -13,6 +13,12 @@ const RAW = Object.freeze({
       gaID: process.env.NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__GOOGLE_ANALYTICS__GA_ID,
     },
   },
+  verification: {
+    microsoft: {
+      associatedApplicationID: process.env.NEXT_PUBLIC_WSD__VERIFICATION__MICROSOFT__ASSOCIATED_APPLICATION_ID,
+    },
+  },
+  githubLink: process.env.NEXT_PUBLIC_WSD__GITHUB_LINK,
 })
 
 export const config = Object.freeze({
@@ -37,4 +43,14 @@ export const config = Object.freeze({
       gaID: stringConfig({ name: 'googleAnalytics.gaID', value: RAW.devtools.googleAnalytics.gaID, default: '' }),
     },
   },
+  verification: {
+    microsoft: {
+      associatedApplicationID: stringConfig({
+        name: 'verification.microsoft.associatedApplicationID',
+        value: RAW.verification.microsoft.associatedApplicationID,
+        default: '',
+      }),
+    },
+  },
+  githubLink: stringConfig({ name: 'githubLink', value: RAW.githubLink, default: '' }),
 })
