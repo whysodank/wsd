@@ -94,7 +94,7 @@ const config = {
     },
   },
   // eslint-disable-next-line @typescript-eslint/no-require-imports
-  plugins: [require('tailwindcss-animate')],
+  plugins: [require('tailwindcss-animate'), require('@tailwindcss/typography')],
   safelist: [
     // This is for Overlay component to work
     ...screens.flatMap((screen) => displayUtilities.map((util) => `${screen}:${util}`)),

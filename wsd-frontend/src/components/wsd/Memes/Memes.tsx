@@ -63,7 +63,6 @@ export function Memes({
 
   useEffectAfterMount(() => {
     setPage(1)
-    setPosts([])
     fetchPosts(1)
   }, [searchParams])
 
