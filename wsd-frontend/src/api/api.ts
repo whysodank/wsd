@@ -119,14 +119,6 @@ export class WSDAPI {
     return await this.client.DELETE('/v0/posts/{id}/', { params: { path: { id } } })
   }
 
-  public async putPost(id: string, data: APIType<'PostRequest'>) {
-    return await this.client.PUT('/v0/posts/{id}/', { params: { path: { id } }, body: data })
-  }
-
-  public async patchPost(id: string, data: APIType<'PatchedPostUpdateRequest'>) {
-    return await this.client.PATCH('/v0/posts/{id}/', { params: { path: { id } }, body: data })
-  }
-
   public async upvotePost(id: string) {
     return await this.client.POST('/v0/posts/{id}/upvote/', { params: { path: { id } } })
   }

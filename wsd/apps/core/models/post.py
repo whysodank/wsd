@@ -51,6 +51,7 @@ class Post(BaseModel):
         verbose_name=_("Image"),
         help_text=_("The post itself."),
     )
+    is_nsfw = models.BooleanField(default=False, verbose_name=_("Is NSFW?"))
     tags = tags(related_name="posts")
 
     # Feedback from the user

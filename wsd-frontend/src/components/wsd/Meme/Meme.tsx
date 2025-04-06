@@ -4,6 +4,7 @@ import Link from 'next/link'
 
 import * as Icons from 'lucide-react'
 
+import { AspectRatio } from '@/components/shadcn/aspect-ratio'
 import { Badge } from '@/components/shadcn/badge'
 import { Button } from '@/components/shadcn/button'
 import { FeedbackButtons } from '@/components/wsd/Meme/client'
@@ -15,10 +16,12 @@ export function Meme({
   post,
   withTags = false,
   fullScreen = false,
+  isAuthenticated = false,
 }: {
   post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
   withTags?: boolean
   fullScreen?: boolean
+  isAuthenticated?: boolean
 }) {
   return (
     <article
@@ -33,28 +36,38 @@ export function Meme({
             {post.title}
           </Link>
         </h2>
-        <div className="relative w-full flex justify-center items-center bg-black overflow-hidden">
-          <div
-            className="absolute inset-0"
-            style={{
-              backgroundImage: `url(${post.image})`,
-              // backgroundColor: 'black',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              filter: 'blur(20px)',
-            }}
-          ></div>
-          <div className="absolute inset-0 bg-black/60"></div>
-          <img
-            src={post.image}
-            alt={post.title}
-            className={cn(
-              'relative z-10 lg:w-5/6 max-w-[80%] h-auto max-md:max-w-full',
-              fullScreen ? 'max-w-full w-full' : 'max-h-[900px]'
+        <Link className="hover:underline break-word" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
+          <div className="relative w-full flex justify-center items-center bg-black overflow-hidden">
+            <div
+              className="absolute inset-0"
+              style={{
+                // backgroundImage: `url(${post.image})`,
+                backgroundColor: 'black',
+                backgroundSize: 'cover',
+                backgroundPosition: 'center',
+                filter: 'blur(20px)',
+              }}
+            ></div>
+            <div className="absolute inset-0 bg-black/60"></div>
+            {!isAuthenticated && post.is_nsfw ? (
+              <AspectRatio ratio={16 / 9} className="text-white">
+                <div className="flex h-full w-full items-center justify-center">
+                  <h1 className="text-4xl font-bold uppercase tracking-wider">NSFW</h1>
+                </div>
+              </AspectRatio>
+            ) : (
+              <img
+                src={post.image}
+                alt={post.title}
+                className={cn(
+                  'relative z-10 lg:w-5/6 max-w-[80%] h-auto max-md:max-w-full',
+                  fullScreen ? 'max-w-full w-full' : 'max-h-[900px]'
+                )}
+                loading="lazy"
+              />
             )}
-            loading="lazy"
-          />
-        </div>
+          </div>
+        </Link>
         {withTags && (
           <div className="flex flex-wrap gap-2">
             {post.tags.map((tag) => (

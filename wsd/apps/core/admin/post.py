@@ -11,13 +11,13 @@ class PostAdmin(BaseAdmin):
     search_fields = ["title"]
     autocomplete_fields = ["user", "initial", "tags", "category"]
     autocomplete_list_filter = ["user", "initial", "category", "tags"]
-    list_filter = ["is_repost"]
+    list_filter = ["is_repost", "is_nsfw"]
     list_display = ["title", "user"]
     object_fieldsets = [
         [["user", "title", "image", "original_source", "category", "tags"], _("Post")],
     ]
     meta_fieldsets = [
-        [["initial", "is_repost"], _("Informational")],
+        [["initial", "is_repost", "is_nsfw"], _("Informational")],
         [Post.HASH_FIELDS, _("Post")],
         [Post.EXTRACTED_TEXT_FIELDS, _("Text")],
     ]

@@ -22,6 +22,7 @@ class PostViewSet(BaseModelViewSet):
     endpoint = "posts"
     model = Post
     serializer_class = PostSerializer
+    disallowed_methods = ["update", "partial_update"]
 
     permission_classes = [
         IsSuperUser
@@ -59,17 +60,6 @@ class PostViewSet(BaseModelViewSet):
         "negative_vote_count",
         "comment_count",
     ]
-
-    update_schema = fake_serializer(
-        name="PostUpdateSerializer",
-        base=PostSerializer,
-        remove_fields=["category"],
-    )
-
-    crud_extend_default_schema = {
-        "update": {"request": update_schema},
-        "partial_update": {"request": update_schema},
-    }
 
     def get_queryset(self):
         qs = Post.objects.annotate(

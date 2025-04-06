@@ -25,10 +25,12 @@ export function Memes({
   query,
   initialPosts,
   hasMorePages,
+  isAuthenticated = false,
 }: {
   query?: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>
   initialPosts?: APIType<'Post'>[]
   hasMorePages?: boolean
+  isAuthenticated?: boolean
 }) {
   const wsd = useWSDAPI()
   const searchParams = useSearchParams()
@@ -85,7 +87,11 @@ export function Memes({
     <div className="flex flex-col gap-2 items-center md:min-w-[840px] w-full">
       {posts.map((post) => (
         <div className="contents" key={post.id}>
-          <Meme post={includes(includes({ ...post }, 'user', 'User'), 'tags', 'PostTag', true)} withTags />
+          <Meme
+            post={includes(includes({ ...post }, 'user', 'User'), 'tags', 'PostTag', true)}
+            withTags
+            isAuthenticated={isAuthenticated}
+          />
           <Separator className="max-sm:w-[calc(100%-8px)] w-5/6" />
         </div>
       ))}

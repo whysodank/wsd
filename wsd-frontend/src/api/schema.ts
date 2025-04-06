@@ -236,11 +236,7 @@ export interface paths {
      * @description Retrieve post by id
      */
     get: operations['posts_retrieve']
-    /**
-     * Put Post
-     * @description Update an existing post by id
-     */
-    put: operations['posts_update']
+    put?: never
     post?: never
     /**
      * Delete Post
@@ -249,11 +245,7 @@ export interface paths {
     delete: operations['posts_destroy']
     options?: never
     head?: never
-    /**
-     * Patch Post
-     * @description Partially update an existing post by id
-     */
-    patch: operations['posts_partial_update']
+    patch?: never
     trace?: never
   }
   '/v0/posts/{id}/bookmark/': {
@@ -593,39 +585,6 @@ export interface components {
      *             }
      *         ]
      *     } */
-    PatchedPostUpdateRequest: {
-      /** @description Title of the post. */
-      title?: string
-      /**
-       * Format: binary
-       * @description Image(jpeg, jpg, png, gif, webp) in base64 format
-       */
-      image?: string
-      tags?: string[]
-    }
-    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
-     *     read only.
-     *
-     *     GET /api/v1/people/5/
-     *     {
-     *         "id": 5,
-     *         "first_name": "John",
-     *         "last_name": "Doe",
-     *         "labels": [7]
-     *     }
-     *
-     *     GET /api/v1/people/5/?include=labels
-     *     {
-     *         "id": 5,
-     *         "first_name": "John",
-     *         "last_name": "Doe",
-     *         "labels": [
-     *             {
-     *                 "id": 7,
-     *                 "name": "label-name"
-     *             }
-     *         ]
-     *     } */
     PatchedUserRequest: {
       first_name?: string
       last_name?: string
@@ -672,6 +631,8 @@ export interface components {
        * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
       image: string
+      /** Is NSFW? */
+      is_nsfw?: boolean
       /**
        * Format: uuid
        * @description Category of the post.
@@ -854,6 +815,7 @@ export interface components {
       readonly user: string[]
       readonly title: string[]
       readonly image: string[]
+      readonly is_nsfw: string[]
       readonly category: string[]
       readonly tags: string[]
       readonly vote: string[]
@@ -894,6 +856,8 @@ export interface components {
        * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
       image: string
+      /** Is NSFW? */
+      is_nsfw?: boolean
       /**
        * Format: uuid
        * @description Category of the post.
@@ -932,39 +896,6 @@ export interface components {
       /** Format: date-time */
       readonly updated_at: string
       name: string
-    }
-    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
-     *     read only.
-     *
-     *     GET /api/v1/people/5/
-     *     {
-     *         "id": 5,
-     *         "first_name": "John",
-     *         "last_name": "Doe",
-     *         "labels": [7]
-     *     }
-     *
-     *     GET /api/v1/people/5/?include=labels
-     *     {
-     *         "id": 5,
-     *         "first_name": "John",
-     *         "last_name": "Doe",
-     *         "labels": [
-     *             {
-     *                 "id": 7,
-     *                 "name": "label-name"
-     *             }
-     *         ]
-     *     } */
-    PostUpdateRequest: {
-      /** @description Title of the post. */
-      title: string
-      /**
-       * Format: binary
-       * @description Image(jpeg, jpg, png, gif, webp) in base64 format
-       */
-      image: string
-      tags: string[]
     }
     ProtectedElement: {
       /** Format: uuid */
@@ -1896,57 +1827,6 @@ export interface operations {
       }
     }
   }
-  posts_update: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /** @description A UUID string identifying this Post. */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody: {
-      content: {
-        'application/json': components['schemas']['PostUpdateRequest']
-        'application/x-www-form-urlencoded': components['schemas']['PostUpdateRequest']
-        'multipart/form-data': components['schemas']['PostUpdateRequest']
-      }
-    }
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Post']
-        }
-      }
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PostError']
-        }
-      }
-      /** @description No response body */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Forbidden']
-        }
-      }
-    }
-  }
   posts_destroy: {
     parameters: {
       query?: never
@@ -1972,57 +1852,6 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['PostDestroyError']
-        }
-      }
-      /** @description No response body */
-      401: {
-        headers: {
-          [name: string]: unknown
-        }
-        content?: never
-      }
-      403: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Forbidden']
-        }
-      }
-    }
-  }
-  posts_partial_update: {
-    parameters: {
-      query?: never
-      header?: never
-      path: {
-        /** @description A UUID string identifying this Post. */
-        id: string
-      }
-      cookie?: never
-    }
-    requestBody?: {
-      content: {
-        'application/json': components['schemas']['PatchedPostUpdateRequest']
-        'application/x-www-form-urlencoded': components['schemas']['PatchedPostUpdateRequest']
-        'multipart/form-data': components['schemas']['PatchedPostUpdateRequest']
-      }
-    }
-    responses: {
-      200: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['Post']
-        }
-      }
-      400: {
-        headers: {
-          [name: string]: unknown
-        }
-        content: {
-          'application/json': components['schemas']['PostError']
         }
       }
       /** @description No response body */

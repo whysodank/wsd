@@ -43,6 +43,7 @@ export default async function PostPage({
   searchParams: APIQuery<'/v0/post-comments/'>
 }) {
   const wsd = sUseWSDAPI()
+  const isAuthenticated = await wsd.isAuthenticated()
   const postId = suppress<string, undefined>([InvalidHEXError], () => hexToUUIDv4(params.hex))
 
   const orderingLabels = {
@@ -70,7 +71,7 @@ export default async function PostPage({
       return (
         <div className="flex flex-col gap-2 items-center w-full">
           <div className="w-4/5 min-h-[130vh]">
-            <Meme post={post_} withTags fullScreen />
+            <Meme post={post_} withTags fullScreen isAuthenticated={isAuthenticated} />
             <Separator className="max-sm:w-[calc(100%-8px)] w-full max-w-full" />
             {wsd.hasResults(comments) && (
               <Overlay breakpoint="md">

@@ -16,6 +16,7 @@ class BaseAdmin(DjangoObjectActions, ModelAdmin):
     META_FIELDS = BaseModel.FIELDS
     object_fieldsets = []
     meta_fieldsets = [[META_FIELDS, _("Meta")]]
+    excluded_list_display = ["slug"]
     safe_m2m_fields = []
     create_force_field_as_current_user = []
     update_force_field_as_current_user = []
@@ -37,7 +38,7 @@ class BaseAdmin(DjangoObjectActions, ModelAdmin):
         return (update + base if obj else create + base) + self.global_readonly_fields
 
     def get_list_display(self, request):
-        return self.list_display + BaseModel.FIELDS
+        return self.list_display + [key for key in BaseModel.FIELDS if key not in self.excluded_list_display]
 
     def get_fieldsets(self, request, obj=None):
         object_fieldsets = [self.make_fieldset_field(*fields, name=name) for fields, name in self.object_fieldsets]

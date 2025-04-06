@@ -36,6 +36,7 @@ class PostSerializer(BaseModelSerializer):
             "user",
             "title",
             "image",
+            "is_nsfw",
             "category",
             "tags",
             "vote",
