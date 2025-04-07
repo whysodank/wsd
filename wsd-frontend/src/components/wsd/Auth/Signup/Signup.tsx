@@ -18,6 +18,16 @@ export async function Signup() {
     { name: 'Reddit', icon: Brands.Reddit, id: 'reddit' },
   ]
   const wsd = sUseWSDAPI()
+  const tos = (
+    <Link href={{ pathname: '/legal/terms-of-service' }} className="text-white hover:underline transition">
+      Terms of Service
+    </Link>
+  )
+  const privacyPolicy = (
+    <Link href={{ pathname: '/legal/privacy-policy' }} className="text-white hover:underline transition">
+      Privacy Policy
+    </Link>
+  )
   return (
     <>
       <Card className="max-w-md w-full">
@@ -42,6 +52,9 @@ export async function Signup() {
                 <provider.icon />
               </AutoFormButton>
             ))}
+          </div>
+          <div className="text-xs text-muted-foreground w-full text-center">
+            By continuing, you agree to our {tos} and {privacyPolicy}.
           </div>
         </CardContent>
       </Card>
