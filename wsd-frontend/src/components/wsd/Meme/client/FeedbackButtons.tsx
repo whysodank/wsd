@@ -6,7 +6,8 @@ import { useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
-import { Button, buttonVariants } from '@/components/shadcn/button'
+import { buttonVariants } from '@/components/shadcn/button'
+import AuthenticatedOnlyActionButton from '@/components/wsd/AuthenticatedOnlyActionButton'
 
 import { APIType, Includes } from '@/api/typeHelpers'
 import { useWSDAPI } from '@/lib/serverHooks'
@@ -14,8 +15,10 @@ import { cn, uuidV4toHEX } from '@/lib/utils'
 
 export default function FeedbackButtons({
   post,
+  isAuthenticated,
 }: {
   post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
+  isAuthenticated: boolean
 }) {
   const wsd = useWSDAPI()
   const [feedback, setFeedback] = useState<APIType<'VoteEnum'> | null>(post.vote)
@@ -58,21 +61,23 @@ export default function FeedbackButtons({
 
   return (
     <div className="flex gap-1 flex-row items-center justify-center">
-      <Button
+      <AuthenticatedOnlyActionButton
         onClick={handleVote(1)}
         className="flex items-center p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
         aria-label="Upvote"
+        isAuthenticated={isAuthenticated}
       >
         <Icons.ArrowBigUp size={24} className={cn(feedback === 1 && 'text-green-500 fill-green-500')} />
-      </Button>
+      </AuthenticatedOnlyActionButton>
       <span className="font-medium text-gray-500">{voteCount}</span>
-      <Button
+      <AuthenticatedOnlyActionButton
         onClick={handleVote(-1)}
         className="flex items-center p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
         aria-label="Downvote"
+        isAuthenticated={isAuthenticated}
       >
         <Icons.ArrowBigDown size={24} className={cn(feedback === -1 && 'text-destructive fill-destructive')} />
-      </Button>
+      </AuthenticatedOnlyActionButton>
       <Link
         href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}
         className={cn(
@@ -87,15 +92,16 @@ export default function FeedbackButtons({
         <Icons.MessageCircleMore size={20} />
         <span>{post.comment_count}</span>
       </Link>
-      <Button
+      <AuthenticatedOnlyActionButton
         onClick={handleBookmark}
         className={cn(
           'flex items-center p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent'
         )}
         aria-label="Bookmark"
+        isAuthenticated={isAuthenticated}
       >
         <Icons.Heart size={20} className={cn(isBookmarked && 'text-blue-500 fill-blue-500')} />
-      </Button>
+      </AuthenticatedOnlyActionButton>
     </div>
   )
 }

@@ -103,7 +103,7 @@ export default async function PostPage({
                 Be the first one to comment!
               </div>
             )}
-            <NewComment post={post_} />
+            {isAuthenticated && <NewComment post={post_} />}
             <div className="flex flex-col justify-center items-start">
               {wsd.hasResults(comments) &&
                 comments.results.map((comment) => (

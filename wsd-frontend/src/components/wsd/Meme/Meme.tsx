@@ -79,7 +79,7 @@ export function Meme({
         )}
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
-            <FeedbackButtons post={post} />
+            <FeedbackButtons post={post} isAuthenticated={isAuthenticated} />
             <Button
               className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
               aria-label="Share"
