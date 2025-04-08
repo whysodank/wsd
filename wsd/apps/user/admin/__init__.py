@@ -1,4 +1,5 @@
-from allauth.socialaccount.models import SocialApp, SocialToken
+from allauth.account.models import EmailAddress
+from allauth.socialaccount.models import SocialAccount, SocialApp, SocialToken
 from django.contrib import admin
 
 from .group import GroupAdmin
@@ -7,6 +8,8 @@ from .user import UserAdmin
 
 admin.site.unregister(SocialApp)
 admin.site.unregister(SocialToken)
+admin.site.unregister(SocialAccount)
+admin.site.unregister(EmailAddress)
 
 __all__ = [
     "UserAdmin",
