@@ -29,7 +29,7 @@ export async function Header() {
           <MobileNav />
         </div>
         <div className="flex flex-1 items-center justify-between gap-2 md:justify-center lg:w-1/2">
-          <div className="w-3/4 max-md:w-full md:flex-none"></div>
+          <div className="w-3/4 max-md:w-full md:flex-none" />
         </div>
         <div className="xl:w-1/6 flex justify-end gap-1 items-center">
           {(await wsd.isAuthenticated()) ? (

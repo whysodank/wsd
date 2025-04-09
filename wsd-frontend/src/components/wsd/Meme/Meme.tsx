@@ -47,8 +47,8 @@ export function Meme({
                 backgroundPosition: 'center',
                 filter: 'blur(20px)',
               }}
-            ></div>
-            <div className="absolute inset-0 bg-black/60"></div>
+            />
+            <div className="absolute inset-0 bg-black/60" />
             {!isAuthenticated && post.is_nsfw ? (
               <AspectRatio ratio={16 / 9} className="text-white">
                 <div className="flex h-full w-full items-center justify-center">
@@ -80,12 +80,6 @@ export function Meme({
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <FeedbackButtons post={post} isAuthenticated={isAuthenticated} />
-            <Button
-              className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
-              aria-label="Share"
-            >
-              <Icons.Share2 size={20} />
-            </Button>
           </div>
           <div className="flex items-center gap-4">
             <Button

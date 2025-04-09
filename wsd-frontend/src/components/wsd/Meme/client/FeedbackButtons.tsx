@@ -6,12 +6,14 @@ import { useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
-import { buttonVariants } from '@/components/shadcn/button'
+import { Button, buttonVariants } from '@/components/shadcn/button'
 import AuthenticatedOnlyActionButton from '@/components/wsd/AuthenticatedOnlyActionButton'
 
 import { APIType, Includes } from '@/api/typeHelpers'
 import { useWSDAPI } from '@/lib/serverHooks'
 import { cn, uuidV4toHEX } from '@/lib/utils'
+
+import { toast } from 'sonner'
 
 export default function FeedbackButtons({
   post,
@@ -59,6 +61,24 @@ export default function FeedbackButtons({
     }
   }
 
+  async function handleShare() {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: post.title,
+          url: `${window.location.origin}/posts/${uuidV4toHEX(post.id)}`,
+        })
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(`${window.location.origin}/posts/${uuidV4toHEX(post.id)}`)
+        toast('Link copied to clipboard!')
+      } else {
+        toast("Couldn't share the post")
+      }
+    } catch {
+      toast("Couldn't share the post")
+    }
+  }
+
   return (
     <div className="flex gap-1 flex-row items-center justify-center">
       <AuthenticatedOnlyActionButton
@@ -102,6 +122,13 @@ export default function FeedbackButtons({
       >
         <Icons.Heart size={20} className={cn(isBookmarked && 'text-blue-500 fill-blue-500')} />
       </AuthenticatedOnlyActionButton>
+      <Button
+        onClick={handleShare}
+        className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+        aria-label="Share"
+      >
+        <Icons.Share2 size={20} />
+      </Button>
     </div>
   )
 }
