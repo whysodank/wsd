@@ -54,7 +54,14 @@ def fake_serializer(
     meta.fields = list(getattr(meta, "fields", [])) + list(fields.keys())
     fields["Meta"] = meta
     # Create our one-off serializer
-    serializer = type(name, (base,), {k: None if k in (remove_fields or []) else v for k, v in fields.items()})
+    serializer = type(
+        name,
+        (base,),
+        {
+            **{k: None if k in (remove_fields or []) else v for k, v in fields.items()},
+            "exempt_from_model_map": True,
+        },
+    )
     # Remove unwanted fields
     serializer.Meta.fields = purge_iterable(  # NOQA
         getattr(serializer.Meta, "fields", []),  # NOQA

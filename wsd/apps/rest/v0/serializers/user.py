@@ -21,6 +21,7 @@ class PublicUserSerializer(BaseModelSerializer):
 
 
 class UserSerializer(BaseModelSerializer):
+    exempt_from_model_map = True
     signup_completed = serializers.SerializerMethodField(required=False, read_only=True)
 
     def get_signup_completed(self, obj) -> str:
@@ -55,6 +56,8 @@ class UserSerializer(BaseModelSerializer):
 
 
 class UserCompleteSignupSerializer(UserSerializer):
+    exempt_from_model_map = True
+
     class Meta:
         model = User
         fields = ["username", "password"]

@@ -79,6 +79,7 @@ export class WSDAPI {
   // post-categories
   // post-tags
   // post-comments
+  // notifications
   public async users(filters?: APIQuery<'/v0/users/'>) {
     return await this.client.GET('/v0/users/', { params: { query: filters } })
   }
@@ -189,5 +190,17 @@ export class WSDAPI {
 
   public async unvotePostComment(id: string) {
     return await this.client.POST('/v0/post-comments/{id}/unvote/', { params: { path: { id } } })
+  }
+
+  public async notifications(filters?: APIQuery<'/v0/notifications/'>) {
+    return await this.client.GET('/v0/notifications/', { params: { query: filters } })
+  }
+
+  public async notification(id: string, query?: APIQuery<'/v0/notifications/{id}/'>) {
+    return await this.client.GET('/v0/notifications/{id}/', { params: { path: { id }, query } })
+  }
+
+  public async patchNotification(id: string, data: APIType<'PatchedNotificationUpdateRequest'>) {
+    return await this.client.PATCH('/v0/notifications/{id}/', { params: { path: { id } }, body: data })
   }
 }

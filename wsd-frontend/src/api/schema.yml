@@ -4,6 +4,219 @@ info:
   version: 0.1.0
   description: WSD API
 paths:
+  /v0/notifications/:
+    get:
+      operationId: notifications_list
+      description: List notifications with optional filters
+      summary: List Notifications
+      parameters:
+      - in: query
+        name: created_at
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__gt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__lt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: created_at__lte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: event
+        schema:
+          type: string
+          enum:
+          - COMMENT
+          - POST
+        description: |-
+          Event Type
+
+          * `POST` - Post
+          * `COMMENT` - Comment
+      - in: query
+        name: include
+        schema:
+          type: string
+        explode: false
+        style: form
+      - in: query
+        name: is_read
+        schema:
+          type: boolean
+      - in: query
+        name: ordering
+        schema:
+          type: string
+        explode: false
+        style: form
+      - name: page
+        required: false
+        in: query
+        description: A page number within the paginated result set.
+        schema:
+          type: integer
+      - name: page_size
+        required: false
+        in: query
+        description: Number of results to return per page.
+        schema:
+          type: integer
+      - name: search
+        required: false
+        in: query
+        description: A search term.
+        schema:
+          type: string
+      - in: query
+        name: updated_at
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__gt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__gte
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__lt
+        schema:
+          type: string
+          format: date-time
+      - in: query
+        name: updated_at__lte
+        schema:
+          type: string
+          format: date-time
+      tags:
+      - notifications
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaginatedNotificationList'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+  /v0/notifications/{id}/:
+    get:
+      operationId: notifications_retrieve
+      description: Retrieve notification by id
+      summary: Retrieve Notification
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Notification.
+        required: true
+      - in: query
+        name: include
+        schema:
+          type: string
+        explode: false
+        style: form
+      tags:
+      - notifications
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
+    patch:
+      operationId: notifications_partial_update
+      description: Partially update an existing notification by id
+      summary: Patch Notification
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Notification.
+        required: true
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PatchedNotificationUpdateRequest'
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
   /v0/post-categories/:
     get:
       operationId: post_categories_list
@@ -1470,9 +1683,175 @@ components:
           type: string
       required:
       - detail
+    Notification:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        id:
+          type: string
+          format: uuid
+          readOnly: true
+        created_at:
+          type: string
+          format: date-time
+          readOnly: true
+        updated_at:
+          type: string
+          format: date-time
+          readOnly: true
+        user:
+          type: string
+          format: uuid
+          readOnly: true
+          description: User who received this notification.
+        description:
+          type: string
+          readOnly: true
+          description: Description of the notification. This is what the users will
+            see.
+        is_read:
+          type: boolean
+          description: Whether the notification has been read or not.
+        object_of_interest:
+          allOf:
+          - $ref: '#/components/schemas/NotificationObjectOfInterest'
+          readOnly: true
+        object_of_interest_type:
+          allOf:
+          - $ref: '#/components/schemas/ObjectOfInterestTypeEnum'
+          readOnly: true
+      required:
+      - created_at
+      - description
+      - id
+      - object_of_interest
+      - object_of_interest_type
+      - updated_at
+      - user
+    NotificationError:
+      type: object
+      properties:
+        id:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        created_at:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        updated_at:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        user:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        description:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        is_read:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        object_of_interest:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        object_of_interest_type:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        non_field_errors:
+          type: array
+          items:
+            type: string
+          readOnly: true
+      required:
+      - created_at
+      - description
+      - id
+      - is_read
+      - non_field_errors
+      - object_of_interest
+      - object_of_interest_type
+      - updated_at
+      - user
+    NotificationObjectOfInterest:
+      oneOf:
+      - $ref: '#/components/schemas/Post'
+      - $ref: '#/components/schemas/PostComment'
+    NotificationObjectOfInterestRequest:
+      oneOf:
+      - $ref: '#/components/schemas/PostRequest'
+      - $ref: '#/components/schemas/PostCommentRequest'
     NullEnum:
       enum:
       - null
+    ObjectOfInterestTypeEnum:
+      enum:
+      - Post
+      - PostComment
+      type: string
+      description: |-
+        * `Post` - Post
+        * `PostComment` - PostComment
+    PaginatedNotificationList:
+      type: object
+      properties:
+        count:
+          type: integer
+          description: Total number of items available.
+          example: 1102
+        page_size:
+          type: integer
+          description: Number of results to return per page.
+          example: 100
+        total_pages:
+          type: integer
+          description: Total number of pages.
+          example: 17
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/Notification'
+      required:
+      - count
+      - page_size
+      - total_pages
+      - results
     PaginatedPostCategoryList:
       type: object
       properties:
@@ -1593,6 +1972,36 @@ components:
       - page_size
       - total_pages
       - results
+    PatchedNotificationUpdateRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        is_read:
+          type: boolean
+          description: Whether the notification has been read or not.
     PatchedPostCommentUpdateRequest:
       type: object
       description: |-

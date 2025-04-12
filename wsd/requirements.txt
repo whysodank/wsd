@@ -29,3 +29,4 @@ ipdb==0.13.13
 drf-extra-fields==3.7.0
 django-allauth[socialaccount]==65.6.0
 django-more-admin-filters==1.12
+rest-framework-generic-relations==2.2.0

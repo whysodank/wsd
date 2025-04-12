@@ -97,7 +97,31 @@ class OnlyCreateNoUpdateMixin:
         return kwargs
 
 
-class BaseModelSerializer(OnlyCreateNoUpdateMixin, ConditionalSerializerMixin, ModelSerializer): ...
+class BaseModelSerializer(OnlyCreateNoUpdateMixin, ConditionalSerializerMixin, ModelSerializer):
+    exempt_from_model_map = False
+    all_model_serializers = []
+    model_map = {}
+
+    def __init_subclass__(cls, **kwargs):
+        if not cls.exempt_from_model_map:
+            BaseModelSerializer.all_model_serializers.append(cls)
+            BaseModelSerializer.model_map[cls.Meta.model] = cls
+        return super().__init_subclass__(**kwargs)
+
+    @classmethod
+    def get_for_model(cls, model):
+        return BaseModelSerializer.model_map[model]
+
+    @classmethod
+    def model_serializer_map(cls, *models, ignore_missing=False):
+        _model_serializer_map = {}
+        for model in models:
+            try:
+                _model_serializer_map[model] = cls.get_for_model(model)
+            except KeyError:
+                if not ignore_missing:
+                    raise
+        return _model_serializer_map
 
 
 def s(serializer):

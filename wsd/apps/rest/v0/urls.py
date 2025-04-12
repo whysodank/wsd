@@ -1,4 +1,11 @@
-from apps.rest.v0.views import PostCategoryViewSet, PostCommentViewSet, PostTagViewSet, PostViewSet, UserViewSet
+from apps.rest.v0.views import (
+    NotificationViewSet,
+    PostCategoryViewSet,
+    PostCommentViewSet,
+    PostTagViewSet,
+    PostViewSet,
+    UserViewSet,
+)
 from django.urls import include, path, reverse_lazy
 from drf_spectacular.utils import extend_schema
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView
@@ -7,7 +14,7 @@ from rest_framework.routers import DefaultRouter
 DefaultRouter.include_root_view = False
 router = DefaultRouter()
 
-viewsets = [UserViewSet, PostViewSet, PostTagViewSet, PostCommentViewSet, PostCategoryViewSet]
+viewsets = [UserViewSet, PostViewSet, PostTagViewSet, PostCommentViewSet, PostCategoryViewSet, NotificationViewSet]
 
 for viewset in viewsets:
     router.register(viewset.endpoint, viewset, basename=viewset.endpoint)

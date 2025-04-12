@@ -4,6 +4,50 @@
  */
 
 export interface paths {
+  '/v0/notifications/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * List Notifications
+     * @description List notifications with optional filters
+     */
+    get: operations['notifications_list']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/notifications/{id}/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Retrieve Notification
+     * @description Retrieve notification by id
+     */
+    get: operations['notifications_retrieve']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    /**
+     * Patch Notification
+     * @description Partially update an existing notification by id
+     */
+    patch: operations['notifications_partial_update']
+    trace?: never
+  }
   '/v0/post-categories/': {
     parameters: {
       query?: never
@@ -443,8 +487,89 @@ export interface components {
     Forbidden: {
       detail: string
     }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    Notification: {
+      /** Format: uuid */
+      readonly id: string
+      /** Format: date-time */
+      readonly created_at: string
+      /** Format: date-time */
+      readonly updated_at: string
+      /**
+       * Format: uuid
+       * @description User who received this notification.
+       */
+      readonly user: string
+      /** @description Description of the notification. This is what the users will see. */
+      readonly description: string
+      /** @description Whether the notification has been read or not. */
+      is_read?: boolean
+      readonly object_of_interest: components['schemas']['NotificationObjectOfInterest']
+      readonly object_of_interest_type: components['schemas']['ObjectOfInterestTypeEnum']
+    }
+    NotificationError: {
+      readonly id: string[]
+      readonly created_at: string[]
+      readonly updated_at: string[]
+      readonly user: string[]
+      readonly description: string[]
+      readonly is_read: string[]
+      readonly object_of_interest: string[]
+      readonly object_of_interest_type: string[]
+      readonly non_field_errors: string[]
+    }
+    NotificationObjectOfInterest: components['schemas']['Post'] | components['schemas']['PostComment']
+    NotificationObjectOfInterestRequest:
+      | components['schemas']['PostRequest']
+      | components['schemas']['PostCommentRequest']
     /** @enum {unknown} */
     NullEnum: null
+    /**
+     * @description * `Post` - Post
+     *     * `PostComment` - PostComment
+     * @enum {string}
+     */
+    ObjectOfInterestTypeEnum: 'Post' | 'PostComment'
+    PaginatedNotificationList: {
+      /**
+       * @description Total number of items available.
+       * @example 1102
+       */
+      count: number
+      /**
+       * @description Number of results to return per page.
+       * @example 100
+       */
+      page_size: number
+      /**
+       * @description Total number of pages.
+       * @example 17
+       */
+      total_pages: number
+      results: components['schemas']['Notification'][]
+    }
     PaginatedPostCategoryList: {
       /**
        * @description Total number of items available.
@@ -534,6 +659,33 @@ export interface components {
        */
       total_pages: number
       results: components['schemas']['PublicUser'][]
+    }
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    PatchedNotificationUpdateRequest: {
+      /** @description Whether the notification has been read or not. */
+      is_read?: boolean
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -1095,6 +1247,155 @@ export interface components {
 }
 export type $defs = Record<string, never>
 export interface operations {
+  notifications_list: {
+    parameters: {
+      query?: {
+        created_at?: string
+        created_at__gt?: string
+        created_at__gte?: string
+        created_at__lt?: string
+        created_at__lte?: string
+        /** @description Event Type
+         *
+         *     * `POST` - Post
+         *     * `COMMENT` - Comment */
+        event?: 'COMMENT' | 'POST'
+        include?: string
+        is_read?: boolean
+        ordering?: string
+        /** @description A page number within the paginated result set. */
+        page?: number
+        /** @description Number of results to return per page. */
+        page_size?: number
+        /** @description A search term. */
+        search?: string
+        updated_at?: string
+        updated_at__gt?: string
+        updated_at__gte?: string
+        updated_at__lt?: string
+        updated_at__lte?: string
+      }
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['PaginatedNotificationList']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  notifications_retrieve: {
+    parameters: {
+      query?: {
+        include?: string
+      }
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Notification. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Notification']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  notifications_partial_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Notification. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['PatchedNotificationUpdateRequest']
+        'application/x-www-form-urlencoded': components['schemas']['PatchedNotificationUpdateRequest']
+        'multipart/form-data': components['schemas']['PatchedNotificationUpdateRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Notification']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['NotificationError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
   post_categories_list: {
     parameters: {
       query?: {

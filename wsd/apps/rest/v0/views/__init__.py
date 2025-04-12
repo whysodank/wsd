@@ -1,3 +1,4 @@
+from .notification import NotificationViewSet
 from .post import PostViewSet
 from .post_category import PostCategoryViewSet
 from .post_comment import PostCommentViewSet
@@ -10,4 +11,5 @@ __all__ = [
     "PostTagViewSet",
     "PostCommentViewSet",
     "PostCategoryViewSet",
+    "NotificationViewSet",
 ]

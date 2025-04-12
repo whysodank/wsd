@@ -45,6 +45,7 @@ THIRD_PARTY_APPS = [
     "sslserver",
     "corsheaders",
     "drf_spectacular",
+    "generic_relations",
 ]
 
 BUILTIN_APPS = [

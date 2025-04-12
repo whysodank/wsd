@@ -1,6 +1,6 @@
 from apps.rest.utils.filters import make_filters
 from apps.rest.utils.schema_helpers import error_serializer
-from apps.rest.v0.serializers import PublicUserSerializer, UserSerializer
+from apps.rest.v0.serializers import PublicUserSerializer, UserCompleteSignupSerializer, UserSerializer
 from apps.user.models import User
 from django.contrib.auth import update_session_auth_hash
 from django.db.models import Count
@@ -10,7 +10,6 @@ from rest_framework.decorators import action
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 
-from ..serializers.user import UserCompleteSignupSerializer
 from .base import BaseModelViewSet
 
 
