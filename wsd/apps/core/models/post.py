@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import AFTER_CREATE, hook
+from PIL import Image
 from ume import average_hash, colorhash, cryptographic_hash, dhash, get_text_from_image, normalize_text, phash, whash
 
 
@@ -149,14 +150,15 @@ class Post(BaseModel):
 
     @hook(AFTER_CREATE, priority=0)
     def calculate_hashes(self):
-        self.phash = str(phash(self.image.url, input_type=phash.URL, hash_size=self.HASH_SIZE))
-        self.dhash = str(dhash(self.image.url, input_type=dhash.URL, hash_size=self.HASH_SIZE))
-        self.whash = str(whash(self.image.url, input_type=whash.URL, hash_size=self.HASH_SIZE))
-        self.average_hash = str(average_hash(self.image.url, input_type=average_hash.URL, hash_size=self.HASH_SIZE))
-        self.colorhash = str(colorhash(self.image.url, input_type=colorhash.URL, binbits=self.BINBITS_SIZE))
-        self.cryptographic_hash = str(cryptographic_hash(self.image.url, input_type=cryptographic_hash.URL))
-        self.extracted_text_raw = get_text_from_image(self.image.url, get_text_from_image.URL)
-        self.extracted_text_normalized = normalize_text(get_text_from_image(self.image.url, get_text_from_image.URL))
+        pil_image = Image.open(self.image)
+        self.phash = str(phash(pil_image, input_type=phash.PIL_IMAGE, hash_size=self.HASH_SIZE))
+        self.dhash = str(dhash(pil_image, input_type=dhash.PIL_IMAGE, hash_size=self.HASH_SIZE))
+        self.whash = str(whash(pil_image, input_type=whash.PIL_IMAGE, hash_size=self.HASH_SIZE))
+        self.average_hash = str(average_hash(pil_image, input_type=average_hash.PIL_IMAGE, hash_size=self.HASH_SIZE))
+        self.colorhash = str(colorhash(pil_image, input_type=colorhash.PIL_IMAGE, binbits=self.BINBITS_SIZE))
+        self.cryptographic_hash = str(cryptographic_hash(pil_image, input_type=cryptographic_hash.PIL_IMAGE))
+        self.extracted_text_raw = get_text_from_image(pil_image, get_text_from_image.PIL_IMAGE)
+        self.extracted_text_normalized = normalize_text(get_text_from_image(pil_image, get_text_from_image.PIL_IMAGE))
         self.save(skip_hooks=True)
 
     @hook(AFTER_CREATE, priority=1)
