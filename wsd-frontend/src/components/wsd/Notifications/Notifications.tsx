@@ -89,7 +89,10 @@ export function Notifications({ hasNew }: { hasNew?: boolean }) {
             </div>
           ))}
           {loading && <Skeleton className="w-full h-1 rounded-md" />}
-          <div ref={loaderRef} className="h-10 w-full" />
+          {!hasMore && notifications.length === 0 && (
+            <div className="w-full flex items-center justify-center">No notifications yet!</div>
+          )}
+          <div ref={loaderRef} className="h-1 w-full" />
         </ScrollArea>
       </OverlayContent>
     </Overlay>
