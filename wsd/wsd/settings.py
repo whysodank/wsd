@@ -1,6 +1,7 @@
 import itertools
 from pathlib import Path
 
+import sentry_sdk
 from corsheaders.defaults import default_headers
 
 from .config import CONFIG as config  # Django thinks CONFIG is a settings if it is all caps  # NOQA
@@ -290,6 +291,20 @@ EMAIL_HOST_PASSWORD = config.EMAIL.SMTP.PASSWORD
 EMAIL_USE_TSL = True
 DEFAULT_AUTH_FROM_EMAIL = config.EMAIL.DEFAULT_AUTH_FROM_EMAIL
 
+if not DEBUG:
+    sentry_sdk.init(
+        dsn=config.DEVTOOLS.SENTRY.DSN,
+        # Set traces_sample_rate to 1.0 to capture 100%
+        # of transactions for tracing.
+        traces_sample_rate=config.DEVTOOLS.SENTRY.TRACES_SAMPLE_RATE,
+        _experiments={
+            # Set continuous_profiling_auto_start to True
+            # to automatically start the profiler on when
+            # possible.
+            "continuous_profiling_auto_start": True,
+        },
+        debug=config.DEBUG,
+    )
 
 if DEBUG:
     # Some stuff here are hardcoded, like dev ports.

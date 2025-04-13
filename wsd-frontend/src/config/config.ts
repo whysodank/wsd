@@ -1,4 +1,4 @@
-import { booleanConfig, stringConfig } from '~/src/config/parsers'
+import { booleanConfig, numberConfig, stringConfig } from '~/src/config/parsers'
 
 const RAW = Object.freeze({
   debug: process.env.NEXT_PUBLIC_WSD__DEBUG,
@@ -9,6 +9,13 @@ const RAW = Object.freeze({
     authBaseURL: process.env.NEXT_PUBLIC_WSD__API__AUTH_BASE_URL,
   },
   devtools: {
+    sentry: {
+      debug: process.env.NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__SENTRY__DEBUG,
+      dsn: process.env.NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__SENTRY__DSN,
+      tracesSampleRate: process.env.NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__SENTRY__TRACES_SAMPLE_RATE,
+      replaysSessionSampleRate: process.env.NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__SENTRY__REPLAYS_SESSION_SAMPLE_RATE,
+      replaysOnErrorSampleRate: process.env.NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__SENTRY__REPLAYS_ON_ERROR_SAMPLE_RATE,
+    },
     googleAnalytics: {
       gaID: process.env.NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__GOOGLE_ANALYTICS__GA_ID,
     },
@@ -39,6 +46,25 @@ export const config = Object.freeze({
     defaultPostPerPage: 10, // It's infinite scroll, so this is how much we fetch per scroll
   },
   devtools: {
+    sentry: {
+      debug: false,
+      dsn: stringConfig({ name: 'sentry.dsn', value: RAW.devtools.sentry.dsn, default: '' }),
+      tracesSampleRate: numberConfig({
+        name: 'sentry.tracesSampleRate',
+        value: RAW.devtools.sentry.tracesSampleRate,
+        default: 0,
+      }),
+      replaysSessionSampleRate: numberConfig({
+        name: 'sentry.replaysSessionSampleRate',
+        value: RAW.devtools.sentry.replaysSessionSampleRate,
+        default: 0,
+      }),
+      replaysOnErrorSampleRate: numberConfig({
+        name: 'sentry.replaysOnErrorSampleRate',
+        value: RAW.devtools.sentry.replaysOnErrorSampleRate,
+        default: 0,
+      }),
+    },
     googleAnalytics: {
       gaID: stringConfig({ name: 'googleAnalytics.gaID', value: RAW.devtools.googleAnalytics.gaID, default: '' }),
     },

@@ -55,6 +55,12 @@ CONFIG = config(
             },
             "DEFAULT_AUTH_FROM_EMAIL": string(),
         },
+        "DEVTOOLS": {
+            "SENTRY": {
+                "DSN": string(),
+                "TRACES_SAMPLE_RATE": string(),
+            },
+        },
         "SETUP": {
             "SUPERUSER": {
                 "USERNAME": string(),
