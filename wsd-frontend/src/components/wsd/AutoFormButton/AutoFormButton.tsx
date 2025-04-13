@@ -21,7 +21,7 @@ export const AutoFormButton = forwardRef<
   const wsd = useWSDAPI()
   const formRef = useRef<HTMLFormElement | null>(null)
 
-  const handleClick = async () => {
+  async function handleClick() {
     if (!formRef.current) {
       const form = document.createElement('form')
       form.action = action

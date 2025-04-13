@@ -70,7 +70,7 @@ export default async function PostPage({
       const post_ = includesType(includesType(post as APIType<'Post'>, 'user', 'User'), 'tags', 'PostTag', true)
       return (
         <div className="flex flex-col gap-2 items-center w-full">
-          <div className="w-4/5 min-h-[130vh]">
+          <div className="min-h-[130vh]">
             <Meme post={post_} withTags fullScreen isAuthenticated={isAuthenticated} />
             <Separator className="max-sm:w-[calc(100%-8px)] w-full max-w-full" />
             {wsd.hasResults(comments) && (

@@ -46,7 +46,7 @@ class Migration(migrations.Migration):
                 (
                     "event",
                     models.CharField(
-                        choices=[("POST", "Post"), ("COMMENT", "Comment")],
+                        choices=[("LIKE", "Like"), ("COMMENT", "Comment")],
                         help_text="Event Type",
                         max_length=7,
                         verbose_name="Event",
@@ -127,7 +127,7 @@ class Migration(migrations.Migration):
                 (
                     "event",
                     models.CharField(
-                        choices=[("POST", "Post"), ("COMMENT", "Comment")],
+                        choices=[("LIKE", "Like"), ("COMMENT", "Comment")],
                         help_text="Event Type",
                         max_length=7,
                         verbose_name="Event",

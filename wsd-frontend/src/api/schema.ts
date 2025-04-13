@@ -36,7 +36,11 @@ export interface paths {
      * @description Retrieve notification by id
      */
     get: operations['notifications_retrieve']
-    put?: never
+    /**
+     * Put Notification
+     * @description Update an existing notification by id
+     */
+    put: operations['notifications_update']
     post?: never
     delete?: never
     options?: never
@@ -484,6 +488,12 @@ export interface paths {
 export type webhooks = Record<string, never>
 export interface components {
   schemas: {
+    /**
+     * @description * `LIKE` - Like
+     *     * `COMMENT` - Comment
+     * @enum {string}
+     */
+    EventEnum: 'LIKE' | 'COMMENT'
     Forbidden: {
       detail: string
     }
@@ -522,6 +532,11 @@ export interface components {
        * @description User who received this notification.
        */
       readonly user: string
+      /** @description Event Type
+       *
+       *     * `LIKE` - Like
+       *     * `COMMENT` - Comment */
+      readonly event: components['schemas']['EventEnum']
       /** @description Description of the notification. This is what the users will see. */
       readonly description: string
       /** @description Whether the notification has been read or not. */
@@ -534,6 +549,7 @@ export interface components {
       readonly created_at: string[]
       readonly updated_at: string[]
       readonly user: string[]
+      readonly event: string[]
       readonly description: string[]
       readonly is_read: string[]
       readonly object_of_interest: string[]
@@ -544,6 +560,33 @@ export interface components {
     NotificationObjectOfInterestRequest:
       | components['schemas']['PostRequest']
       | components['schemas']['PostCommentRequest']
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    NotificationUpdateRequest: {
+      /** @description Whether the notification has been read or not. */
+      is_read?: boolean
+    }
     /** @enum {unknown} */
     NullEnum: null
     /**
@@ -1257,12 +1300,12 @@ export interface operations {
         created_at__lte?: string
         /** @description Event Type
          *
-         *     * `POST` - Post
+         *     * `LIKE` - Like
          *     * `COMMENT` - Comment */
-        event?: 'COMMENT' | 'POST'
+        event?: 'COMMENT' | 'LIKE'
         include?: string
         is_read?: boolean
-        ordering?: string
+        ordering?: '-created_at' | '-updated_at' | 'created_at' | 'updated_at'
         /** @description A page number within the paginated result set. */
         page?: number
         /** @description Number of results to return per page. */
@@ -1345,6 +1388,57 @@ export interface operations {
       }
     }
   }
+  notifications_update: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Notification. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['NotificationUpdateRequest']
+        'application/x-www-form-urlencoded': components['schemas']['NotificationUpdateRequest']
+        'multipart/form-data': components['schemas']['NotificationUpdateRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Notification']
+        }
+      }
+      400: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['NotificationError']
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
   notifications_partial_update: {
     parameters: {
       query?: never
@@ -1400,7 +1494,7 @@ export interface operations {
     parameters: {
       query?: {
         include?: string
-        ordering?: string
+        ordering?: '-created_at' | '-updated_at' | 'created_at' | 'updated_at'
         /** @description A page number within the paginated result set. */
         page?: number
         /** @description Number of results to return per page. */
@@ -1872,7 +1966,7 @@ export interface operations {
     parameters: {
       query?: {
         include?: string
-        ordering?: string
+        ordering?: '-created_at' | '-updated_at' | 'created_at' | 'updated_at'
         /** @description A page number within the paginated result set. */
         page?: number
         /** @description Number of results to return per page. */
@@ -2324,7 +2418,7 @@ export interface operations {
         is_active?: boolean
         is_staff?: boolean
         is_superuser?: boolean
-        ordering?: string
+        ordering?: '-created_at' | '-updated_at' | 'created_at' | 'updated_at'
         /** @description A page number within the paginated result set. */
         page?: number
         /** @description Number of results to return per page. */

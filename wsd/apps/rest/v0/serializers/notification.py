@@ -27,6 +27,7 @@ class NotificationSerializer(BaseModelSerializer):
             "created_at",
             "updated_at",
             "user",
+            "event",
             "description",
             "is_read",
             "object_of_interest",
@@ -34,10 +35,10 @@ class NotificationSerializer(BaseModelSerializer):
         ]
         read_only_fields = [
             "id",
-            "user",
             "created_at",
             "updated_at",
             "user",
+            "event",
             "description",
             "object_of_interest",
             "object_of_interest_type",

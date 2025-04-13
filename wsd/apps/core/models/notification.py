@@ -8,12 +8,13 @@ from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import ngettext
 
 
 @track_events()
 class Notification(BaseModel):
     class EVENTS(models.TextChoices):
-        LIKE = "POST", _("Post")
+        LIKE = "LIKE", _("Like")
         COMMENT = "COMMENT", _("Comment")
 
     event = models.CharField(
@@ -74,7 +75,11 @@ def like_notification(vote_obj):
         Notification.objects.create(
             event=Notification.EVENTS.LIKE,
             user=vote_obj.post.user,
-            description=_(f"Your {vote_obj.post._meta.verbose_name.lower()} has received {total} votes."),
+            description=ngettext(
+                f"Your {vote_obj.post._meta.verbose_name.lower()} has received {total} vote.",
+                f"Your {vote_obj.post._meta.verbose_name.lower()} has received {total} votes.",
+                total,
+            ),
             object_of_interest=vote_obj.post,
         )
 

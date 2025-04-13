@@ -5,6 +5,7 @@ import * as Icons from 'lucide-react'
 import { Button, buttonVariants } from '@/components/shadcn/button'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/shadcn/sheet'
 import { MobileNav } from '@/components/wsd/Header/MobileNav'
+import Notifications from '@/components/wsd/Notifications'
 import UserAvatar from '@/components/wsd/UserAvatar'
 
 import { APIType } from '@/api'
@@ -15,6 +16,7 @@ import { cn } from '@/lib/utils'
 export async function Header() {
   const wsd = sUseWSDAPI()
   const user = (await wsd.getCurrentUser()) as APIType<'User'>
+  const { data: notifications } = await wsd.notifications({ is_read: false })
 
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-primary">
@@ -48,23 +50,7 @@ export async function Header() {
               >
                 <Icons.Plus size={20} className="h-6 w-6" />
               </Link>
-              <Link
-                href={{ pathname: `/notifications/` }}
-                prefetch={true}
-                className={cn(
-                  buttonVariants({
-                    variant: 'ghost',
-                    size: 'sm',
-                    className: 'max-md:hidden flex gap-2 h-10 w-10 rounded-full p-2',
-                  })
-                )}
-                aria-label="New Post"
-              >
-                <div className="relative">
-                  <Icons.Bell size={20} />
-                  <span className="absolute -top-0.5 -right-0.5 h-3 w-3 rounded-full bg-red-600 border" />
-                </div>
-              </Link>
+              <Notifications hasNew={wsd.hasResults(notifications)} />
               <Link
                 prefetch={true}
                 href={{ pathname: '/profile/details' }}

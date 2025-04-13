@@ -200,6 +200,10 @@ export class WSDAPI {
     return await this.client.GET('/v0/notifications/{id}/', { params: { path: { id }, query } })
   }
 
+  public async putNotification(id: string, data: APIType<'PatchedNotificationUpdateRequest'>) {
+    return await this.client.PUT('/v0/notifications/{id}/', { params: { path: { id } }, body: data })
+  }
+
   public async patchNotification(id: string, data: APIType<'PatchedNotificationUpdateRequest'>) {
     return await this.client.PATCH('/v0/notifications/{id}/', { params: { path: { id } }, body: data })
   }

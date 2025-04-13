@@ -1,4 +1,5 @@
 from apps.core.models import Notification
+from apps.rest.utils.permissions import IsAuthenticatedANDSignupCompleted, IsSuperUser, ReadOnly, is_owner
 from apps.rest.v0.serializers import NotificationSerializer
 
 from .base import BaseModelViewSet
@@ -8,7 +9,8 @@ class NotificationViewSet(BaseModelViewSet):
     endpoint = "notifications"
     model = Notification
     serializer_class = NotificationSerializer
-    disallowed_methods = ["create", "update", "destroy"]
+    disallowed_methods = ["create", "destroy"]
+    permission_classes = [IsSuperUser | (IsAuthenticatedANDSignupCompleted & is_owner("user")) | ReadOnly]
     filterset_fields = {
         "is_read": ["exact"],
         "event": ["exact"],

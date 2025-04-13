@@ -36,7 +36,10 @@ class BaseModelViewSet(ModelViewSet):
     filterset_base = FilterSet
     crud_extend_default_schema = {}
     disallowed_methods = []
-    ordering_fields = []
+    ordering_fields = [
+        "created_at",
+        "updated_at",
+    ]
     action_permissions = {}
     request = None  # This is a hack around drf-spectacular not passing the request to the viewset methods
     action = None  # This is a hack around drf-spectacular not passing the action to the viewset methods

@@ -41,11 +41,11 @@ paths:
           type: string
           enum:
           - COMMENT
-          - POST
+          - LIKE
         description: |-
           Event Type
 
-          * `POST` - Post
+          * `LIKE` - Like
           * `COMMENT` - Comment
       - in: query
         name: include
@@ -61,6 +61,11 @@ paths:
         name: ordering
         schema:
           type: string
+          enum:
+          - -created_at
+          - -updated_at
+          - created_at
+          - updated_at
         explode: false
         style: form
       - name: page
@@ -167,6 +172,56 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
+    put:
+      operationId: notifications_update
+      description: Update an existing notification by id
+      summary: Put Notification
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Notification.
+        required: true
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationUpdateRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationUpdateRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationUpdateRequest'
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Notification'
+          description: ''
+        '400':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationError'
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Forbidden'
+          description: ''
     patch:
       operationId: notifications_partial_update
       description: Partially update an existing notification by id
@@ -233,6 +288,11 @@ paths:
         name: ordering
         schema:
           type: string
+          enum:
+          - -created_at
+          - -updated_at
+          - created_at
+          - updated_at
         explode: false
         style: form
       - name: page
@@ -791,6 +851,11 @@ paths:
         name: ordering
         schema:
           type: string
+          enum:
+          - -created_at
+          - -updated_at
+          - created_at
+          - updated_at
         explode: false
         style: form
       - name: page
@@ -1414,6 +1479,11 @@ paths:
         name: ordering
         schema:
           type: string
+          enum:
+          - -created_at
+          - -updated_at
+          - created_at
+          - updated_at
         explode: false
         style: form
       - name: page
@@ -1676,6 +1746,14 @@ paths:
           description: ''
 components:
   schemas:
+    EventEnum:
+      enum:
+      - LIKE
+      - COMMENT
+      type: string
+      description: |-
+        * `LIKE` - Like
+        * `COMMENT` - Comment
     Forbidden:
       type: object
       properties:
@@ -1727,6 +1805,15 @@ components:
           format: uuid
           readOnly: true
           description: User who received this notification.
+        event:
+          allOf:
+          - $ref: '#/components/schemas/EventEnum'
+          readOnly: true
+          description: |-
+            Event Type
+
+            * `LIKE` - Like
+            * `COMMENT` - Comment
         description:
           type: string
           readOnly: true
@@ -1746,6 +1833,7 @@ components:
       required:
       - created_at
       - description
+      - event
       - id
       - object_of_interest
       - object_of_interest_type
@@ -1770,6 +1858,11 @@ components:
             type: string
           readOnly: true
         user:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        event:
           type: array
           items:
             type: string
@@ -1802,6 +1895,7 @@ components:
       required:
       - created_at
       - description
+      - event
       - id
       - is_read
       - non_field_errors
@@ -1817,6 +1911,36 @@ components:
       oneOf:
       - $ref: '#/components/schemas/PostRequest'
       - $ref: '#/components/schemas/PostCommentRequest'
+    NotificationUpdateRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        is_read:
+          type: boolean
+          description: Whether the notification has been read or not.
     NullEnum:
       enum:
       - null
