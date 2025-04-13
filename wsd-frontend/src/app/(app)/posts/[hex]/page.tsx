@@ -35,13 +35,12 @@ export async function generateMetadata(props: { params: Promise<{ hex: string }>
   return notFound()
 }
 
-export default async function PostPage({
-  params,
-  searchParams,
-}: {
-  params: { hex: string }
-  searchParams: APIQuery<'/v0/post-comments/'>
+export default async function PostPage(props: {
+  params: Promise<{ hex: string }>
+  searchParams: Promise<APIQuery<'/v0/post-comments/'>>
 }) {
+  const searchParams = await props.searchParams
+  const params = await props.params
   const wsd = sUseWSDAPI()
   const isAuthenticated = await wsd.isAuthenticated()
   const postId = suppress<string, undefined>([InvalidHEXError], () => hexToUUIDv4(params.hex))

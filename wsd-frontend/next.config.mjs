@@ -15,7 +15,7 @@ const nextConfig = {
             }
         },
         // For forbidden interrupts
-        // authInterrupts: true,  // In NEXT 15 enable this
+        authInterrupts: true,
         optimizePackageImports: ["lodash"]
     },
     webpack(config) {

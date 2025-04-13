@@ -45,7 +45,7 @@ export function Memes({
 
   const { ref: loaderRef, inView } = useInView({ threshold: 1 })
 
-  const fetchPosts = async (pageNum: number) => {
+  async function fetchPosts(pageNum: number) {
     setLoading(true)
     const fullQuery = {
       ...defaultQuery,
@@ -64,6 +64,9 @@ export function Memes({
   }
 
   useEffectAfterMount(() => {
+    setPosts([])
+    setLoading(true)
+    setHasMore(true)
     setPage(1)
     fetchPosts(1)
   }, [searchParams])

@@ -12,7 +12,6 @@ DEBUG = config.DEBUG
 SECRET_KEY = config.SECRET_KEY
 ALLOWED_HOSTS = config.ALLOWED_HOSTS
 PROTOCOL = "https" if not DEBUG else "http"
-PROTOCOL = "https"
 
 # Application definition
 WSD_APPS_FIRST = [

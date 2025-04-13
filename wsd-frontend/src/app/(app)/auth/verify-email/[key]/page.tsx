@@ -13,6 +13,7 @@ export async function generateMetadata(): Promise<Metadata> {
   })
 }
 
-export default async function VerifyEmailPage({ params }: { params: { key: string } }) {
+export default async function VerifyEmailPage(props: { params: Promise<{ key: string }> }) {
+  const params = await props.params
   return <VerifyEmail verificationKey={params.key} />
 }

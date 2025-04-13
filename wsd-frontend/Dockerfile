@@ -32,7 +32,7 @@ ENV NEXT_PUBLIC_WSD__GITHUB_LINK=$NEXT_PUBLIC_WSD__GITHUB_LINK
 
 COPY . /wsd-frontend/
 
-RUN npm install --frozen-lockfile
+RUN npm install --frozen-lockfile --legacy-peer-deps
 RUN npm run build
 
 ENV NODE_ENV=production

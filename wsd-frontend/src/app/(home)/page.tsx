@@ -4,7 +4,8 @@ import { APIQuery } from '@/api'
 import config from '@/config'
 import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
 
-export default async function Home({ searchParams }: { searchParams?: APIQuery<'/v0/posts/'> }) {
+export default async function Home(props: { searchParams?: Promise<APIQuery<'/v0/posts/'>> }) {
+  const searchParams = await props.searchParams
   const wsd = sUseWSDAPI()
   const isAuthenticated = await wsd.isAuthenticated()
   const { data } = await wsd.posts({
