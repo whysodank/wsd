@@ -85,7 +85,7 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
 
   return (
     <form className="flex items-end gap-2 w-full justify-center" onSubmit={handleCreatePost}>
-      <div className="bg-background p-6 w-2/5 max-m:w-full">
+      <div className="bg-background p-6 w-full sm:w-4/5 md:w-4/5 lg:w-3/5 xl:w-2/5">
         <div className="flex flex-col gap-6">
           <h1 className="text-2xl font-bold">Create Post</h1>
           <div className="flex flex-col gap-2">

@@ -83,7 +83,7 @@ export default function FeedbackButtons({
     <div className="flex gap-1 flex-row items-center justify-center">
       <AuthenticatedOnlyActionButton
         onClick={handleVote(1)}
-        className="flex items-center p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+        className="flex items-center p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
         aria-label="Upvote"
         isAuthenticated={isAuthenticated}
       >
@@ -92,7 +92,7 @@ export default function FeedbackButtons({
       <span className="font-medium text-gray-500">{voteCount}</span>
       <AuthenticatedOnlyActionButton
         onClick={handleVote(-1)}
-        className="flex items-center p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+        className="flex items-center p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
         aria-label="Downvote"
         isAuthenticated={isAuthenticated}
       >
@@ -104,7 +104,7 @@ export default function FeedbackButtons({
           buttonVariants({
             variant: 'default',
             className:
-              'flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent',
+              'flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent',
           })
         )}
         aria-label="Comment"
@@ -124,7 +124,7 @@ export default function FeedbackButtons({
       </AuthenticatedOnlyActionButton>
       <Button
         onClick={handleShare}
-        className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+        className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
         aria-label="Share"
       >
         <Icons.Share2 size={20} />

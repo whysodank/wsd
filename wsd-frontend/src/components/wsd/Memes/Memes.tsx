@@ -90,6 +90,7 @@ export function Memes({
           <Meme
             post={includes(includes({ ...post }, 'user', 'User'), 'tags', 'PostTag', true)}
             withTags
+            withRepostData
             isAuthenticated={isAuthenticated}
           />
           <Separator className="max-sm:w-[calc(100%-8px)] w-5/6" />

@@ -2234,6 +2234,13 @@ components:
           format: uuid
           readOnly: true
           description: User who posted this post.
+        initial:
+          type: string
+          format: uuid
+          readOnly: true
+          nullable: true
+          description: The very first instance of this post in our system, if null,
+            it means this is the initial
         title:
           type: string
           description: Title of the post.
@@ -2282,6 +2289,7 @@ components:
       - created_at
       - id
       - image
+      - initial
       - negative_vote_count
       - positive_vote_count
       - tags
@@ -2600,6 +2608,11 @@ components:
           items:
             type: string
           readOnly: true
+        initial:
+          type: array
+          items:
+            type: string
+          readOnly: true
         title:
           type: array
           items:
@@ -2662,6 +2675,7 @@ components:
       - created_at
       - id
       - image
+      - initial
       - is_nsfw
       - negative_vote_count
       - non_field_errors

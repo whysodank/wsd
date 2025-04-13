@@ -15,11 +15,13 @@ import { cn, uuidV4toHEX } from '@/lib/utils'
 export function Meme({
   post,
   withTags = false,
+  withRepostData = false,
   fullScreen = false,
   isAuthenticated = false,
 }: {
   post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
   withTags?: boolean
+  withRepostData?: boolean
   fullScreen?: boolean
   isAuthenticated?: boolean
 }) {
@@ -69,7 +71,7 @@ export function Meme({
           </div>
         </Link>
         {withTags && (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 py-2">
             {post.tags.map((tag) => (
               <Badge key={tag.name} variant="outline" className="px-3 py-1 text-sm">
                 {tag.name}
@@ -82,8 +84,33 @@ export function Meme({
             <FeedbackButtons post={post} isAuthenticated={isAuthenticated} />
           </div>
           <div className="flex items-center gap-4">
+            {withRepostData && post.initial && (
+              <Badge
+                variant="outline"
+                className={cn(
+                  'inline-flex items-center gap-2 px-3 py-1.5 transition-all',
+                  'hover:bg-secondary hover:text-secondary-foreground',
+                  'border border-border/50 rounded-full shadow-sm',
+                  'cursor-pointer group'
+                )}
+              >
+                <Icons.Share2
+                  size={14}
+                  className="text-muted-foreground group-hover:text-secondary-foreground transition-colors"
+                />
+                <Link
+                  href={`/posts/${uuidV4toHEX(post.initial)}/`}
+                  className={cn(
+                    'text-xs font-medium text-muted-foreground',
+                    'group-hover:text-secondary-foreground transition-colors'
+                  )}
+                >
+                  View original post
+                </Link>
+              </Badge>
+            )}
             <Button
-              className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-gray-900 bg-transparent"
+              className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
               aria-label="More"
             >
               <Icons.Ellipsis size={20} />

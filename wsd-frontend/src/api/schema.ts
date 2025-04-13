@@ -819,6 +819,11 @@ export interface components {
        * @description User who posted this post.
        */
       readonly user: string
+      /**
+       * Format: uuid
+       * @description The very first instance of this post in our system, if null, it means this is the initial
+       */
+      readonly initial: string | null
       /** @description Title of the post. */
       title: string
       /**
@@ -1008,6 +1013,7 @@ export interface components {
       readonly created_at: string[]
       readonly updated_at: string[]
       readonly user: string[]
+      readonly initial: string[]
       readonly title: string[]
       readonly image: string[]
       readonly is_nsfw: string[]

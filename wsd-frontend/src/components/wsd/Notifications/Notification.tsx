@@ -56,7 +56,11 @@ export function Notification({ notification }: { notification: APIType<'Notifica
       <div className="flex items-center justify-between gap-2">
         <p className="text-sm font-medium text-muted-foreground text-left">{notification.description}</p>
         {'image' in notification.object_of_interest && (
-          <img src={notification.object_of_interest.image} className="h-10 w-10 object-cover rounded-sm text-right" />
+          <img
+            src={notification.object_of_interest.image}
+            alt="Notification Object Of Interest Preview"
+            className="h-10 w-10 object-cover rounded-sm text-right"
+          />
         )}
       </div>
       {!isRead && <span className="absolute top-2.5 right-2.5 h-3 w-3 rounded-full bg-red-600 border" />}

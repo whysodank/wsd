@@ -43,7 +43,7 @@ export async function Header() {
                   buttonVariants({
                     variant: 'ghost',
                     size: 'sm',
-                    className: 'max-md:hidden flex gap-2 h-10 w-10 rounded-full p-2',
+                    className: 'flex gap-2 h-10 w-10 rounded-full p-2',
                   })
                 )}
                 aria-label="New Post"
