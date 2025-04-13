@@ -9,8 +9,8 @@ from whitenoise.middleware import WhiteNoiseMiddleware
 class MediaWhiteNoiseMiddleware(WhiteNoiseMiddleware):
     def configure_from_settings(self, settings):
         # Default configuration
-        self.autorefresh = settings.DEBUG
-        self.use_finders = settings.DEBUG
+        self.autorefresh = True
+        self.use_finders = True
         self.static_prefix = urlparse(settings.MEDIA_URL or "").path
         script_prefix = get_script_prefix().rstrip("/")
         if script_prefix:
@@ -32,6 +32,4 @@ class MediaWhiteNoiseMiddleware(WhiteNoiseMiddleware):
         self.static_root = decode_if_byte_string(settings.MEDIA_ROOT)
 
     def process_request(self, request):
-        if not settings.DEBUG:
-            return
         return super().process_request(request)
