@@ -1,5 +1,5 @@
 from apps.core.models import Notification
-from apps.rest.utils.permissions import IsAuthenticatedANDSignupCompleted, IsSuperUser, ReadOnly, is_owner
+from apps.rest.utils.permissions import IsAuthenticatedANDSignupCompleted, IsSuperUser, is_owner
 from apps.rest.v0.serializers import NotificationSerializer
 
 from .base import BaseModelViewSet
@@ -10,7 +10,7 @@ class NotificationViewSet(BaseModelViewSet):
     model = Notification
     serializer_class = NotificationSerializer
     disallowed_methods = ["create", "destroy"]
-    permission_classes = [IsSuperUser | (IsAuthenticatedANDSignupCompleted & is_owner("user")) | ReadOnly]
+    permission_classes = [IsSuperUser | (IsAuthenticatedANDSignupCompleted & is_owner("user"))]
     filterset_fields = {
         "is_read": ["exact"],
         "event": ["exact"],
@@ -19,4 +19,5 @@ class NotificationViewSet(BaseModelViewSet):
     }
 
     def get_queryset(self):
-        return self.model.objects.filter(user=self.request.user)
+        user = self.request.user
+        return self.model.objects.filter(user=user) if user.is_authenticated else self.model.objects.none()
