@@ -25,7 +25,11 @@ export default function VerifyButton(
         .groupBy('param')
         .mapValues((i) => i.map((i) => i.message))
         .value()
-      toast('Verification failed.', { description: fieldErrors.key.join('\n') })
+      toast('Verification failed.', {
+        description: Object.values(fieldErrors)
+          .map((messages) => messages.join('\n'))
+          .join('\n'),
+      })
     } else {
       toast('Email verified successfully.')
       router.push('/auth/login')
