@@ -36,7 +36,7 @@ class WSDAllauthAccountAdapter(DefaultAccountAdapter):
 
     def populate_username(self, request, user):
         if not user.username:
-            user.set_unusable_name()
+            user.set_unusable_username()
 
 
 class WSDAllauthSocialAccountAdapter(DefaultSocialAccountAdapter):
