@@ -1,3 +1,4 @@
+from contextlib import nullcontext
 from pathlib import Path
 
 from allauth.account.adapter import DefaultAccountAdapter
@@ -30,7 +31,8 @@ class WSDAllauthAccountAdapter(DefaultAccountAdapter):
         """
         Save the user instance and set the username to an unusable value.
         """
-        with user.skip_full_clean():
+        cm = user.skip_field_validators("username") if user.has_unusable_username else nullcontext()
+        with cm:
             user = super().save_user(request, user, form, commit)
         return user
 
@@ -41,7 +43,9 @@ class WSDAllauthAccountAdapter(DefaultAccountAdapter):
 
 class WSDAllauthSocialAccountAdapter(DefaultSocialAccountAdapter):
     def save_user(self, request, sociallogin, form=None):
-        with sociallogin.user.skip_full_clean():
+        user = sociallogin.user
+        cm = user.skip_field_validators("username") if user.has_unusable_username else nullcontext()
+        with cm:
             user = super().save_user(request, sociallogin, form)
         return user
 

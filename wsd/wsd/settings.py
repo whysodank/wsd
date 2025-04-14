@@ -12,6 +12,7 @@ DEBUG = config.DEBUG
 SECRET_KEY = config.SECRET_KEY
 ALLOWED_HOSTS = config.ALLOWED_HOSTS
 PROTOCOL = "https"
+SECURE_SSL_REDIRECT = False  # Only because we use cloudflare without full or strict
 
 # Application definition
 WSD_APPS_FIRST = [
