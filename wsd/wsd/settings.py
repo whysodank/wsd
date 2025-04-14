@@ -143,13 +143,13 @@ AUTH_USER_MODEL = "user.User"
 ACCOUNT_ADAPTER = "apps.core.backends.allauth.WSDAllauthAccountAdapter"
 SOCIALACCOUNT_ADAPTER = "apps.core.backends.allauth.WSDAllauthSocialAccountAdapter"
 HEADLESS_ADAPTER = "apps.core.backends.allauth.WSDAllauthHeadlessAccountAdapter"
-ACCOUNT_SIGNUP_FIELDS = ["email*", "username*"]
+ACCOUNT_SIGNUP_FIELDS = ["email*", "username*", "password1*"]
 ACCOUNT_LOGIN_METHODS = ["username", "email"]
 ACCOUNT_EMAIL_VERIFICATION = "mandatory"
 ACCOUNT_LOGOUT_ON_PASSWORD_CHANGE = False
 ACCOUNT_EMAIL_VERIFICATION_BY_CODE_ENABLED = False
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = PROTOCOL
-
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
 
 SOCIALACCOUNT_EMAIL_AUTHENTICATION = True
 SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT = True

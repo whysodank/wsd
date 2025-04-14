@@ -28,9 +28,6 @@ class WSDAllauthAccountAdapter(DefaultAccountAdapter):
         )
 
     def save_user(self, request, user, form, commit=True):
-        """
-        Save the user instance and set the username to an unusable value.
-        """
         cm = user.skip_field_validators("username") if user.has_unusable_username else nullcontext()
         with cm:
             user = super().save_user(request, user, form, commit)
