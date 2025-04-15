@@ -65,7 +65,7 @@ class PostViewSet(BaseModelViewSet):
         qs = Post.objects.annotate(
             positive_vote_count=Count("votes", filter=Q(votes__body=PostVote.VoteType.UPVOTE), distinct=True),
             negative_vote_count=Count("votes", filter=Q(votes__body=PostVote.VoteType.DOWNVOTE), distinct=True),
-            comment_count=Count("comments"),
+            comment_count=Count("comments", distinct=True),
         )
         qs = self.annotate_vote(qs, self.request)
         qs = self.annotate_bookmarked(qs, self.request)
