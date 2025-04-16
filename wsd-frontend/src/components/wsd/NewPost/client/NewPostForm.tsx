@@ -142,6 +142,9 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
                 <FileInputButton onFileSelect={onFileSelect} ref={fileInputRef} id="postMedia" />
               </div>
             </div>
+            {postErrors?.image?.join('\n') && (
+              <span className="text-sm text-destructive whitespace-pre-line">{postErrors?.image?.join('\n')}</span>
+            )}
           </div>
           <div>
             <div className="flex flex-col gap-2">
