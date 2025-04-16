@@ -13,6 +13,8 @@ import type { APIType, Includes } from '@/api'
 import { useWSDAPI } from '@/lib/serverHooks'
 import { cn, shortFormattedDateTime, uuidV4toHEX } from '@/lib/utils'
 
+import { toast } from 'sonner'
+
 export function MemeComment({ comment }: { comment: Includes<APIType<'PostComment'>, 'user', APIType<'User'>> }) {
   const wsd = useWSDAPI()
   const [feedback, setFeedback] = useState<APIType<'VoteEnum'> | null>(comment.vote)
@@ -25,24 +27,40 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
 
       if (feedback === vote) {
         newFeedback = null
-        await wsd.unvotePostComment(comment.id)
         newVoteCount -= vote
       } else {
         newFeedback = vote
         if (feedback !== null) {
           newVoteCount -= feedback
         }
-
-        if (vote === 1) {
-          await wsd.upvotePostComment(comment.id)
-        } else {
-          await wsd.downvotePostComment(comment.id)
-        }
         newVoteCount += vote
       }
 
       setFeedback(newFeedback)
       setVoteCount(newVoteCount)
+
+      try {
+        let response
+
+        if (feedback === vote) {
+          response = (await wsd.unvotePostComment(comment.id)).response
+        } else {
+          if (vote === 1) {
+            response = (await wsd.upvotePostComment(comment.id)).response
+          } else {
+            response = (await wsd.downvotePostComment(comment.id)).response
+          }
+        }
+        if (!response.ok) {
+          setFeedback(feedback)
+          setVoteCount(voteCount)
+          toast('Error updating vote')
+        }
+      } catch {
+        setFeedback(feedback)
+        setVoteCount(voteCount)
+        toast('Error updating vote')
+      }
     }
   }
 

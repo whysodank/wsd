@@ -39,25 +39,40 @@ export default function FeedbackButtons({
 
       if (feedback === vote) {
         newFeedback = null
-        await wsd.unvotePost(post.id)
         newVoteCount -= vote
       } else {
         newFeedback = vote
         if (feedback !== null) {
           newVoteCount -= feedback
         }
-
-        if (vote === 1) {
-          await wsd.upvotePost(post.id)
-        } else {
-          await wsd.downvotePost(post.id)
-        }
-
         newVoteCount += vote
       }
 
       setFeedback(newFeedback)
       setVoteCount(newVoteCount)
+
+      try {
+        let response
+
+        if (feedback === vote) {
+          response = (await wsd.unvotePost(post.id)).response
+        } else {
+          if (vote === 1) {
+            response = (await wsd.upvotePost(post.id)).response
+          } else {
+            response = (await wsd.downvotePost(post.id)).response
+          }
+        }
+        if (!response.ok) {
+          setFeedback(feedback)
+          setVoteCount(voteCount)
+          toast('Error updating vote')
+        }
+      } catch {
+        setFeedback(feedback)
+        setVoteCount(voteCount)
+        toast('Error updating vote')
+      }
     }
   }
 
