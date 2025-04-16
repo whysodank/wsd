@@ -299,12 +299,6 @@ if not DEBUG:
         # Set traces_sample_rate to 1.0 to capture 100%
         # of transactions for tracing.
         traces_sample_rate=config.DEVTOOLS.SENTRY.TRACES_SAMPLE_RATE,
-        _experiments={
-            # Set continuous_profiling_auto_start to True
-            # to automatically start the profiler on when
-            # possible.
-            "continuous_profiling_auto_start": True,
-        },
         debug=config.DEBUG,
     )
 
