@@ -47,6 +47,9 @@ THIRD_PARTY_APPS = [
     "corsheaders",
     "drf_spectacular",
     "generic_relations",
+    # Admin
+    "colorfield",
+    "admin_interface",
 ]
 
 BUILTIN_APPS = [
