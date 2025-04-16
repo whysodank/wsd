@@ -3,7 +3,7 @@ from .post import Post
 from .post_category import PostCategory
 from .user_post_view import UserPostView
 
-# Notification import should come after the rest because it _can_ use the other models for notification registry
+# Notification import should come after the rest because it _may_ use the other models for notification registry
 from .notification import Notification  # isort: skip
 
 PostComment = Post.comment_class
