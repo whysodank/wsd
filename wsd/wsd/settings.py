@@ -239,6 +239,21 @@ USE_I18N = True
 USE_L10N = True
 USE_TZ = True
 
+AWS_S3_ACCESS_KEY_ID = config.STORAGE.S3.ACCESS_KEY_ID
+AWS_S3_SECRET_ACCESS_KEY = config.STORAGE.S3.SECRET_ACCESS_KEY
+AWS_S3_ENDPOINT_URL = config.STORAGE.S3.ENDPOINT_URL
+AWS_STORAGE_BUCKET_NAME = config.STORAGE.S3.BUCKET_NAME
+AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+AWS_S3_SIGNATURE_VERSION = "s3"
+
+_s3 = config.STORAGE.S3
+s3_is_available = _s3.ACCESS_KEY_ID and _s3.SECRET_ACCESS_KEY and _s3.ENDPOINT_URL and _s3.BUCKET_NAME
+if s3_is_available:
+    STORAGE_BACKEND = "storages.backends.s3.S3Storage"
+else:
+    STORAGE_BACKEND = "django.core.files.storage.FileSystemStorage"
+
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -247,20 +262,12 @@ MEDIA_URL = f"{PROTOCOL}://{API_SUBDOMAIN}.{HOST}/media/"
 MEDIA_ROOT = BASE_DIR / "mediafiles"
 STORAGES = {
     "default": {
-        "BACKEND": "storages.backends.s3.S3Storage",
+        "BACKEND": STORAGE_BACKEND,
     },
     "staticfiles": {
         "BACKEND": STATICFILES_STORAGE,
     },
 }
-
-AWS_S3_ACCESS_KEY_ID = config.STORAGE.S3.ACCESS_KEY_ID
-AWS_S3_SECRET_ACCESS_KEY = config.STORAGE.S3.SECRET_ACCESS_KEY
-AWS_S3_ENDPOINT_URL = config.STORAGE.S3.ENDPOINT_URL
-AWS_STORAGE_BUCKET_NAME = config.STORAGE.S3.BUCKET_NAME
-AWS_S3_FILE_OVERWRITE = False
-AWS_DEFAULT_ACL = None
-AWS_S3_SIGNATURE_VERSION = "s3"
 
 X_FRAME_OPTIONS = "SAMEORIGIN"
 
@@ -334,4 +341,3 @@ if DEBUG:
     ORIGINS_HTTPS = [f"https://{d}:{p}" for d in DOMAINS for p in PORTS] + [f"https://{d}" for d in DOMAINS]
     CORS_ALLOWED_ORIGINS = ORIGINS_HTTP + ORIGINS_HTTPS
     CSRF_TRUSTED_ORIGINS = ORIGINS_HTTP + ORIGINS_HTTPS
-    STORAGES["default"]["BACKEND"] = "django.core.files.storage.FileSystemStorage"
