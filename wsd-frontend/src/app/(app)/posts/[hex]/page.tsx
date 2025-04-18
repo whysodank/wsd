@@ -68,14 +68,14 @@ export default async function PostPage(props: {
       })
       const post_ = includesType(includesType(post as APIType<'Post'>, 'user', 'User'), 'tags', 'PostTag', true)
       return (
-        <div className="flex flex-col gap-2 items-center w-full">
+        <div className="flex flex-col gap-2 items-center lg:w-5/6 w-full">
           <div className="w-full min-h-[130vh]">
             <Meme post={post_} withRepostData withTags fullScreen isAuthenticated={isAuthenticated} />
             <Separator className="max-sm:w-[calc(100%-8px)] w-full max-w-full" />
             {wsd.hasResults(comments) && (
               <Overlay breakpoint="md">
                 <OverlayTrigger>
-                  <Button variant="ghost" className="px-0 hover:bg-transparent">
+                  <Button variant="ghost" className="px-0 max-md:px-2 hover:bg-transparent">
                     <p className="font-medium text-muted-foreground hover:underline">Ordering: {currentOrdering}</p>
                   </Button>
                 </OverlayTrigger>

@@ -1,6 +1,8 @@
-// Can't make this server component for some reason -- is it because the Memes component loads the memes in the
-// frontend? Because of the infinite scroll?
+'use client'
+
 import Link from 'next/link'
+
+import { useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
@@ -10,7 +12,8 @@ import { Button } from '@/components/shadcn/button'
 import { FeedbackButtons } from '@/components/wsd/Meme/client'
 
 import { APIType, Includes } from '@/api'
-import { cn, uuidV4toHEX } from '@/lib/utils'
+import { useElementAttribute } from '@/lib/hooks'
+import { cn, preventDefault, uuidV4toHEX } from '@/lib/utils'
 
 export function Meme({
   post,
@@ -25,6 +28,14 @@ export function Meme({
   fullScreen?: boolean
   isAuthenticated?: boolean
 }) {
+  const [isExpanded, setIsExpanded] = useState(false)
+  const { ref: imageRef, attributeValue: naturalHeight } = useElementAttribute<HTMLImageElement, 'naturalHeight'>(
+    'naturalHeight'
+  )
+
+  const showExpandButton = !fullScreen && naturalHeight !== null && naturalHeight > 900 && !isExpanded
+  const showShrinkButton = !fullScreen && naturalHeight !== null && naturalHeight > 900 && isExpanded
+
   return (
     <article
       className={cn(
@@ -59,14 +70,25 @@ export function Meme({
               </AspectRatio>
             ) : (
               <img
+                ref={imageRef}
                 src={post.image}
                 alt={post.title}
                 className={cn(
-                  'relative z-10 lg:w-5/6 max-w-[80%] h-auto max-md:max-w-full',
-                  fullScreen ? 'max-w-full w-full' : 'max-h-[900px]'
+                  'relative h-auto object-cover object-top',
+                  fullScreen ? 'w-full max-w-full' : ['lg:w-5/6', !isExpanded && 'max-h-[900px]']
                 )}
                 loading="lazy"
               />
+            )}
+            {(showExpandButton || showShrinkButton) && (
+              <Button
+                onClick={preventDefault(() => setIsExpanded(!isExpanded))}
+                variant="ghost"
+                className="z-10 w-8 h-8 absolute bottom-4 right-4 rounded-full p-2"
+                aria-label={isExpanded ? 'Shrink' : 'Expand'}
+              >
+                {isExpanded ? <Icons.Minimize2 size={16} /> : <Icons.Maximize2 size={16} />}
+              </Button>
             )}
           </div>
         </Link>
@@ -101,8 +123,7 @@ export function Meme({
                 <Link
                   href={`/posts/${uuidV4toHEX(post.initial)}/`}
                   className={cn(
-                    'text-xs font-medium text-muted-foreground',
-                    'group-hover:text-secondary-foreground transition-colors'
+                    'text-xs font-medium text-muted-foreground group-hover:text-secondary-foreground transition-colors'
                   )}
                 >
                   View original post
