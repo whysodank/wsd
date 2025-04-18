@@ -4,11 +4,14 @@ import { useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
+import _ from 'lodash'
+
 import { APIType } from '@/api'
 import { useWSDAPI } from '@/lib/serverHooks'
 import { uuidV4toHEX } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
+import { toast } from 'sonner'
 
 export function Notification({ notification }: { notification: APIType<'Notification'> }) {
   const wsd = useWSDAPI()
@@ -23,9 +26,9 @@ export function Notification({ notification }: { notification: APIType<'Notifica
   const NotificationIcon = icons[notification.event] || Icons.Shell
 
   async function getPost(notificationObject: APIType<'Notification'>) {
-    let post: APIType<'Post'> | undefined
+    let post: APIType<'Post'> | null | undefined
     if (notification.object_of_interest_type === 'Post') {
-      post = notificationObject.object_of_interest as APIType<'Post'>
+      post = notificationObject.object_of_interest as APIType<'Post'> | null
     } else if (notification.object_of_interest_type === 'PostComment') {
       post = (await wsd.post((notification.object_of_interest as APIType<'PostComment'>).post)).data as APIType<'Post'>
     }
@@ -39,6 +42,8 @@ export function Notification({ notification }: { notification: APIType<'Notifica
       await wsd.patchNotification(notification.id, { is_read: true })
       setIsRead(true)
       router.refresh()
+    } else {
+      toast('This post is no longer available.')
     }
   }
 
@@ -55,7 +60,7 @@ export function Notification({ notification }: { notification: APIType<'Notifica
       </div>
       <div className="flex items-center justify-between gap-2">
         <p className="text-sm font-medium text-muted-foreground text-left">{notification.description}</p>
-        {'image' in notification.object_of_interest && (
+        {notification.object_of_interest && 'image' in notification.object_of_interest && (
           <img
             src={notification.object_of_interest.image}
             alt="Notification Object Of Interest Preview"
