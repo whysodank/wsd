@@ -43,6 +43,8 @@ export function Notification({ notification }: { notification: APIType<'Notifica
       setIsRead(true)
       router.refresh()
     } else {
+      await wsd.patchNotification(notification.id, { is_read: true })
+      setIsRead(true)
       toast('This post is no longer available.')
     }
   }
