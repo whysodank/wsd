@@ -15,6 +15,14 @@ CONFIG = config(
             "HOST": string(),
             "PORT": string(),
         },
+        "STORAGE": {
+            "S3": {
+                "BUCKET_NAME": string(missing_default=None),
+                "ENDPOINT_URL": string(missing_default=None),
+                "ACCESS_KEY_ID": string(missing_default=None),
+                "SECRET_ACCESS_KEY": string(missing_default=None),
+            }
+        },
         "SECRET_KEY": string(),
         "HOSTS": {
             "DOMAIN": string(),
