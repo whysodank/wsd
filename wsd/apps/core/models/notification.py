@@ -54,7 +54,7 @@ class Notification(BaseModel):
     def register_notification_moment(cls, model, **kwargs):
         # When a model is created, if kwargs match the instance, call the registered function with the instance
         def decorator(func):
-            @receiver(post_save, sender=model)
+            @receiver(post_save, sender=model, weak=False)
             def wrapper(**signal_kwargs):
                 created, instance = signal_kwargs.get("created", False), signal_kwargs.get("instance", None)
                 no_value = Sentinel("NO_VALUE")

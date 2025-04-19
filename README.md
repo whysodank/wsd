@@ -1,1 +1,1 @@
-# whysodank.com
+# [whysodank.com](https://whysodank.com)
