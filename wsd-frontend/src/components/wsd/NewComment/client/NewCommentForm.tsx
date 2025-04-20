@@ -1,5 +1,6 @@
 'use client'
 
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/shadcn/button'
@@ -46,7 +47,9 @@ export default function NewCommentForm({
 
   return (
     <form className="mt-4 flex items-end gap-2 px-4 py-2" onSubmit={handleCommentSubmit}>
-      <UserAvatar user={user} className="w-12 h-12 self-start" />
+      <Link href={{ pathname: `/users/${user?.username}` }} className="self-start">
+        <UserAvatar user={user} className="w-12 h-12" />
+      </Link>
       <div className="flex flex-col justify-end w-full gap-2">
         <div className="relative flex-1">
           <Textarea

@@ -26,7 +26,7 @@ class UserViewSet(BaseModelViewSet):
     }
 
     filterset_fields = {
-        "username": ["iexact", "icontains"],
+        "username": ["exact", "iexact", "icontains"],
         "is_active": ["exact"],
         "is_staff": ["exact"],
         "is_superuser": ["exact"],

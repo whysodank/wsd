@@ -11,7 +11,7 @@ import UserAvatar from '@/components/wsd/UserAvatar'
 
 import type { APIType, Includes } from '@/api'
 import { useWSDAPI } from '@/lib/serverHooks'
-import { cn, shortFormattedDateTime, uuidV4toHEX } from '@/lib/utils'
+import { cn, shortFormattedDateTime } from '@/lib/utils'
 
 import { toast } from 'sonner'
 
@@ -66,11 +66,13 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
 
   return (
     <article className="flex flex-row gap-2 p-4 rounded-lg bg-background w-full">
-      <UserAvatar user={comment.user} className="w-12 h-12" />
+      <Link href={{ pathname: `/users/${comment?.user?.username}` }}>
+        <UserAvatar user={comment.user} className="w-12 h-12" />
+      </Link>
       <div className="flex flex-col gap-1 w-full">
         <div className="flex items-center gap-2">
           <Link
-            href={`/users/${uuidV4toHEX(comment.user.id)}`}
+            href={`/users/${comment.user.username}`}
             className="text-sm font-semibold hover:underline text-foreground"
           >
             {comment.user.username}

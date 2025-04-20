@@ -1146,6 +1146,10 @@ paths:
           type: string
           format: uuid
       - in: query
+        name: user__username
+        schema:
+          type: string
+      - in: query
         name: vote
         schema:
           type: integer
@@ -1569,6 +1573,10 @@ paths:
         schema:
           type: string
           format: date-time
+      - in: query
+        name: username
+        schema:
+          type: string
       - in: query
         name: username__icontains
         schema:
@@ -2841,6 +2849,15 @@ components:
           title: Active
           description: Designates whether this user should be treated as active. Unselect
             this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
         is_staff:
           type: boolean
           readOnly: true
@@ -2862,10 +2879,12 @@ components:
           readOnly: true
       required:
       - created_at
+      - date_joined
       - id
       - is_active
       - is_staff
       - is_superuser
+      - last_login
       - updated_at
       - username
     User:
@@ -2921,6 +2940,15 @@ components:
           title: Active
           description: Designates whether this user should be treated as active. Unselect
             this instead of deleting accounts.
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
+        last_login:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
         is_staff:
           type: boolean
           readOnly: true
@@ -2945,11 +2973,13 @@ components:
           readOnly: true
       required:
       - created_at
+      - date_joined
       - email
       - id
       - is_active
       - is_staff
       - is_superuser
+      - last_login
       - signup_completed
       - updated_at
       - username
@@ -3050,6 +3080,16 @@ components:
           items:
             type: string
           readOnly: true
+        date_joined:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        last_login:
+          type: array
+          items:
+            type: string
+          readOnly: true
         is_staff:
           type: array
           items:
@@ -3082,12 +3122,14 @@ components:
           readOnly: true
       required:
       - created_at
+      - date_joined
       - email
       - first_name
       - id
       - is_active
       - is_staff
       - is_superuser
+      - last_login
       - last_name
       - non_field_errors
       - signup_completed

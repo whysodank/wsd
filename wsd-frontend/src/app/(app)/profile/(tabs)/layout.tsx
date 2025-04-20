@@ -35,7 +35,7 @@ export default async function ProfileLayout({ children }: { children: React.Reac
     <div className="min-h-screen flex flex-col gap-1 items-center justify-center p-4">
       <div className="flex flex-col justify-center items-center gap-1">
         <UserAvatar user={user as APIType<'User'>} className="w-24 h-24" />
-        <Link href={{ pathname: '/users/username' }} className="hover:underline">
+        <Link href={{ pathname: `/users/${user?.username}` }} className="hover:underline">
           {user?.username}
         </Link>
       </div>

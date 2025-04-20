@@ -44,6 +44,7 @@ class PostViewSet(BaseModelViewSet):
 
     filterset_fields = {
         "user": ["exact"],
+        "user__username": ["exact"],
         "title": ["exact"],
         "created_at": ["exact", "gt", "gte", "lt", "lte"],
         "updated_at": ["exact", "gt", "gte", "lt", "lte"],

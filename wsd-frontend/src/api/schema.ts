@@ -1136,6 +1136,10 @@ export interface components {
        * @description Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
        */
       readonly is_active: boolean
+      /** Format: date-time */
+      readonly date_joined: string
+      /** Format: date-time */
+      readonly last_login: string | null
       /**
        * Staff status
        * @description Designates whether the user can log into this admin site.
@@ -1191,6 +1195,10 @@ export interface components {
        * @description Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
        */
       readonly is_active: boolean
+      /** Format: date-time */
+      readonly date_joined: string
+      /** Format: date-time */
+      readonly last_login: string | null
       /**
        * Staff status
        * @description Designates whether the user can log into this admin site.
@@ -1247,6 +1255,8 @@ export interface components {
       readonly last_name: string[]
       readonly email: string[]
       readonly is_active: string[]
+      readonly date_joined: string[]
+      readonly last_login: string[]
       readonly is_staff: string[]
       readonly is_superuser: string[]
       readonly created_at: string[]
@@ -2105,6 +2115,7 @@ export interface operations {
         updated_at__lt?: string
         updated_at__lte?: string
         user?: string
+        user__username?: string
         /** @description * `1` - Upvote
          *     * `-1` - Downvote */
         vote?: -1 | 1
@@ -2446,6 +2457,7 @@ export interface operations {
         updated_at__gte?: string
         updated_at__lt?: string
         updated_at__lte?: string
+        username?: string
         username__icontains?: string
         username__iexact?: string
       }

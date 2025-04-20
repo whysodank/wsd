@@ -62,14 +62,16 @@ export class WSDAPI {
     return listOfResources.join(',')
   }
 
-  public hasResults(
-    resource: undefined | { results: { length: number } }
-  ): resource is { results: { length: number } } {
+  public hasResults<T>(resource: undefined | { results: T[] }): resource is { results: T[] } {
     return !!resource && resource.results.length > 0
   }
 
-  public hasNoResult(resource: undefined | { results: { length: number } }) {
-    return resource && (resource.results.length || 0) === 0
+  public hasNoResult<T>(resource: undefined | { results: T[] }): resource is { results: T[] } {
+    return !!resource && resource.results.length === 0
+  }
+
+  public getFirst<T>(resource: { results: T[] }): T | undefined {
+    return resource.results[0]
   }
 
   // Below this are api endpoint wrappers
