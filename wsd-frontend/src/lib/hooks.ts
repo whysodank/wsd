@@ -107,13 +107,20 @@ export function useFormState<T>(initialState: T) {
 
 export function useEffectAfterMount(effect: EffectCallback, deps: DependencyList) {
   const isFirstRender = useRef(true)
+  const prevDepsRef = useRef<DependencyList>([])
 
   useEffect(() => {
     if (isFirstRender.current) {
       isFirstRender.current = false
+      prevDepsRef.current = [...deps]
       return
     }
-    return effect()
+
+    if (deps.some((dep, index) => dep !== prevDepsRef.current[index])) {
+      const cleanup = effect()
+      prevDepsRef.current = [...deps]
+      return cleanup
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps)
 }
