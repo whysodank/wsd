@@ -29,6 +29,7 @@ export async function generateMetadata(props: { params: Promise<{ hex: string }>
       return await getWSDMetadata({
         title: post_.title,
         description: post_.title,
+        image: post.image,
       })
     }
   }
