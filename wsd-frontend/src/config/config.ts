@@ -3,6 +3,7 @@ import { booleanConfig, numberConfig, stringConfig } from '~/src/config/parsers'
 const RAW = Object.freeze({
   debug: process.env.NEXT_PUBLIC_WSD__DEBUG,
   name: process.env.NEXT_PUBLIC_WSD__NAME,
+  motto: process.env.NEXT_PUBLIC_WSD__MOTTO,
   domain: process.env.NEXT_PUBLIC_WSD__DOMAIN,
   api: {
     baseURL: process.env.NEXT_PUBLIC_WSD__API__BASE_URL,
@@ -31,6 +32,8 @@ const RAW = Object.freeze({
 export const config = Object.freeze({
   debug: booleanConfig({ name: 'debug', value: RAW.debug, default: false }),
   name: stringConfig({ name: 'name', value: RAW.name, default: 'WSD' }),
+  motto: stringConfig({ name: 'motto', value: RAW.motto, default: 'Why So Dank?' }),
+  image: `https://${stringConfig({ name: 'domain', value: RAW.domain })}/og-image.jpg`,
   domain: stringConfig({ name: 'domain', value: RAW.domain }),
   url: `https://${stringConfig({ name: 'domain', value: RAW.domain })}`,
   api: {

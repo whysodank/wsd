@@ -1,4 +1,3 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import * as Icons from 'lucide-react'
@@ -8,16 +7,7 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/shadcn/tabs'
 import UserAvatar from '@/components/wsd/UserAvatar'
 
 import { APIType } from '@/api'
-import config from '@/config'
-import { getWSDMetadata } from '@/lib/metadata'
 import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
-
-export async function generateMetadata(): Promise<Metadata> {
-  return await getWSDMetadata({
-    title: config.name,
-    description: config.name,
-  })
-}
 
 export default async function ProfileLayout({ children }: { children: React.ReactNode }) {
   const wsd = sUseWSDAPI()

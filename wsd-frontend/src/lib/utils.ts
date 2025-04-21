@@ -2,6 +2,8 @@ import WSDTailwindConfig from '~/tailwind.config'
 
 import { NextRequest, NextResponse } from 'next/server'
 
+import React from 'react'
+
 import _ from 'lodash'
 
 import { LONG_DATE_FORMAT, SHORT_DATETIME_FORMAT, SHORT_DATE_FORMAT } from '@/lib/constants'
@@ -252,4 +254,10 @@ export function fileToBase64(file: File): Promise<string> {
     }
     reader.onerror = (error) => reject(error)
   })
+}
+
+export function noopLayout() {
+  return function Layout({ children }: { children: React.ReactNode }) {
+    return React.createElement(React.Fragment, null, children)
+  }
 }

@@ -1,3 +1,5 @@
+'use server'
+
 import { CompleteSignupForm } from '@/components/wsd/Profile/CompleteSignup/client'
 
 export async function CompleteSignup() {

@@ -1,3 +1,5 @@
+'use server'
+
 import * as Icons from 'lucide-react'
 
 import { Badge } from '@/components/shadcn/badge'

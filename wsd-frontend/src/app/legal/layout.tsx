@@ -1,20 +1,9 @@
-import type { Metadata } from 'next'
 import Link from 'next/link'
 
 import React from 'react'
 
 import { Card, CardContent } from '@/components/shadcn/card'
 import { Tabs, TabsList, TabsTrigger } from '@/components/shadcn/tabs'
-
-import config from '@/config'
-import { getWSDMetadata } from '@/lib/metadata'
-
-export async function generateMetadata(): Promise<Metadata> {
-  return await getWSDMetadata({
-    title: config.name,
-    description: config.name,
-  })
-}
 
 export default async function LegalLayout({ children }: { children: React.ReactNode }) {
   const legalTabs = [

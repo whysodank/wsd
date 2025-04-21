@@ -5,32 +5,45 @@ import _ from 'lodash'
 import config from '@/config'
 
 export type WSDMetaData = {
-  title: string
-  description: string
+  title?: string
+  description?: string
   noIndex?: boolean
   image?: string
 }
 
-export async function getWSDMetadata(metadata: WSDMetaData): Promise<Metadata> {
+const DEFAULT_WSD_METADATA: WSDMetaData = {
+  title: `${config.name} - ${config.motto}`,
+  description:
+    'Dank memes. Viral chaos. Strange news. Regular people. ' +
+    'WSD keeps your humor feed unreasonably funny. No filter, ne censorship, just fire.',
+  noIndex: false,
+  image: config.image,
+}
+
+export async function getWSDMetadata(metadata: WSDMetaData = DEFAULT_WSD_METADATA): Promise<Metadata> {
   // Base metadata + og metadata for wsd
   const index = metadata.noIndex ? noIndex : {}
+  const wsdMetadata = {
+    ...DEFAULT_WSD_METADATA,
+    ...metadata,
+  }
 
   const metaData = {
-    title: metadata.title,
-    description: metadata.description,
+    title: wsdMetadata.title,
+    description: wsdMetadata.description,
     publisher: config.name,
     openGraph: {
-      title: metadata.title,
-      description: metadata.description,
+      title: wsdMetadata.title,
+      description: wsdMetadata.description,
       type: 'website',
       url: config.url,
       siteName: config.name,
-      ...(metadata.image
+      ...(wsdMetadata.image
         ? {
             images: [
               {
-                url: metadata.image,
-                alt: metadata.title,
+                url: wsdMetadata.image,
+                alt: wsdMetadata.title,
               },
             ],
           }

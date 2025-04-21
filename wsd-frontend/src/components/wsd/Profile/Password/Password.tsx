@@ -1,3 +1,5 @@
+'use server'
+
 import { ChangePasswordForm, SetPasswordForm } from '@/components/wsd/Profile/Password/client'
 
 import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'

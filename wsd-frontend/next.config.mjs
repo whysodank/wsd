@@ -6,17 +6,17 @@ const require = createRequire(import.meta.url);
 /** @type {import('next').NextConfig} */
 const nextConfig = {
     experimental: {
-        turbo: {
-            rules: {
-                '*.svg': {
-                    loaders: ['@svgr/webpack'],
-                    as: "*.js"
-                },
-            }
-        },
         // For forbidden interrupts
         authInterrupts: true,
         optimizePackageImports: ["lodash"]
+    },
+    turbopack: {
+        rules: {
+            '*.svg': {
+                loaders: ['@svgr/webpack'],
+                as: "*.js"
+            },
+        }
     },
     webpack(config) {
         config.module.rules.push({

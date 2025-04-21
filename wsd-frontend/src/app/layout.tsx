@@ -1,3 +1,5 @@
+'use server'
+
 import '~/src/app/globals.css'
 
 import type { Metadata } from 'next'
@@ -11,10 +13,7 @@ import { getWSDMetadata } from '@/lib/metadata'
 import { GoogleAnalytics } from '@next/third-parties/google'
 
 export async function generateMetadata(): Promise<Metadata> {
-  return await getWSDMetadata({
-    title: config.name,
-    description: config.name,
-  })
+  return await getWSDMetadata()
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
