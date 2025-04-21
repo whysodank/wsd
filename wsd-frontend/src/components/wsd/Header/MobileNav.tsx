@@ -1,3 +1,5 @@
+import Link from 'next/link'
+
 import * as Icons from 'lucide-react'
 
 import { Button } from '@/components/shadcn/button'
@@ -36,6 +38,17 @@ export async function MobileNav() {
           <LeftColumn />
           <ScrollBar orientation="vertical" />
         </ScrollArea>
+        <div className="p-2 flex flex-col gap-1">
+          <Link href={{ pathname: '/legal/privacy-policy' }} className="text-muted-foreground text-sm hover:underline">
+            Privacy Policy
+          </Link>
+          <Link
+            href={{ pathname: '/legal/terms-of-service' }}
+            className="text-muted-foreground text-sm hover:underline"
+          >
+            Terms of Service
+          </Link>
+        </div>
       </SheetContent>
     </Sheet>
   )

@@ -21,18 +21,6 @@ export async function LeftColumn() {
         <CategoryLink href={getQuickFilterHREF({ feed: 'home' })} icon={<Icons.Home size={20} />}>
           Home
         </CategoryLink>
-        <CategoryLink href={getQuickFilterHREF({ feed: 'hot' })} icon={<Icons.Flame size={20} />}>
-          Hot
-        </CategoryLink>
-        <CategoryLink href={getQuickFilterHREF({ feed: 'trending' })} icon={<Icons.TrendingUp size={20} />}>
-          Trending
-        </CategoryLink>
-        <CategoryLink href={getQuickFilterHREF({ feed: 'conversational' })} icon={<Icons.MessagesSquare size={24} />}>
-          Conversational
-        </CategoryLink>
-        <CategoryLink href={getQuickFilterHREF({ feed: 'recent' })} icon={<Icons.Clock size={20} />}>
-          Recent
-        </CategoryLink>
         <Separator />
         {categories.map((category) => (
           <CategoryLink
