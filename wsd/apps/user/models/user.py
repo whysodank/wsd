@@ -5,6 +5,8 @@ from apps.common.utils import track_events
 from apps.core.managers import UserManager
 from apps.feedback import UserBookmarkMixin, UserVoteMixin
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import RegexValidator
+from django.db import models
 from django.utils.translation import gettext_lazy as _
 
 
@@ -14,6 +16,26 @@ class User(UserVoteMixin, UserBookmarkMixin, AbstractUser, BaseModel):
 
     UNUSABLE_USERNAME_PREFIX = "!"
     SIGNUP_COMPLETED_FIELD = "signup_completed"
+
+    username = models.CharField(
+        max_length=150,
+        unique=True,
+        blank=True,
+        null=True,
+        validators=[
+            RegexValidator(
+                regex=r"^[a-z][a-z0-9_]*\Z",
+                message=(
+                    "Enter a valid username. "
+                    "It must start with a lowercase letter and contain only lowercase letters, digits, or underscores."
+                ),
+            )
+        ],
+        help_text=_(
+            "Required. 150 characters or fewer. "
+            "It must start with a lowercase letter and contain only lowercase letters, digits, or underscores."
+        ),
+    )
 
     objects = UserManager()
 
