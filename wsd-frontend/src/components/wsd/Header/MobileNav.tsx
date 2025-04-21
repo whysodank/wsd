@@ -34,7 +34,7 @@ export async function MobileNav() {
           <SheetDescription className="hidden">Categories</SheetDescription>
           <Separator className="!mt-4" />
         </SheetHeader>
-        <ScrollArea className="my-4 h-[calc(100vh-4rem)] pr-0">
+        <ScrollArea className="my-4 h-[calc(100vh-10rem)] pr-0">
           <LeftColumn />
           <ScrollBar orientation="vertical" />
         </ScrollArea>
