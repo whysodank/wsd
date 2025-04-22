@@ -44,7 +44,7 @@ class User(UserVoteMixin, UserBookmarkMixin, AbstractUser, BaseModel):
 
     @property
     def has_unusable_username(self):
-        return self.username.startswith(self.UNUSABLE_USERNAME_PREFIX)
+        return self.username and self.username.startswith(self.UNUSABLE_USERNAME_PREFIX)
 
     def save(self, *args, **kwargs):
         if self.has_unusable_username:
