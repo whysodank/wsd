@@ -68,7 +68,7 @@ class Notification(BaseModel):
 @Notification.register_notification_moment(Post.vote_class)
 @Notification.register_notification_moment(Post.comment_class.vote_class)
 def like_notification(vote_obj):
-    total = vote_obj.post.votes.filter(body=vote_obj.VoteType.UPVOTE).count()
+    total = vote_obj.post.votes.exclude(user=vote_obj.post.user).filter(body=vote_obj.VoteType.UPVOTE).count()
     if total in [1, 5, 10, 20, 50, 100, 500, 1000, 5000, 10000]:
         # We may want to add a digest to the Notification model so someone can't keep
         # unlike and re-like to notify the post owner multiple times
@@ -86,9 +86,10 @@ def like_notification(vote_obj):
 
 @Notification.register_notification_moment(Post.comment_class)
 def comment_notification(comment_obj):
-    Notification.objects.create(
-        event=Notification.EVENTS.COMMENT,
-        user=comment_obj.post.user,
-        description=_(f"{comment_obj.user} commented on your {comment_obj.post._meta.verbose_name.lower()}."),
-        object_of_interest=comment_obj.post,
-    )
+    if comment_obj.post.user != comment_obj.user:
+        Notification.objects.create(
+            event=Notification.EVENTS.COMMENT,
+            user=comment_obj.post.user,
+            description=_(f"{comment_obj.user} commented on your {comment_obj.post._meta.verbose_name.lower()}."),
+            object_of_interest=comment_obj.post,
+        )
