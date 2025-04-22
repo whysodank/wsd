@@ -70,6 +70,7 @@ class PostViewSet(BaseModelViewSet):
         )
         qs = self.annotate_vote(qs, self.request)
         qs = self.annotate_bookmarked(qs, self.request)
+        qs = qs.prefetch_related("user", "tags", "category")
         return qs
 
     @staticmethod
