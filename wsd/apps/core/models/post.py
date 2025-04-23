@@ -1,6 +1,7 @@
 from apps.common.models.base import BaseModel
 from apps.common.utils import track_events
 from apps.core.querysets import PostQuerySet
+from apps.core.utils.nsfw_detector import is_nsfw
 from apps.feedback import bookmarks, comments, votes
 from apps.tags import tags
 from django.contrib.auth import get_user_model
@@ -148,6 +149,9 @@ class Post(BaseModel):
         max_length=EXTRACTED_TEXT_MAX_LENGTH,
     )
 
+    def nsfw_prediction(self):
+        return is_nsfw(Image.open(self.image))
+
     @hook(AFTER_CREATE, priority=0)
     def calculate_hashes(self):
         pil_image = Image.open(self.image)
@@ -168,6 +172,12 @@ class Post(BaseModel):
         is_repost = post_model.objects.is_repost(self)
         is_original = False if is_repost else self.is_original
         self.update(initial=initial, is_repost=is_repost, is_original=is_original)
+
+    @hook(AFTER_CREATE, priority=2)
+    def check_nsfw(self):
+        if not self.is_nsfw:  # If they explicitly marked it as such, we don't care
+            self.is_nsfw = self.nsfw_prediction()
+            self.save(skip_hooks=True)
 
     class Meta:
         verbose_name = _("Post")

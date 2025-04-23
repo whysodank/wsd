@@ -29,7 +29,7 @@ class SuppressToSentry(SuppressAndRun):
         self.func = func
 
 
-def suppress_callable(*exceptions, func=print):
+def suppress_callable(*exceptions, func=print, return_value=None):
     """
     Same as SuppressAndRun but as a decorator instead of a context manager.
     """
@@ -38,17 +38,18 @@ def suppress_callable(*exceptions, func=print):
         def wrapper(*a, **kw):
             with SuppressAndRun(*exceptions, func=func):
                 return f(*a, **kw)
+            return return_value  # NOQA
 
         return wrapper
 
     return decorator
 
 
-def suppress_callable_to_sentry(*exceptions):
+def suppress_callable_to_sentry(*exceptions, return_value=None):
     """
     Same as SuppressToSentry but as a decorator instead of a context manager.
     """
-    return suppress_callable(exceptions, func=sentry_sdk.capture_exception)
+    return suppress_callable(exceptions, func=sentry_sdk.capture_exception, return_value=return_value)
 
 
 class TransformExceptions(ContextDecorator):
