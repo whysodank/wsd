@@ -30,6 +30,7 @@ export function Notifications({ hasNew }: { hasNew?: boolean }) {
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [isOpen, setIsOpen] = useState(false)
 
   const { ref: loaderRef, inView } = useInView()
 
@@ -48,19 +49,27 @@ export function Notifications({ hasNew }: { hasNew?: boolean }) {
     setLoading(false)
   }
 
-  useEffectAfterMount(() => {
+  // Reset and fetch first page
+  function resetAndFetch() {
+    setNotifications([])
     setPage(1)
+    setHasMore(true)
     fetchNotifications(1)
+  }
+
+  const debouncedResetAndFetch = _.debounce(function () {
+    resetAndFetch()
+  }, 2000)
+
+  useEffectAfterMount(() => {
+    resetAndFetch()
   }, [searchParams])
 
   useEffect(() => {
-    if (hasMore) {
+    if (page > 1 && hasMore) {
       fetchNotifications(page)
-    } else {
-      setHasMore(false)
-      setLoading(false)
     }
-  }, [page]) // eslint-disable-line react-hooks/exhaustive-deps -- We rerender on page change, fetchNotifications is not needed
+  }, [page]) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (inView && hasMore && !loading) {
@@ -68,8 +77,15 @@ export function Notifications({ hasNew }: { hasNew?: boolean }) {
     }
   }, [inView, hasMore, loading])
 
+  function handleOpenChange(open: boolean) {
+    setIsOpen(open)
+    if (!open) {
+      debouncedResetAndFetch()
+    }
+  }
+
   return (
-    <Overlay breakpoint="md">
+    <Overlay breakpoint="md" open={isOpen} onOpenChange={handleOpenChange}>
       <OverlayTrigger asChild>
         <Button variant="ghost" className="flex gap-2 h-10 w-10 rounded-full p-2">
           <div className="relative">

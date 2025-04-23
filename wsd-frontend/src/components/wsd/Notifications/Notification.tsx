@@ -1,17 +1,17 @@
+'use client'
+
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
 import { useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
-import _ from 'lodash'
-
 import { APIType } from '@/api'
 import { useWSDAPI } from '@/lib/serverHooks'
 import { uuidV4toHEX } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
-import { toast } from 'sonner'
 
 export function Notification({ notification }: { notification: APIType<'Notification'> }) {
   const wsd = useWSDAPI()
@@ -25,33 +25,26 @@ export function Notification({ notification }: { notification: APIType<'Notifica
   }
   const NotificationIcon = icons[notification.event] || Icons.Shell
 
-  async function getPost(notificationObject: APIType<'Notification'>) {
-    let post: APIType<'Post'> | null | undefined
+  function getPostHREF(notificationObject: APIType<'Notification'>) {
+    let postID: string | undefined
     if (notification.object_of_interest_type === 'Post') {
-      post = notificationObject.object_of_interest as APIType<'Post'> | null
+      postID = notificationObject.object_of_interest.id as string
     } else if (notification.object_of_interest_type === 'PostComment') {
-      post = (await wsd.post((notification.object_of_interest as APIType<'PostComment'>).post)).data as APIType<'Post'>
+      postID = (notification.object_of_interest as APIType<'PostComment'>).post as string
     }
-    return post
+    return (postID && { pathname: `/posts/${uuidV4toHEX(postID)}` }) || {}
   }
 
   async function handleClick() {
-    const post = await getPost(notification)
-    if (post) {
-      router.push(`/posts/${uuidV4toHEX(post?.id as string)}`)
-      await wsd.patchNotification(notification.id, { is_read: true })
-      setIsRead(true)
-      router.refresh()
-    } else {
-      await wsd.patchNotification(notification.id, { is_read: true })
-      setIsRead(true)
-      toast('This post is no longer available.')
-    }
+    await wsd.patchNotification(notification.id, { is_read: true })
+    setIsRead(true)
+    router.refresh()
   }
 
   return (
-    <div
+    <Link
       className="transition-colors cursor-pointer hover:bg-muted/50 rounded-xl p-4 flex flex-col gap-2 relative"
+      href={getPostHREF(notification)}
       onClick={handleClick}
     >
       <div className="flex items-center gap-2">
@@ -71,6 +64,6 @@ export function Notification({ notification }: { notification: APIType<'Notifica
         )}
       </div>
       {!isRead && <span className="absolute top-2.5 right-2.5 h-3 w-3 rounded-full bg-red-600 border" />}
-    </div>
+    </Link>
   )
 }

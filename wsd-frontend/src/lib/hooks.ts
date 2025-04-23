@@ -106,6 +106,9 @@ export function useFormState<T>(initialState: T) {
 }
 
 export function useEffectAfterMount(effect: EffectCallback, deps: DependencyList) {
+  /*
+    Only run the effect after the first render, and only if the dependencies change.
+   */
   const isFirstRender = useRef(true)
   const prevDepsRef = useRef<DependencyList>([])
 

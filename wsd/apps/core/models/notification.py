@@ -4,7 +4,9 @@ from apps.common.utils.db import get_longest_choice_length, track_events
 from apps.common.utils.pyutils import Sentinel
 from apps.core.models import Post
 from django.contrib.auth import get_user_model
+from django.contrib.contenttypes.models import ContentType
 from django.db import models
+from django.db.models import Q
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.translation import gettext_lazy as _
@@ -49,6 +51,22 @@ class Notification(BaseModel):
     class Meta:
         verbose_name = _("Notification")
         verbose_name_plural = _("Notifications")
+
+    @classmethod
+    def get_for_post(cls, post):
+        """Returns all the notifications for a given post, these can be from votes, comments, or comment votes."""
+
+        post_notifications = Q(
+            object_of_interest_content_type=ContentType.objects.get_for_model(Post),
+            object_of_interest_object_id=post.id,
+        )
+
+        post_comment_notifications = Q(
+            object_of_interest_content_type=ContentType.objects.get_for_model(Post.comment_class),
+            object_of_interest_object_id__in=post.comments.values_list("id", flat=True),
+        )
+
+        return cls.objects.filter(post_notifications | post_comment_notifications)
 
     @classmethod
     def register_notification_moment(cls, model, **kwargs):
