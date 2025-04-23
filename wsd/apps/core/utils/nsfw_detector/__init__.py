@@ -5,7 +5,7 @@ from apps.common.utils.error_handling import suppress_callable_to_sentry
 from django.conf import settings
 
 MODEL_PATH = settings.BASE_DIR / "apps/core/utils/nsfw_detector/nsfw.299x299.h5"
-model = tf.keras.models.load_model(MODEL_PATH, custom_objects={"KerasLayer": hub.KerasLayer})
+model = tf.keras.models.load_model(MODEL_PATH, custom_objects={"KerasLayer": hub.KerasLayer}, compile=False)
 
 IMAGE_DIM = 299
 TOTAL_THRESHOLD = 0.9

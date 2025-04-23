@@ -34,6 +34,7 @@ export const config = Object.freeze({
   name: stringConfig({ name: 'name', value: RAW.name, default: 'WSD' }),
   motto: stringConfig({ name: 'motto', value: RAW.motto, default: 'Why So Dank?' }),
   image: `https://${stringConfig({ name: 'domain', value: RAW.domain })}/og-image.jpg`,
+  nsfw_image: `https://${stringConfig({ name: 'domain', value: RAW.domain })}/og-image-nsfw.jpg`,
   domain: stringConfig({ name: 'domain', value: RAW.domain }),
   url: `https://${stringConfig({ name: 'domain', value: RAW.domain })}`,
   api: {

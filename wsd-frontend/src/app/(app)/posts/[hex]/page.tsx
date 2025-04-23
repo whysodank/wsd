@@ -12,6 +12,7 @@ import MemeComment from '@/components/wsd/MemeComment'
 import NewComment from '@/components/wsd/NewComment'
 
 import { APIQuery, APIType, includesType } from '@/api'
+import config from '@/config'
 import { getWSDMetadata } from '@/lib/metadata'
 import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
 import { getKeys } from '@/lib/typeHelpers'
@@ -25,11 +26,10 @@ export async function generateMetadata(props: { params: Promise<{ hex: string }>
   if (!_.isUndefined(postId)) {
     const { data: post } = await wsd.post(postId, { include: 'tags' })
     if (!_.isUndefined(post)) {
-      const post_ = includesType(includesType(post as APIType<'Post'>, 'user', 'User'), 'tags', 'PostTag', true)
       return await getWSDMetadata({
-        title: post_.title,
-        description: post_.title,
-        image: post.image,
+        title: post.title,
+        description: post.title,
+        image: post.is_nsfw ? config.nsfw_image : post.image,
       })
     }
   }
