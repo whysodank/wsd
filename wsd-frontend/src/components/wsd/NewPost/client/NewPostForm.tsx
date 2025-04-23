@@ -84,7 +84,11 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
       startTransition(() => router.push(`/posts/${uuidV4toHEX(postData?.id as string)}`))
       setLoading(false)
     } else {
-      setPostErrors(postError)
+      if (postResponse.status === 413) {
+        setPostErrors({ image: ['File too large. Please upload a smaller file.'] })
+      } else {
+        setPostErrors(postError)
+      }
       setLoading(false)
     }
   }
