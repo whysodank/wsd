@@ -31,6 +31,7 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
 
   const [tags, setTags] = useState<Tag[]>([])
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null)
+  const [loading, setLoading] = useState(false)
 
   function setPostTags(input: SetStateAction<Tag[]>) {
     setTags((prevTags) => {
@@ -73,13 +74,17 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
 
   async function handleCreatePost(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
+    setLoading(true)
     const { data: postData, response: postResponse, error: postError } = await wsd.createPost(postState)
+
     if (postResponse.ok) {
       setPostErrors({})
       resetPostState()
       router.push(`/posts/${uuidV4toHEX(postData?.id as string)}`)
+      setLoading(false)
     } else {
       setPostErrors(postError)
+      setLoading(false)
     }
   }
 
@@ -196,8 +201,14 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
             />
           </div>
           <div className="flex justify-end">
-            <Button variant="outline" className="w-full">
-              Post
+            <Button className="w-full" disabled={loading}>
+              {loading ? (
+                <div className="w-full flex justify-center gap-2 animate-pulse">
+                  <span>Creating...</span>
+                </div>
+              ) : (
+                'Post'
+              )}
             </Button>
           </div>
         </div>
