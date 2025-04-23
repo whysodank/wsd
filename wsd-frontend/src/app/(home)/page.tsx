@@ -8,15 +8,16 @@ export default async function Home(props: { searchParams?: Promise<APIQuery<'/v0
   const searchParams = await props.searchParams
   const wsd = sUseWSDAPI()
   const isAuthenticated = await wsd.isAuthenticated()
-  const { data } = await wsd.posts({
+  const postQuery = {
     ...searchParams,
     page_size: config.ux.defaultPostPerPage,
-    include: 'tags,user,category',
-    ordering: '-created_at',
-  })
+    include: 'tags,user,category' as const,
+    ordering: searchParams?.ordering || ('-created_at' as const),
+  }
+  const { data } = await wsd.posts(postQuery)
   return (
     <Memes
-      query={searchParams}
+      query={postQuery}
       initialPosts={data?.results || []}
       hasMorePages={Boolean(data?.total_pages && data.total_pages > 1)}
       isAuthenticated={isAuthenticated}

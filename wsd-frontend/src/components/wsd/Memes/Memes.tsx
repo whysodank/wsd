@@ -45,7 +45,7 @@ export function Memes({
 
   const { ref: loaderRef, inView } = useInView({ threshold: 1 })
 
-  async function fetchPosts(pageNum: number) {
+  async function fetchPosts(pageNum: number, resetPosts = false) {
     setLoading(true)
     const fullQuery = {
       ...defaultQuery,
@@ -56,7 +56,7 @@ export function Memes({
 
     const { data: postsData } = await wsd.posts(fullQuery)
     setPosts((prev) => {
-      const newPosts = [...prev, ...(postsData?.results || [])]
+      const newPosts = resetPosts ? postsData?.results || [] : [...prev, ...(postsData?.results || [])]
       return _.uniqBy(newPosts, 'id')
     })
     setHasMore(page !== postsData?.total_pages)
@@ -64,11 +64,10 @@ export function Memes({
   }
 
   useEffectAfterMount(() => {
-    setPosts([])
     setLoading(true)
     setHasMore(true)
     setPage(1)
-    fetchPosts(1)
+    fetchPosts(1, true)
   }, [searchParams])
 
   useEffect(() => {
