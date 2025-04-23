@@ -3,7 +3,7 @@
 import { useRouter } from 'next/navigation'
 
 import * as React from 'react'
-import { SetStateAction, useRef, useState } from 'react'
+import { SetStateAction, useRef, useState, useTransition } from 'react'
 
 import * as Icons from 'lucide-react'
 
@@ -32,6 +32,7 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
   const [tags, setTags] = useState<Tag[]>([])
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
+  const [transitionIsPending, startTransition] = useTransition()
 
   function setPostTags(input: SetStateAction<Tag[]>) {
     setTags((prevTags) => {
@@ -80,7 +81,7 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
     if (postResponse.ok) {
       setPostErrors({})
       resetPostState()
-      router.push(`/posts/${uuidV4toHEX(postData?.id as string)}`)
+      startTransition(() => router.push(`/posts/${uuidV4toHEX(postData?.id as string)}`))
       setLoading(false)
     } else {
       setPostErrors(postError)
@@ -201,8 +202,8 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
             />
           </div>
           <div className="flex justify-end">
-            <Button className="w-full" disabled={loading}>
-              {loading ? (
+            <Button className="w-full" disabled={loading || transitionIsPending}>
+              {loading || transitionIsPending ? (
                 <div className="w-full flex justify-center gap-2 animate-pulse">
                   <span>Creating...</span>
                 </div>
