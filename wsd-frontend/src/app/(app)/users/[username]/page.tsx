@@ -23,6 +23,7 @@ export default async function User(props: {
       user__username: username,
       page_size: config.ux.defaultPostPerPage,
       include: 'tags,user,category',
+      ordering: '-created_at',
     })
     return (
       <>

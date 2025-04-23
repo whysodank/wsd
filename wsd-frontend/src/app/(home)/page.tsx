@@ -12,6 +12,7 @@ export default async function Home(props: { searchParams?: Promise<APIQuery<'/v0
     ...searchParams,
     page_size: config.ux.defaultPostPerPage,
     include: 'tags,user,category',
+    ordering: '-created_at',
   })
   return (
     <Memes

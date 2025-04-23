@@ -29,12 +29,27 @@ export function Meme({
   isAuthenticated?: boolean
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
+  const [isBlurred, setIsBlurred] = useState(true)
   const { ref: imageRef, attributeValue: naturalHeight } = useElementAttribute<HTMLImageElement, 'naturalHeight'>(
     'naturalHeight'
   )
 
   const showExpandButton = !fullScreen && naturalHeight !== null && naturalHeight > 900 && !isExpanded
   const showShrinkButton = !fullScreen && naturalHeight !== null && naturalHeight > 900 && isExpanded
+
+  const shouldApplyBlur = post.is_nsfw && isAuthenticated && isBlurred
+
+  function handleNSFWClick() {
+    if (post.is_nsfw && isAuthenticated) {
+      setIsBlurred(false)
+    }
+  }
+
+  function handleReBlur() {
+    if (post.is_nsfw && isAuthenticated) {
+      setIsBlurred(true)
+    }
+  }
 
   return (
     <article
@@ -49,18 +64,9 @@ export function Meme({
             {post.title}
           </Link>
         </h2>
+
         <Link className="hover:underline break-word" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
           <div className="relative w-full flex justify-center items-center bg-black overflow-hidden">
-            <div
-              className="absolute inset-0"
-              style={{
-                // backgroundImage: `url(${post.image})`,
-                backgroundColor: 'black',
-                backgroundSize: 'cover',
-                backgroundPosition: 'center',
-                filter: 'blur(20px)',
-              }}
-            />
             <div className="absolute inset-0 bg-black/60" />
             {!isAuthenticated && post.is_nsfw ? (
               <AspectRatio ratio={16 / 9} className="text-white">
@@ -69,16 +75,41 @@ export function Meme({
                 </div>
               </AspectRatio>
             ) : (
-              <img
-                ref={imageRef}
-                src={post.image}
-                alt={post.title}
-                className={cn(
-                  'relative h-auto object-cover object-top',
-                  fullScreen ? 'w-full max-w-full' : ['lg:w-5/6', !isExpanded && 'max-h-[900px]']
+              <div className="relative w-full flex justify-center">
+                <img
+                  ref={imageRef}
+                  src={post.image}
+                  alt={post.title}
+                  className={cn(
+                    'relative h-auto object-cover object-top transition-all duration-300',
+                    fullScreen ? 'w-full max-w-full' : ['lg:w-5/6', !isExpanded && 'max-h-[900px]'],
+                    shouldApplyBlur && 'blur-xl'
+                  )}
+                  loading="lazy"
+                />
+                {shouldApplyBlur && (
+                  <div
+                    className="absolute inset-0 flex items-center justify-center z-10"
+                    onClick={preventDefault(() => handleNSFWClick())}
+                  >
+                    <div className="p-4 bg-black/70 rounded-md text-white cursor-pointer">
+                      <h3 className="text-xl font-bold uppercase">NSFW</h3>
+                      <p className="text-sm">Click to reveal</p>
+                    </div>
+                  </div>
                 )}
-                loading="lazy"
-              />
+                {post.is_nsfw && isAuthenticated && !isBlurred && (
+                  <Button
+                    onClick={preventDefault(() => handleReBlur())}
+                    variant="secondary"
+                    className="z-10 absolute top-4 right-4 text-xs py-1 px-2 h-auto text-md flex gap-2"
+                    aria-label="Reblur NSFW content"
+                  >
+                    <Icons.EyeOff size={20} />
+                    <span>Blur</span>
+                  </Button>
+                )}
+              </div>
             )}
             {(showExpandButton || showShrinkButton) && (
               <Button
@@ -92,6 +123,7 @@ export function Meme({
             )}
           </div>
         </Link>
+
         {withTags && (
           <div className="flex flex-wrap gap-2 py-2">
             {post.tags.map((tag) => (
@@ -101,6 +133,7 @@ export function Meme({
             ))}
           </div>
         )}
+
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <FeedbackButtons post={post} isAuthenticated={isAuthenticated} />
@@ -122,11 +155,9 @@ export function Meme({
                 />
                 <Link
                   href={`/posts/${uuidV4toHEX(post.initial)}/`}
-                  className={cn(
-                    'text-xs font-medium text-muted-foreground group-hover:text-secondary-foreground transition-colors'
-                  )}
+                  className="text-xs font-medium text-muted-foreground group-hover:text-secondary-foreground transition-colors"
                 >
-                  View original post
+                  View original
                 </Link>
               </Badge>
             )}

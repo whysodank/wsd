@@ -10,7 +10,7 @@ export async function LeftColumn() {
   const wsd = sUseWSDAPI()
   const { data: postCategoriesData } = await wsd.postCategories()
 
-  function getQuickFilterHREF(params: { [key: string]: string }) {
+  function getQuickFilterHREF(params?: { [key: string]: string }) {
     return { pathname: '/', query: params }
   }
 
@@ -18,8 +18,8 @@ export async function LeftColumn() {
   return (
     <div className="w-full">
       <div className="pb-4 flex flex-col gap-1">
-        <CategoryLink href={getQuickFilterHREF({ feed: 'home' })} icon={<Icons.Home size={20} />}>
-          Home
+        <CategoryLink href={getQuickFilterHREF()} icon={<Icons.Clock size={20} />}>
+          Recent
         </CategoryLink>
         <Separator />
         {categories.map((category) => (
