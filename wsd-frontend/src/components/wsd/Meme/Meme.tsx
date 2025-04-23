@@ -82,7 +82,7 @@ export function Meme({
                   alt={post.title}
                   className={cn(
                     'relative h-auto object-cover object-top transition-all duration-300',
-                    fullScreen ? 'w-full max-w-full' : ['lg:w-5/6', !isExpanded && 'max-h-[900px]'],
+                    fullScreen ? 'w-full max-w-full' : ['lg:w-5/6 w-full', !isExpanded && 'max-h-[900px]'],
                     shouldApplyBlur && 'blur-xl'
                   )}
                   loading="lazy"
