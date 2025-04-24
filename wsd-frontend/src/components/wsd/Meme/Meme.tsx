@@ -51,6 +51,8 @@ export function Meme({
     }
   }
 
+  const originalSource = post.initial ? `/posts/${uuidV4toHEX(post.initial)}/` : post.original_source || undefined
+
   return (
     <article
       className={cn(
@@ -139,7 +141,7 @@ export function Meme({
             <FeedbackButtons post={post} isAuthenticated={isAuthenticated} />
           </div>
           <div className="flex items-center gap-4">
-            {withRepostData && post.initial && (
+            {withRepostData && originalSource && (
               <Badge
                 variant="outline"
                 className={cn(
@@ -154,10 +156,12 @@ export function Meme({
                   className="text-muted-foreground group-hover:text-secondary-foreground transition-colors"
                 />
                 <Link
-                  href={`/posts/${uuidV4toHEX(post.initial)}/`}
+                  href={originalSource}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="text-xs font-medium text-muted-foreground group-hover:text-secondary-foreground transition-colors"
                 >
-                  View original
+                  Source
                 </Link>
               </Badge>
             )}

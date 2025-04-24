@@ -831,6 +831,15 @@ export interface components {
        * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
       image: string
+      /**
+       * Format: uri
+       * @description Verified original source of this post.
+       */
+      original_source?: string | null
+      /** @description Whether this post is made by the user uploading it or not. */
+      is_original?: boolean
+      /** @description Whether this post is a repost or not. */
+      readonly is_repost: boolean
       /** Is NSFW? */
       is_nsfw?: boolean
       /**
@@ -1016,6 +1025,9 @@ export interface components {
       readonly initial: string[]
       readonly title: string[]
       readonly image: string[]
+      readonly original_source: string[]
+      readonly is_original: string[]
+      readonly is_repost: string[]
       readonly is_nsfw: string[]
       readonly category: string[]
       readonly tags: string[]
@@ -1057,6 +1069,13 @@ export interface components {
        * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
       image: string
+      /**
+       * Format: uri
+       * @description Verified original source of this post.
+       */
+      original_source?: string | null
+      /** @description Whether this post is made by the user uploading it or not. */
+      is_original?: boolean
       /** Is NSFW? */
       is_nsfw?: boolean
       /**
@@ -1129,7 +1148,7 @@ export interface components {
     PublicUser: {
       /** Format: uuid */
       readonly id: string
-      /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+      /** @description Required. 150 characters or fewer. It must start with a lowercase letter and contain only lowercase letters, digits, or underscores. */
       readonly username: string
       /**
        * Active
@@ -1181,7 +1200,7 @@ export interface components {
     User: {
       /** Format: uuid */
       readonly id: string
-      /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+      /** @description Required. 150 characters or fewer. It must start with a lowercase letter and contain only lowercase letters, digits, or underscores. */
       readonly username: string
       first_name?: string
       last_name?: string
@@ -1244,7 +1263,7 @@ export interface components {
      *         ]
      *     } */
     UserCompleteSignupRequest: {
-      /** @description Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+      /** @description Required. 150 characters or fewer. It must start with a lowercase letter and contain only lowercase letters, digits, or underscores. */
       username: string
       password: string
     }
@@ -1596,7 +1615,7 @@ export interface operations {
         created_at__gte?: string
         created_at__lt?: string
         created_at__lte?: string
-        include?: 'user'
+        include?: 'post' | 'user' | 'user,post'
         negative_vote_count?: number
         negative_vote_count__gt?: number
         negative_vote_count__gte?: number
@@ -1712,7 +1731,7 @@ export interface operations {
   post_comments_retrieve: {
     parameters: {
       query?: {
-        include?: 'user'
+        include?: 'post' | 'user' | 'user,post'
       }
       header?: never
       path: {
@@ -2078,6 +2097,8 @@ export interface operations {
         created_at__lt?: string
         created_at__lte?: string
         include?: 'category' | 'tags' | 'tags,category' | 'tags,user' | 'tags,user,category' | 'user' | 'user,category'
+        is_nsfw?: boolean
+        is_original?: boolean
         is_repost?: boolean
         negative_vote_count?: number
         negative_vote_count__gt?: number

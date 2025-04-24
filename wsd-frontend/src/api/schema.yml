@@ -410,7 +410,9 @@ paths:
         schema:
           type: string
           enum:
+          - post
           - user
+          - user,post
         explode: false
         style: form
       - in: query
@@ -603,7 +605,9 @@ paths:
         schema:
           type: string
           enum:
+          - post
           - user
+          - user,post
         explode: false
         style: form
       tags:
@@ -1019,6 +1023,14 @@ paths:
           - user,category
         explode: false
         style: form
+      - in: query
+        name: is_nsfw
+        schema:
+          type: boolean
+      - in: query
+        name: is_original
+        schema:
+          type: boolean
       - in: query
         name: is_repost
         schema:
@@ -2257,6 +2269,19 @@ components:
           type: string
           format: uri
           description: Image(jpeg, jpg, png, gif, webp) in base64 format
+        original_source:
+          type: string
+          format: uri
+          nullable: true
+          description: Verified original source of this post.
+          maxLength: 200
+        is_original:
+          type: boolean
+          description: Whether this post is made by the user uploading it or not.
+        is_repost:
+          type: boolean
+          readOnly: true
+          description: Whether this post is a repost or not.
         is_nsfw:
           type: boolean
           title: Is NSFW?
@@ -2298,6 +2323,7 @@ components:
       - id
       - image
       - initial
+      - is_repost
       - negative_vote_count
       - positive_vote_count
       - tags
@@ -2631,6 +2657,21 @@ components:
           items:
             type: string
           readOnly: true
+        original_source:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        is_original:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        is_repost:
+          type: array
+          items:
+            type: string
+          readOnly: true
         is_nsfw:
           type: array
           items:
@@ -2685,8 +2726,11 @@ components:
       - image
       - initial
       - is_nsfw
+      - is_original
+      - is_repost
       - negative_vote_count
       - non_field_errors
+      - original_source
       - positive_vote_count
       - tags
       - title
@@ -2729,6 +2773,15 @@ components:
           type: string
           format: binary
           description: Image(jpeg, jpg, png, gif, webp) in base64 format
+        original_source:
+          type: string
+          format: uri
+          nullable: true
+          description: Verified original source of this post.
+          maxLength: 200
+        is_original:
+          type: boolean
+          description: Whether this post is made by the user uploading it or not.
         is_nsfw:
           type: boolean
           title: Is NSFW?
@@ -2841,8 +2894,8 @@ components:
         username:
           type: string
           readOnly: true
-          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-            only.
+          description: Required. 150 characters or fewer. It must start with a lowercase
+            letter and contain only lowercase letters, digits, or underscores.
         is_active:
           type: boolean
           readOnly: true
@@ -2921,8 +2974,8 @@ components:
         username:
           type: string
           readOnly: true
-          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-            only.
+          description: Required. 150 characters or fewer. It must start with a lowercase
+            letter and contain only lowercase letters, digits, or underscores.
         first_name:
           type: string
           maxLength: 150
@@ -3035,9 +3088,9 @@ components:
         username:
           type: string
           minLength: 1
-          description: Required. 150 characters or fewer. Letters, digits and @/./+/-/_
-            only.
-          pattern: ^[\w.@+-]+$
+          description: Required. 150 characters or fewer. It must start with a lowercase
+            letter and contain only lowercase letters, digits, or underscores.
+          pattern: ^[a-z][a-z0-9_]*$
           maxLength: 150
         password:
           type: string

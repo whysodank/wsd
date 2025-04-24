@@ -20,8 +20,6 @@ class User(UserVoteMixin, UserBookmarkMixin, AbstractUser, BaseModel):
     username = models.CharField(
         max_length=150,
         unique=True,
-        blank=True,
-        null=True,
         validators=[
             RegexValidator(
                 regex=r"^[a-z][a-z0-9_]*\Z",

@@ -37,6 +37,7 @@ class PostSerializer(BaseModelSerializer):
             "initial",
             "title",
             "image",
+            "original_source",
             "is_original",
             "is_repost",
             "is_nsfw",
