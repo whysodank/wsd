@@ -1,6 +1,7 @@
 from apps.common.models.base import BaseModel
 from apps.common.utils import track_events
 from apps.core.querysets import PostQuerySet
+from apps.core.tasks import post_processor
 from apps.core.utils.nsfw_detector import is_nsfw
 from apps.feedback import bookmarks, comments, votes
 from apps.tags import tags
@@ -152,7 +153,6 @@ class Post(BaseModel):
     def nsfw_prediction(self):
         return is_nsfw(Image.open(self.image))
 
-    @hook(AFTER_CREATE, priority=0)
     def calculate_hashes(self):
         pil_image = Image.open(self.image)
         self.phash = str(phash(pil_image, input_type=phash.PIL_IMAGE, hash_size=self.HASH_SIZE))
@@ -165,7 +165,6 @@ class Post(BaseModel):
         self.extracted_text_normalized = normalize_text(get_text_from_image(pil_image, get_text_from_image.PIL_IMAGE))
         self.save(skip_hooks=True)
 
-    @hook(AFTER_CREATE, priority=1)
     def check_if_repost(self):
         post_model = self.__class__
         initial = post_model.objects.get_initial(self)
@@ -173,11 +172,13 @@ class Post(BaseModel):
         is_original = False if is_repost else self.is_original
         self.update(initial=initial, is_repost=is_repost, is_original=is_original, _skip_hooks=True)
 
-    @hook(AFTER_CREATE, priority=2)
     def check_nsfw(self):
         if not self.is_nsfw:  # If they explicitly marked it as such, we don't care
-            self.is_nsfw = self.nsfw_prediction()
-            self.save(skip_hooks=True)
+            self.update(is_nsfw=self.nsfw_prediction(), _skip_hooks=True)
+
+    @hook(AFTER_CREATE)
+    def process_post(self):
+        post_processor.delay(self.id)
 
     class Meta:
         verbose_name = _("Post")

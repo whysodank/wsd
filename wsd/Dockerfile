@@ -19,4 +19,4 @@ EXPOSE 8000
 
 RUN chmod +x /wsd/entrypoint.sh
 
-ENTRYPOINT ["/wsd/entrypoint.sh"]
+CMD ["/wsd/entrypoint.sh"]

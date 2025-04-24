@@ -1,3 +1,5 @@
+from threading import Lock
+
 import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
@@ -12,6 +14,9 @@ TOTAL_THRESHOLD = 0.9
 INDIVIDUAL_THRESHOLD = 0.7
 
 
+predict_lock = Lock()
+
+
 @suppress_callable_to_sentry(Exception, return_value=False)
 def is_nsfw(image):
     if image.mode == "RGBA":
@@ -19,7 +24,8 @@ def is_nsfw(image):
     image = image.resize((IMAGE_DIM, IMAGE_DIM))
     image = np.array(image) / 255.0
     image = np.expand_dims(image, axis=0)
-    preds = model.predict(image)[0]
+    with predict_lock:
+        preds = model.predict(image)[0]
     categories = ["drawings", "hentai", "neutral", "porn", "sexy"]
     probabilities = {cat: float(pred) for cat, pred in zip(categories, preds)}
     individual_nsfw_prob = max(probabilities["porn"], probabilities["hentai"], probabilities["sexy"])

@@ -37,3 +37,6 @@ tensorflow==2.19.0
 tensorflow-hub==0.16.1
 numpy==1.26.4
 # END NSFW detection
+celery==5.5.1
+django-celery-beat==2.8.0
+django-celery-results==2.6.0

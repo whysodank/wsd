@@ -51,6 +51,9 @@ THIRD_PARTY_APPS = [
     # Admin
     "colorfield",
     "admin_interface",
+    # Celery
+    "django_celery_beat",
+    "django_celery_results",
 ]
 
 BUILTIN_APPS = [
@@ -319,6 +322,10 @@ EMAIL_HOST_USER = config.EMAIL.SMTP.USER
 EMAIL_HOST_PASSWORD = config.EMAIL.SMTP.PASSWORD
 EMAIL_USE_TSL = True
 DEFAULT_AUTH_FROM_EMAIL = config.EMAIL.DEFAULT_AUTH_FROM_EMAIL
+
+CELERY_BROKER_URL = config.CELERY.BROKER_URL
+CELERY_RESULT_BACKEND = "django-db"
+CELERYD_POOL = "threads"
 
 if not DEBUG:
     sentry_sdk.init(

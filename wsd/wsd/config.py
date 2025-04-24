@@ -76,6 +76,9 @@ CONFIG = config(
                 "PASSWORD": string(),
             },
         },
+        "CELERY": {
+            "BROKER_URL": string(),
+        },
     },
     prefix="WSD",
 )

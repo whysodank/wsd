@@ -1,50 +1,10 @@
 services:
   backend:
+    image: wsd:latest
     build:
       context: ./wsd
       dockerfile: Dockerfile
     env_file: .env
-    environment:
-      - WSD__NAME
-      - WSD__DEBUG
-      - WSD__DB__NAME
-      - WSD__DB__USER
-      - WSD__DB__PASSWORD
-      - WSD__DB__HOST
-      - WSD__DB__PORT
-      - WSD__SECRET_KEY
-      - WSD__HOST
-      - WSD__STORAGE__S3__BUCKET_NAME
-      - WSD__STORAGE__S3__ACCESS_KEY_ID
-      - WSD__STORAGE__S3__SECRET_ACCESS_KEY
-      - WSD__STORAGE__S3__ENDPOINT_URL
-      - WSD__ALLOWED_HOSTS
-      - WSD__HOSTS__DOMAIN
-      - WSD__HOSTS__API_SUBDOMAIN
-      - WSD__HOSTS__ADMIN_SUBDOMAIN
-      - WSD__HOSTS__AUTH_SUBDOMAIN
-      - WSD__AUTH__VERIFY_EMAIL_URL_TEMPLATE
-      - WSD__EMAIL__SMTP__HOST
-      - WSD__EMAIL__SMTP__PORT__TSL
-      - WSD__EMAIL__SMTP__USER
-      - WSD__EMAIL__SMTP__PASSWORD
-      - WSD__SETUP__SUPERUSER__USERNAME
-      - WSD__SETUP__SUPERUSER__EMAIL
-      - WSD__SETUP__SUPERUSER__PASSWORD
-      - WSD__DEVTOOLS__SENTRY__DSN
-      - WSD__DEVTOOLS__SENTRY__TRACES_SAMPLE_RATE
-      - WSD__OAUTH__GOOGLE__CLIENT_ID
-      - WSD__OAUTH__GOOGLE__CLIENT_SECRET
-      - WSD__OAUTH__MICROSOFT__CLIENT_ID
-      - WSD__OAUTH__MICROSOFT__CLIENT_SECRET
-      - WSD__OAUTH__DISCORD__CLIENT_ID
-      - WSD__OAUTH__DISCORD__CLIENT_SECRET
-      - WSD__OAUTH__GITHUB__CLIENT_ID
-      - WSD__OAUTH__GITHUB__CLIENT_SECRET
-      - WSD__OAUTH__REDDIT__CLIENT_ID
-      - WSD__OAUTH__REDDIT__CLIENT_SECRET
-      - WSD__OAUTH__REDDIT__APP_OWNER_USERNAME
-      - DJANGO_SETTINGS_MODULE=wsd.settings
     networks:
       - internal
       - external
@@ -73,22 +33,6 @@ services:
         NEXT_PUBLIC_WSD__VERIFICATION__MICROSOFT__ASSOCIATED_APPLICATION_ID: ${NEXT_PUBLIC_WSD__VERIFICATION__MICROSOFT__ASSOCIATED_APPLICATION_ID}
         NEXT_PUBLIC_WSD__GITHUB_LINK: ${NEXT_PUBLIC_WSD__GITHUB_LINK}
     env_file: .env
-    environment:
-      - SENTRY_AUTH_TOKEN
-      - NEXT_PUBLIC_WSD__DEBUG
-      - NEXT_PUBLIC_WSD__NAME
-      - NEXT_PUBLIC_WSD__MOTTO
-      - NEXT_PUBLIC_WSD__DOMAIN
-      - NEXT_PUBLIC_WSD__API__BASE_URL
-      - NEXT_PUBLIC_WSD__API__AUTH_BASE_URL
-      - NEXT_PUBLIC_WSD__LANGUAGE
-      - NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__SENTRY__DSN
-      - NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__SENTRY__TRACES_SAMPLE_RATE
-      - NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__SENTRY__REPLAYS_SESSION_SAMPLE_RATE
-      - NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__SENTRY__REPLAYS_ON_ERROR_SAMPLE_RATE
-      - NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__GOOGLE_ANALYTICS__GA_ID
-      - NEXT_PUBLIC_WSD__VERIFICATION__MICROSOFT__ASSOCIATED_APPLICATION_ID
-      - NEXT_PUBLIC_WSD__GITHUB_LINK
     networks:
       - internal
       - external
@@ -99,11 +43,6 @@ services:
       context: ./wsd-server
       dockerfile: Dockerfile
     env_file: .env
-    environment:
-      - WSD__HOSTS__DOMAIN
-      - WSD__HOSTS__API_SUBDOMAIN
-      - WSD__HOSTS__ADMIN_SUBDOMAIN
-      - WSD__HOSTS__AUTH_SUBDOMAIN
     ports:
       - "${WSD_SERVER_PORT}:80"
     depends_on:
@@ -130,6 +69,42 @@ services:
       POSTGRES_PASSWORD: ${WSD__DB__PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+    restart: unless-stopped
+
+  rabbitmq:
+    image: rabbitmq:3
+    env_file: .env
+    ports:
+      - "5672:5672"
+    networks:
+      - internal
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  celery:
+    image: wsd:latest
+    command: celery -A wsd worker --pool=threads --concurrency=10  # threads option is important for tensorflow
+    env_file: .env
+    depends_on:
+      - backend
+      - rabbitmq
+    networks:
+      - internal
+    restart: unless-stopped
+
+  celery-beat:
+    image: wsd:latest
+    command: celery -A wsd beat
+    env_file: .env
+    depends_on:
+      - backend
+      - rabbitmq
     networks:
       - internal
     restart: unless-stopped
