@@ -2,7 +2,6 @@
 
 import { useRouter } from 'next/navigation'
 
-import * as React from 'react'
 import { SetStateAction, useRef, useState, useTransition } from 'react'
 
 import * as Icons from 'lucide-react'
@@ -23,6 +22,7 @@ import { useWSDAPI } from '@/lib/serverHooks'
 import { fileToBase64, uuidV4toHEX } from '@/lib/utils'
 
 import { Tag, TagInput } from 'emblor'
+import { toast } from 'sonner'
 
 export default function NewPostForm({ categories }: { categories: APIType<'PostCategory'>[] }) {
   const wsd = useWSDAPI()
@@ -76,20 +76,25 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
   async function handleCreatePost(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault()
     setLoading(true)
-    const { data: postData, response: postResponse, error: postError } = await wsd.createPost(postState)
+    try {
+      const { data: postData, response: postResponse, error: postError } = await wsd.createPost(postState)
 
-    if (postResponse.ok) {
-      setPostErrors({})
-      resetPostState()
-      startTransition(() => router.push(`/posts/${uuidV4toHEX(postData?.id as string)}`))
-      setLoading(false)
-    } else {
-      if (postResponse.status === 413) {
-        setPostErrors({ image: ['File too large. Please upload a smaller file.'] })
+      if (postResponse.ok) {
+        setPostErrors({})
+        resetPostState()
+        startTransition(() => router.push(`/posts/${uuidV4toHEX(postData?.id as string)}`))
+        setLoading(false)
       } else {
-        setPostErrors(postError)
+        if (postResponse.status === 413) {
+          setPostErrors({ image: ['File too large. Please upload a smaller file.'] })
+        } else {
+          setPostErrors(postError)
+        }
+        setLoading(false)
       }
+    } catch {
       setLoading(false)
+      toast('Something went wrong, please try again.')
     }
   }
 
