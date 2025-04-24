@@ -2,7 +2,7 @@
 
 import {createContext, ReactNode, useContext} from "react";
 import {Popover, PopoverContent, PopoverTrigger} from "@/components/shadcn/popover";
-import {Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle} from "@/components/shadcn/sheet";
+import {Sheet, SheetContent, SheetTrigger, SheetClose, SheetTitle, SheetDescription} from "@/components/shadcn/sheet";
 import { PopoverClose } from "@radix-ui/react-popover";
 import {cn, tailwindConfig} from "@/lib/utils";
 import _ from "lodash";
@@ -29,18 +29,18 @@ interface OverlayProps extends React.ComponentProps<typeof Popover>, React.Compo
 }
 
 
-export function Overlay({children, breakpoint, displayType="block"}: OverlayProps) {
+export function Overlay({children, breakpoint, displayType="block", ...props}: OverlayProps) {
   // breakpoint:displayType must be in safelist in tailwind configuration for this to work
   return (
     <>
       <OverlayProvider overlayType={OverlayType.Popover}>
         <div className={`hidden ${breakpoint}:${displayType} h-full`}>
-          <Popover>{children}</Popover>
+          <Popover {...props}>{children}</Popover>
         </div>
       </OverlayProvider>
       <OverlayProvider overlayType={OverlayType.Sheet}>
         <div className={`block ${breakpoint}:hidden h-full`}>
-          <Sheet>{children}</Sheet>
+          <Sheet {...props}>{children}</Sheet>
         </div>
       </OverlayProvider>
     </>
@@ -138,6 +138,19 @@ export function OverlayTitle({ children, className }: OverlayTitleProps) {
   const {overlayType} = useContext(OverlayContext);
   if (overlayType === OverlayType.Sheet) {
     return <SheetTitle className={className}>{children}</SheetTitle>;
+  }
+  return <></>
+}
+
+interface OverlayDescriptionProps {
+  children: ReactNode;
+  className?: string;
+}
+
+export function OverlayDescription({ children, className }: OverlayDescriptionProps) {
+  const {overlayType} = useContext(OverlayContext);
+  if (overlayType === OverlayType.Sheet) {
+    return <SheetDescription className={className}>{children}</SheetDescription>
   }
   return <></>
 }

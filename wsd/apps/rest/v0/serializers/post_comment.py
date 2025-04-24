@@ -46,4 +46,5 @@ class PostCommentSerializer(BaseModelSerializer):
         ]
         relational_fields = {
             "user": s("PublicUserSerializer")(),
+            "post": s("PostSerializer")(),
         }

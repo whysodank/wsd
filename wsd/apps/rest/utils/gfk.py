@@ -45,7 +45,11 @@ class LazyGenericRelatedField(GenericRelatedField):
 
     @property
     def serializers(self):
-        return self.serializers_func()
+        target_serializers = self.serializers_func()
+        for key, serializer in target_serializers.items():
+            new_context = self.context | getattr(serializer, "context", {})
+            serializer._context = new_context
+        return target_serializers
 
 
 def get_generic_serializer_serializers(relation_models):
