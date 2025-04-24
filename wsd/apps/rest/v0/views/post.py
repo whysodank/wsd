@@ -52,6 +52,8 @@ class PostViewSet(BaseModelViewSet):
         "category": ["exact", "isnull"],
         "category__handle": ["exact"],
         "is_repost": ["exact"],
+        "is_nsfw": ["exact"],
+        "is_original": ["exact"],
     }
 
     ordering_fields = [
