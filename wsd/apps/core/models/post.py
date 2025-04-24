@@ -173,6 +173,12 @@ class Post(BaseModel):
         is_original = False if is_repost else self.is_original
         self.update(initial=initial, is_repost=is_repost, is_original=is_original, _skip_hooks=True)
 
+    @hook(AFTER_CREATE, priority=2)
+    def check_nsfw(self):
+        if not self.is_nsfw:  # If they explicitly marked it as such, we don't care
+            self.is_nsfw = self.nsfw_prediction()
+            self.save(skip_hooks=True)
+
     class Meta:
         verbose_name = _("Post")
         verbose_name_plural = _("Posts")
