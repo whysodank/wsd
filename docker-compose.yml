@@ -96,6 +96,7 @@ services:
       - rabbitmq
     networks:
       - internal
+      - external  # Needs to download static files and send errors to sentry
     restart: unless-stopped
 
   celery-beat:
@@ -107,6 +108,7 @@ services:
       - rabbitmq
     networks:
       - internal
+      - external  # Needs to download static files and send errors to sentry
     restart: unless-stopped
 
 volumes:
