@@ -86,20 +86,21 @@ class Notification(BaseModel):
 @Notification.register_notification_moment(Post.vote_class)
 @Notification.register_notification_moment(Post.comment_class.vote_class)
 def like_notification(vote_obj):
-    total = vote_obj.post.votes.exclude(user=vote_obj.post.user).filter(body=vote_obj.VoteType.UPVOTE).count()
-    if total in [1, 5, 10, 20, 50, 100, 500, 1000, 5000, 10000]:
-        # We may want to add a digest to the Notification model so someone can't keep
-        # unlike and re-like to notify the post owner multiple times
-        Notification.objects.create(
-            event=Notification.EVENTS.LIKE,
-            user=vote_obj.post.user,
-            description=ngettext(
-                f"Your {vote_obj.post._meta.verbose_name.lower()} has received {total} vote.",
-                f"Your {vote_obj.post._meta.verbose_name.lower()} has received {total} votes.",
-                total,
-            ),
-            object_of_interest=vote_obj.post,
-        )
+    if vote_obj.post.user != vote_obj.user:
+        total = vote_obj.post.votes.exclude(user=vote_obj.post.user).filter(body=vote_obj.VoteType.UPVOTE).count()
+        if total in [1, 5, 10, 20, 50, 100, 500, 1000, 5000, 10000]:
+            # We may want to add a digest to the Notification model so someone can't keep
+            # unlike and re-like to notify the post owner multiple times
+            Notification.objects.create(
+                event=Notification.EVENTS.LIKE,
+                user=vote_obj.post.user,
+                description=ngettext(
+                    f"Your {vote_obj.post._meta.verbose_name.lower()} has received {total} vote.",
+                    f"Your {vote_obj.post._meta.verbose_name.lower()} has received {total} votes.",
+                    total,
+                ),
+                object_of_interest=vote_obj.post,
+            )
 
 
 @Notification.register_notification_moment(Post.comment_class)
