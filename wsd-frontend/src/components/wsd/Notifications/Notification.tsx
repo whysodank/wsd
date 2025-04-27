@@ -10,7 +10,7 @@ import * as Icons from 'lucide-react'
 import { APIType, Includes } from '@/api'
 import { useWSDAPI } from '@/lib/serverHooks'
 import { forcedType } from '@/lib/typeHelpers'
-import { uuidV4toHEX } from '@/lib/utils'
+import { shortFormattedDateTime, uuidV4toHEX } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
 
@@ -72,7 +72,10 @@ export function Notification({ notification }: { notification: APIType<'Notifica
     >
       <div className="flex items-center gap-2">
         <NotificationIcon className="h-4 w-4 text-muted-foreground" />
-        <span className="text-xs text-muted-foreground">
+        <span
+          title={shortFormattedDateTime(new Date(notification.created_at))}
+          className="text-xs text-muted-foreground"
+        >
           {formatDistanceToNow(new Date(notification.created_at), { addSuffix: true })}
         </span>
       </div>

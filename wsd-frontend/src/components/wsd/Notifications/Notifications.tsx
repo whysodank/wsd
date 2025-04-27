@@ -50,7 +50,7 @@ export function Notifications({ hasNew }: { hasNew?: boolean }) {
       setPage((prev) => prev + 1)
       fetchNotifications(page)
     }
-  }, [inView, hasMore, loading])
+  }, [inView, hasMore, loading]) // eslint-disable-line react-hooks/exhaustive-deps -- what we have is enough
 
   function onOverlayOpenChange(open: boolean) {
     if (!open) {

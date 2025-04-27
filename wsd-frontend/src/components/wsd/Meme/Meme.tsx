@@ -10,10 +10,13 @@ import { AspectRatio } from '@/components/shadcn/aspect-ratio'
 import { Badge } from '@/components/shadcn/badge'
 import { Button } from '@/components/shadcn/button'
 import { FeedbackButtons } from '@/components/wsd/Meme/client'
+import UserAvatar from '@/components/wsd/UserAvatar'
 
 import { APIType, Includes } from '@/api'
 import { useElementAttribute } from '@/lib/hooks'
-import { cn, preventDefault, uuidV4toHEX } from '@/lib/utils'
+import { cn, preventDefault, shortFormattedDateTime, uuidV4toHEX } from '@/lib/utils'
+
+import { formatDistanceToNow } from 'date-fns'
 
 export function Meme({
   post,
@@ -61,12 +64,25 @@ export function Meme({
       )}
     >
       <div className="flex flex-col gap-1 p-4 max-md:p-2 max-md:py-0">
+        <div className="flex items-center gap-2">
+          <UserAvatar user={post.user} className="w-6 h-6" />
+          <Link
+            href={{ pathname: `/users/${post.user.username}/` }}
+            className="text-xs text-muted-foreground hover:underline"
+            target="_blank"
+          >
+            {post.user.username}
+          </Link>
+          <span className="text-xs text-muted-foreground">•</span>
+          <span title={shortFormattedDateTime(new Date(post.created_at))} className="text-xs text-muted-foreground">
+            {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+          </span>
+        </div>
         <h2 className="text-xl font-semibold">
           <Link className="hover:underline break-word" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
             {post.title}
           </Link>
         </h2>
-
         <Link className="hover:underline break-word" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
           <div className="relative w-full flex justify-center items-center bg-black overflow-hidden">
             <div className="absolute inset-0 bg-black/60" />
@@ -125,7 +141,6 @@ export function Meme({
             )}
           </div>
         </Link>
-
         {withTags && (
           <div className="flex flex-wrap gap-2 py-2">
             {post.tags.map((tag) => (
@@ -135,35 +150,34 @@ export function Meme({
             ))}
           </div>
         )}
-
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <FeedbackButtons post={post} isAuthenticated={isAuthenticated} />
           </div>
           <div className="flex items-center gap-4">
             {withRepostData && originalSource && (
-              <Badge
-                variant="outline"
-                className={cn(
-                  'inline-flex items-center gap-2 px-3 py-1.5 transition-all',
-                  'hover:bg-secondary hover:text-secondary-foreground',
-                  'border border-border/50 rounded-full shadow-sm',
-                  'cursor-pointer group'
-                )}
+              <Link
+                href={originalSource}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-xs font-medium text-muted-foreground group-hover:text-secondary-foreground transition-colors"
               >
-                <Icons.Share2
-                  size={14}
-                  className="text-muted-foreground group-hover:text-secondary-foreground transition-colors"
-                />
-                <Link
-                  href={originalSource}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-xs font-medium text-muted-foreground group-hover:text-secondary-foreground transition-colors"
+                <Badge
+                  variant="outline"
+                  className={cn(
+                    'inline-flex items-center gap-2 px-3 py-1.5 transition-all',
+                    'hover:bg-secondary hover:text-secondary-foreground',
+                    'border border-border/50 rounded-full shadow-sm',
+                    'cursor-pointer group'
+                  )}
                 >
-                  Source
-                </Link>
-              </Badge>
+                  <Icons.Share2
+                    size={14}
+                    className="text-muted-foreground group-hover:text-secondary-foreground transition-colors"
+                  />
+                  <span className="text-xs font-medium text-muted-foreground">Source</span>
+                </Badge>
+              </Link>
             )}
             <Button
               className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"

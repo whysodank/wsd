@@ -13,6 +13,7 @@ import type { APIType, Includes } from '@/api'
 import { useWSDAPI } from '@/lib/serverHooks'
 import { cn, shortFormattedDateTime } from '@/lib/utils'
 
+import { formatDistanceToNow } from 'date-fns'
 import { toast } from 'sonner'
 
 export function MemeComment({ comment }: { comment: Includes<APIType<'PostComment'>, 'user', APIType<'User'>> }) {
@@ -77,9 +78,9 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
           >
             {comment.user.username}
           </Link>
-          <div className="text-sm text-gray-500">
-            <span>{shortFormattedDateTime(new Date(comment.created_at))}</span>
-          </div>
+          <span className="text-sm text-gray-500" title={shortFormattedDateTime(new Date(comment.created_at))}>
+            {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
+          </span>
         </div>
         <p className="text-sm text-muted-foreground whitespace-pre-line">{comment.body}</p>
         <div className="flex items-center justify-between">
