@@ -101,6 +101,10 @@ APEX_DOMAIN = config.HOSTS.DOMAIN
 ADMIN_SUBDOMAIN = config.HOSTS.ADMIN_SUBDOMAIN
 API_SUBDOMAIN = config.HOSTS.API_SUBDOMAIN
 AUTH_SUBDOMAIN = config.HOSTS.AUTH_SUBDOMAIN
+MEDIA_SUBDOMAIN = config.HOSTS.MEDIA_SUBDOMAIN
+# In the future, switch to a different domain entirely for media
+# So we are safe against cookie-based attacks
+
 
 PARENT_HOST = config.HOSTS.DOMAIN
 
@@ -250,6 +254,7 @@ AWS_S3_FILE_OVERWRITE = False
 AWS_DEFAULT_ACL = None
 AWS_S3_SIGNATURE_VERSION = "s3"
 AWS_QUERYSTRING_AUTH = False
+AWS_S3_CUSTOM_DOMAIN = f"{MEDIA_SUBDOMAIN}.{APEX_DOMAIN}"  # Served by nginx in nginx-s3-proxy container
 
 _s3 = config.STORAGE.S3
 s3_is_available = _s3.ACCESS_KEY_ID and _s3.SECRET_ACCESS_KEY and _s3.ENDPOINT_URL and _s3.BUCKET_NAME

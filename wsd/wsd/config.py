@@ -29,6 +29,7 @@ CONFIG = config(
             "API_SUBDOMAIN": string(),
             "ADMIN_SUBDOMAIN": string(),
             "AUTH_SUBDOMAIN": string(),
+            "MEDIA_SUBDOMAIN": string(),
         },
         "ALLOWED_HOSTS": comma_separated_list(),
         "OAUTH": {
