@@ -65,7 +65,9 @@ export function Meme({
     >
       <div className="flex flex-col gap-1 p-4 max-md:p-2 max-md:py-0">
         <div className="flex items-center gap-2">
-          <UserAvatar user={post.user} className="w-6 h-6" />
+          <Link href={{ pathname: `/users/${post.user.username}` }}>
+            <UserAvatar user={post.user} className="w-6 h-6" />
+          </Link>
           <Link
             href={{ pathname: `/users/${post.user.username}/` }}
             className="text-xs text-muted-foreground hover:underline"

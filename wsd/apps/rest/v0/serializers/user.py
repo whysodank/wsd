@@ -1,5 +1,6 @@
 from apps.user.models import User
 from django.contrib.auth.password_validation import validate_password
+from drf_extra_fields.fields import Base64ImageField
 from rest_framework import serializers
 
 from .base import BaseModelSerializer
@@ -11,6 +12,7 @@ class PublicUserSerializer(BaseModelSerializer):
         fields = [
             "id",
             "username",
+            "avatar",
             "is_active",
             "date_joined",
             "last_login",
@@ -26,6 +28,8 @@ class UserSerializer(BaseModelSerializer):
     exempt_from_model_map = True
     signup_completed = serializers.SerializerMethodField(required=False, read_only=True)
 
+    avatar = Base64ImageField(help_text=f"Image({', '.join(Base64ImageField.ALLOWED_TYPES)}) in base64 format")
+
     def get_signup_completed(self, obj) -> str:
         return getattr(obj, self.Meta.model.SIGNUP_COMPLETED_FIELD, False)
 
@@ -34,6 +38,7 @@ class UserSerializer(BaseModelSerializer):
         fields = [
             "id",
             "username",
+            "avatar",
             "first_name",
             "last_name",
             "email",

@@ -1677,6 +1677,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/UserRequest'
+        required: true
       security:
       - tokenAuth: []
       - basicAuth: []
@@ -2204,6 +2205,10 @@ components:
             ]
         }
       properties:
+        avatar:
+          type: string
+          format: binary
+          description: Image(jpeg, jpg, png, gif, webp) in base64 format
         first_name:
           type: string
           maxLength: 150
@@ -2896,6 +2901,12 @@ components:
           readOnly: true
           description: Required. 150 characters or fewer. It must start with a lowercase
             letter and contain only lowercase letters, digits, or underscores.
+        avatar:
+          type: string
+          format: uri
+          readOnly: true
+          nullable: true
+          description: User's avatar image.
         is_active:
           type: boolean
           readOnly: true
@@ -2931,6 +2942,7 @@ components:
           format: date-time
           readOnly: true
       required:
+      - avatar
       - created_at
       - date_joined
       - id
@@ -2976,6 +2988,10 @@ components:
           readOnly: true
           description: Required. 150 characters or fewer. It must start with a lowercase
             letter and contain only lowercase letters, digits, or underscores.
+        avatar:
+          type: string
+          format: uri
+          description: Image(jpeg, jpg, png, gif, webp) in base64 format
         first_name:
           type: string
           maxLength: 150
@@ -3025,6 +3041,7 @@ components:
           type: string
           readOnly: true
       required:
+      - avatar
       - created_at
       - date_joined
       - email
@@ -3113,6 +3130,11 @@ components:
           items:
             type: string
           readOnly: true
+        avatar:
+          type: array
+          items:
+            type: string
+          readOnly: true
         first_name:
           type: array
           items:
@@ -3174,6 +3196,7 @@ components:
             type: string
           readOnly: true
       required:
+      - avatar
       - created_at
       - date_joined
       - email
@@ -3215,12 +3238,18 @@ components:
             ]
         }
       properties:
+        avatar:
+          type: string
+          format: binary
+          description: Image(jpeg, jpg, png, gif, webp) in base64 format
         first_name:
           type: string
           maxLength: 150
         last_name:
           type: string
           maxLength: 150
+      required:
+      - avatar
     VoteEnum:
       enum:
       - 1

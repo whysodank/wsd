@@ -781,6 +781,11 @@ export interface components {
      *         ]
      *     } */
     PatchedUserRequest: {
+      /**
+       * Format: binary
+       * @description Image(jpeg, jpg, png, gif, webp) in base64 format
+       */
+      avatar?: string
       first_name?: string
       last_name?: string
     }
@@ -1151,6 +1156,11 @@ export interface components {
       /** @description Required. 150 characters or fewer. It must start with a lowercase letter and contain only lowercase letters, digits, or underscores. */
       readonly username: string
       /**
+       * Format: uri
+       * @description User's avatar image.
+       */
+      readonly avatar: string | null
+      /**
        * Active
        * @description Designates whether this user should be treated as active. Unselect this instead of deleting accounts.
        */
@@ -1202,6 +1212,11 @@ export interface components {
       readonly id: string
       /** @description Required. 150 characters or fewer. It must start with a lowercase letter and contain only lowercase letters, digits, or underscores. */
       readonly username: string
+      /**
+       * Format: uri
+       * @description Image(jpeg, jpg, png, gif, webp) in base64 format
+       */
+      avatar: string
       first_name?: string
       last_name?: string
       /**
@@ -1270,6 +1285,7 @@ export interface components {
     UserError: {
       readonly id: string[]
       readonly username: string[]
+      readonly avatar: string[]
       readonly first_name: string[]
       readonly last_name: string[]
       readonly email: string[]
@@ -1307,6 +1323,11 @@ export interface components {
      *         ]
      *     } */
     UserRequest: {
+      /**
+       * Format: binary
+       * @description Image(jpeg, jpg, png, gif, webp) in base64 format
+       */
+      avatar: string
       first_name?: string
       last_name?: string
     }
@@ -2548,7 +2569,7 @@ export interface operations {
       path?: never
       cookie?: never
     }
-    requestBody?: {
+    requestBody: {
       content: {
         'application/json': components['schemas']['UserRequest']
         'application/x-www-form-urlencoded': components['schemas']['UserRequest']
