@@ -89,3 +89,26 @@
 .break-word {
   word-break: break-word;
 }
+
+/* Tiptap Editor Styles */
+.ProseMirror {
+  @apply py-2 px-4;
+
+  > * {
+    @apply my-2;
+  }
+
+  a {
+    @apply text-muted-foreground underline cursor-pointer;
+  }
+}
+
+.tiptap p.is-editor-empty:first-child::before {
+  @apply text-muted-foreground;
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+/* End Tiptap Editor Styles */

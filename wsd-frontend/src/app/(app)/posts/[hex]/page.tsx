@@ -7,6 +7,7 @@ import _ from 'lodash'
 import { Button, buttonVariants } from '@/components/shadcn/button'
 import { Overlay, OverlayClose, OverlayContent, OverlayTitle, OverlayTrigger } from '@/components/shadcn/overlay'
 import { Separator } from '@/components/shadcn/separator'
+import AuthenticatedOnlyActionButton from '@/components/wsd/AuthenticatedOnlyActionButton'
 import Meme from '@/components/wsd/Meme'
 import MemeComment from '@/components/wsd/MemeComment'
 import NewComment from '@/components/wsd/NewComment'
@@ -17,8 +18,6 @@ import { getWSDMetadata } from '@/lib/metadata'
 import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
 import { getKeys } from '@/lib/typeHelpers'
 import { InvalidHEXError, cn, hexToUUIDv4, suppress } from '@/lib/utils'
-import AuthenticatedOnlyActionButton from "@/components/wsd/AuthenticatedOnlyActionButton";
-import * as Icons from "lucide-react";
 
 export async function generateMetadata(props: { params: Promise<{ hex: string }> }): Promise<Metadata | undefined> {
   const params = await props.params
@@ -102,10 +101,7 @@ export default async function PostPage(props: {
             )}
             {!isAuthenticated && (
               <div className="flex w-full justify-center items-center p-4 text-muted-foreground">
-                <AuthenticatedOnlyActionButton
-                  isAuthenticated={false}
-                  variant="outline"
-                >
+                <AuthenticatedOnlyActionButton isAuthenticated={false} variant="outline">
                   Be the first one to comment!
                 </AuthenticatedOnlyActionButton>
               </div>

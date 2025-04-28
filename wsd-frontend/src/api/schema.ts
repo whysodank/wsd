@@ -754,8 +754,8 @@ export interface components {
      *         ]
      *     } */
     PatchedPostCommentUpdateRequest: {
-      /** @description The actual comment. */
-      body?: string
+      /** @description The actual comment as JSON. */
+      body?: unknown
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -939,8 +939,8 @@ export interface components {
        * @description The post this comment is for.
        */
       post: string
-      /** @description The actual comment. */
-      body: string
+      /** @description The actual comment as JSON. */
+      body: unknown
       readonly vote: (components['schemas']['VoteEnum'] | components['schemas']['NullEnum']) | null
       readonly positive_vote_count: number | null
       readonly negative_vote_count: number | null
@@ -989,8 +989,8 @@ export interface components {
        * @description The post this comment is for.
        */
       post: string
-      /** @description The actual comment. */
-      body: string
+      /** @description The actual comment as JSON. */
+      body: unknown
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -1016,8 +1016,8 @@ export interface components {
      *         ]
      *     } */
     PostCommentUpdateRequest: {
-      /** @description The actual comment. */
-      body: string
+      /** @description The actual comment as JSON. */
+      body: unknown
     }
     PostDestroyError: {
       protected_elements: components['schemas']['ProtectedElement'][]

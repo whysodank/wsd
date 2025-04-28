@@ -18,6 +18,7 @@ class Notification(BaseModel):
     class EVENTS(models.TextChoices):
         LIKE = "LIKE", _("Like")
         COMMENT = "COMMENT", _("Comment")
+        COMMENT_MENTION = "COMMENT_MENTION", _("Comment Mention")
 
     event = models.CharField(
         verbose_name=_("Event"),
@@ -112,3 +113,17 @@ def comment_notification(comment_obj):
             description=_(f"{comment_obj.user} commented on your {comment_obj.post._meta.verbose_name.lower()}."),
             object_of_interest=comment_obj.post,
         )
+
+
+@Notification.register_notification_moment(Post.comment_class)
+def comment_mention_notification(comment_obj):
+    notifications = [
+        Notification(
+            event=Notification.EVENTS.COMMENT_MENTION,
+            user=mentioned_user,
+            description=_(f"{comment_obj.user} mentioned you in a comment."),
+            object_of_interest=comment_obj.post,
+        )
+        for mentioned_user in comment_obj.mentions
+    ]
+    Notification.objects.bulk_create(notifications)

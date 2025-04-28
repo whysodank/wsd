@@ -8,6 +8,7 @@ import * as Icons from 'lucide-react'
 
 import { Button } from '@/components/shadcn/button'
 import UserAvatar from '@/components/wsd/UserAvatar'
+import { WSDEditorRenderer } from '@/components/wsd/WSDEditor/Editor'
 
 import type { APIType, Includes } from '@/api'
 import { useWSDAPI } from '@/lib/serverHooks'
@@ -82,7 +83,9 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
             {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
           </span>
         </div>
-        <p className="text-sm text-muted-foreground whitespace-pre-line">{comment.body}</p>
+        <div className="text-sm text-muted-foreground whitespace-pre-line">
+          <WSDEditorRenderer content={comment.body as object} />
+        </div>
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-1">
             <Button

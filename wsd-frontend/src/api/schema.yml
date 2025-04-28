@@ -2175,9 +2175,7 @@ components:
         }
       properties:
         body:
-          type: string
-          minLength: 1
-          description: The actual comment.
+          description: The actual comment as JSON.
     PatchedUserRequest:
       type: object
       description: |-
@@ -2445,8 +2443,7 @@ components:
           format: uuid
           description: The post this comment is for.
         body:
-          type: string
-          description: The actual comment.
+          description: The actual comment as JSON.
         vote:
           readOnly: true
           nullable: true
@@ -2576,9 +2573,7 @@ components:
           format: uuid
           description: The post this comment is for.
         body:
-          type: string
-          minLength: 1
-          description: The actual comment.
+          description: The actual comment as JSON.
       required:
       - body
       - post
@@ -2610,9 +2605,7 @@ components:
         }
       properties:
         body:
-          type: string
-          minLength: 1
-          description: The actual comment.
+          description: The actual comment as JSON.
       required:
       - body
     PostDestroyError:

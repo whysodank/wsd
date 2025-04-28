@@ -2,6 +2,7 @@ from functools import lru_cache
 
 from apps.common.models.base import BaseModel
 from apps.common.utils import camel_to_snake, track_events
+from apps.feedback.comments.tiptap import get_mentions
 from apps.feedback.votes import votes
 from django.contrib.auth import get_user_model
 from django.db import models
@@ -31,10 +32,16 @@ def create_comment_class(klass, name, comment_min_length=0, comment_max_length=1
             verbose_name=_("Post"),
             help_text=_("The post this comment is for."),
         )
-        body = models.TextField(
+
+        body = models.JSONField(
             verbose_name=_("Body"),
-            help_text=_("The actual comment."),
+            help_text=_("The actual comment as JSON."),
+            # TipTap format
         )
+
+        @property
+        def mentions(self):
+            return get_user_model().objects.filter(username__in=get_mentions(self.body))
 
         class Meta:
             abstract = True
