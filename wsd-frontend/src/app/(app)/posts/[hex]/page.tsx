@@ -17,6 +17,8 @@ import { getWSDMetadata } from '@/lib/metadata'
 import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
 import { getKeys } from '@/lib/typeHelpers'
 import { InvalidHEXError, cn, hexToUUIDv4, suppress } from '@/lib/utils'
+import AuthenticatedOnlyActionButton from "@/components/wsd/AuthenticatedOnlyActionButton";
+import * as Icons from "lucide-react";
 
 export async function generateMetadata(props: { params: Promise<{ hex: string }> }): Promise<Metadata | undefined> {
   const params = await props.params
@@ -98,7 +100,17 @@ export default async function PostPage(props: {
                 </OverlayContent>
               </Overlay>
             )}
-            {wsd.hasNoResult(comments) && (
+            {!isAuthenticated && (
+              <div className="flex w-full justify-center items-center p-4 text-muted-foreground">
+                <AuthenticatedOnlyActionButton
+                  isAuthenticated={false}
+                  variant="outline"
+                >
+                  Be the first one to comment!
+                </AuthenticatedOnlyActionButton>
+              </div>
+            )}
+            {isAuthenticated && wsd.hasNoResult(comments) && (
               <div className="flex w-full justify-center items-center p-4 text-muted-foreground">
                 Be the first one to comment!
               </div>
