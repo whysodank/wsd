@@ -15,6 +15,7 @@ export const CategoryLink = React.forwardRef<
 >(({ children, icon, className, ...props }, ref) => {
   return (
     <Link
+      prefetch={true}
       ref={ref}
       className={cn(
         'rounded-md p-2 text-sm hover:bg-accent hover:text-accent-foreground focus:bg-accent',
