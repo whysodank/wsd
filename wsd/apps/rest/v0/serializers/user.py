@@ -28,7 +28,11 @@ class UserSerializer(BaseModelSerializer):
     exempt_from_model_map = True
     signup_completed = serializers.SerializerMethodField(required=False, read_only=True)
 
-    avatar = Base64ImageField(help_text=f"Image({', '.join(Base64ImageField.ALLOWED_TYPES)}) in base64 format")
+    avatar = Base64ImageField(
+        required=False,
+        help_text=f"Image({', '.join(Base64ImageField.ALLOWED_TYPES)}) in base64 format",
+        allow_null=True,
+    )
 
     def get_signup_completed(self, obj) -> str:
         return getattr(obj, self.Meta.model.SIGNUP_COMPLETED_FIELD, False)

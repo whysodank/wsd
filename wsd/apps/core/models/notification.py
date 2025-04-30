@@ -111,7 +111,7 @@ def comment_notification(comment_obj):
             event=Notification.EVENTS.COMMENT,
             user=comment_obj.post.user,
             description=_(f"{comment_obj.user} commented on your {comment_obj.post._meta.verbose_name.lower()}."),
-            object_of_interest=comment_obj.post,
+            object_of_interest=comment_obj,
         )
 
 
@@ -122,7 +122,7 @@ def comment_mention_notification(comment_obj):
             event=Notification.EVENTS.COMMENT_MENTION,
             user=mentioned_user,
             description=_(f"{comment_obj.user} mentioned you in a comment."),
-            object_of_interest=comment_obj.post,
+            object_of_interest=comment_obj,
         )
         for mentioned_user in comment_obj.mentions
     ]

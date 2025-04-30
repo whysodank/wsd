@@ -23,6 +23,7 @@ export function Notification({ notification }: { notification: APIType<'Notifica
   const icons = {
     LIKE: Icons.Heart,
     COMMENT: Icons.MessageSquare,
+    COMMENT_MENTION: Icons.AtSign,
   }
   const NotificationIcon = icons[notification.event] || Icons.Shell
 

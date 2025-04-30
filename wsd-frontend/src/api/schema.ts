@@ -491,9 +491,10 @@ export interface components {
     /**
      * @description * `LIKE` - Like
      *     * `COMMENT` - Comment
+     *     * `COMMENT_MENTION` - Comment Mention
      * @enum {string}
      */
-    EventEnum: 'LIKE' | 'COMMENT'
+    EventEnum: 'LIKE' | 'COMMENT' | 'COMMENT_MENTION'
     Forbidden: {
       detail: string
     }
@@ -535,7 +536,8 @@ export interface components {
       /** @description Event Type
        *
        *     * `LIKE` - Like
-       *     * `COMMENT` - Comment */
+       *     * `COMMENT` - Comment
+       *     * `COMMENT_MENTION` - Comment Mention */
       readonly event: components['schemas']['EventEnum']
       /** @description Description of the notification. This is what the users will see. */
       readonly description: string
@@ -785,7 +787,7 @@ export interface components {
        * Format: binary
        * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
-      avatar?: string
+      avatar?: string | null
       first_name?: string
       last_name?: string
     }
@@ -1216,7 +1218,7 @@ export interface components {
        * Format: uri
        * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
-      avatar: string
+      avatar?: string | null
       first_name?: string
       last_name?: string
       /**
@@ -1327,7 +1329,7 @@ export interface components {
        * Format: binary
        * @description Image(jpeg, jpg, png, gif, webp) in base64 format
        */
-      avatar: string
+      avatar?: string | null
       first_name?: string
       last_name?: string
     }
@@ -1357,8 +1359,9 @@ export interface operations {
         /** @description Event Type
          *
          *     * `LIKE` - Like
-         *     * `COMMENT` - Comment */
-        event?: 'COMMENT' | 'LIKE'
+         *     * `COMMENT` - Comment
+         *     * `COMMENT_MENTION` - Comment Mention */
+        event?: 'COMMENT' | 'COMMENT_MENTION' | 'LIKE'
         include?: string
         is_read?: boolean
         ordering?: '-created_at' | '-updated_at' | 'created_at' | 'updated_at'
@@ -2569,7 +2572,7 @@ export interface operations {
       path?: never
       cookie?: never
     }
-    requestBody: {
+    requestBody?: {
       content: {
         'application/json': components['schemas']['UserRequest']
         'application/x-www-form-urlencoded': components['schemas']['UserRequest']

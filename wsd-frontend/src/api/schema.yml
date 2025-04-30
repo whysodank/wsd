@@ -41,12 +41,14 @@ paths:
           type: string
           enum:
           - COMMENT
+          - COMMENT_MENTION
           - LIKE
         description: |-
           Event Type
 
           * `LIKE` - Like
           * `COMMENT` - Comment
+          * `COMMENT_MENTION` - Comment Mention
       - in: query
         name: include
         schema:
@@ -1677,7 +1679,6 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/UserRequest'
-        required: true
       security:
       - tokenAuth: []
       - basicAuth: []
@@ -1771,10 +1772,12 @@ components:
       enum:
       - LIKE
       - COMMENT
+      - COMMENT_MENTION
       type: string
       description: |-
         * `LIKE` - Like
         * `COMMENT` - Comment
+        * `COMMENT_MENTION` - Comment Mention
     Forbidden:
       type: object
       properties:
@@ -1835,6 +1838,7 @@ components:
 
             * `LIKE` - Like
             * `COMMENT` - Comment
+            * `COMMENT_MENTION` - Comment Mention
         description:
           type: string
           readOnly: true
@@ -2206,6 +2210,7 @@ components:
         avatar:
           type: string
           format: binary
+          nullable: true
           description: Image(jpeg, jpg, png, gif, webp) in base64 format
         first_name:
           type: string
@@ -2984,6 +2989,7 @@ components:
         avatar:
           type: string
           format: uri
+          nullable: true
           description: Image(jpeg, jpg, png, gif, webp) in base64 format
         first_name:
           type: string
@@ -3034,7 +3040,6 @@ components:
           type: string
           readOnly: true
       required:
-      - avatar
       - created_at
       - date_joined
       - email
@@ -3234,6 +3239,7 @@ components:
         avatar:
           type: string
           format: binary
+          nullable: true
           description: Image(jpeg, jpg, png, gif, webp) in base64 format
         first_name:
           type: string
@@ -3241,8 +3247,6 @@ components:
         last_name:
           type: string
           maxLength: 150
-      required:
-      - avatar
     VoteEnum:
       enum:
       - 1
