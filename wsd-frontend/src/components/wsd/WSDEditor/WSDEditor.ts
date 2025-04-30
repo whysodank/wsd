@@ -50,6 +50,7 @@ export function stripEmptyParagraphs(json: JSONContent): JSONContent {
 export function useWSDEditor({ content, editable = true }: { content?: object; editable?: boolean }) {
   return useEditor(
     {
+      immediatelyRender: false,
       editable,
       extensions: [
         Document,
@@ -78,6 +79,5 @@ export function useWSDEditor({ content, editable = true }: { content?: object; e
 }
 
 export function getWSDEditorHTML({ content }: { content: JSONContent }) {
-  console.log(content)
   return generateHTML(content, [Document, Text, Paragraph, WSDMentionSSR])
 }
