@@ -2,6 +2,8 @@
 
 import { useRouter } from 'next/navigation'
 
+import { useState } from 'react'
+
 import _ from 'lodash'
 
 import { Button } from '@/components/shadcn/button'
@@ -17,6 +19,7 @@ import { toast } from 'sonner'
 export default function SignupForm() {
   const wsd = useWSDAPI()
   const router = useRouter()
+  const [registrationDisabled, setRegistrationDisabled] = useState<boolean>(false)
 
   const {
     formState: signupState,
@@ -34,25 +37,30 @@ export default function SignupForm() {
   })
 
   async function handleSignup(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const { response, error } = await wsd.auth.signup({
-      username: signupState.username,
-      email: signupState.email,
-      password: signupState.password,
-    })
-    if (error && response?.status !== 401) {
-      // Django Allauth returns 401 for a successful signup attempt
-      const errors = (error as { errors: { message: string; code: string; param: string }[] }).errors
-      setSignupErrors(
-        _.chain(errors)
-          .groupBy('param')
-          .mapValues((i) => i.map((i) => i.message))
-          .value()
-      )
-      toast('Signup failed.')
-    } else {
-      router.push('/auth/signup-email-sent')
-      toast('Signed up successfully. Please check your email for verification.')
+    try {
+      setRegistrationDisabled(true)
+      event.preventDefault()
+      const { response, error } = await wsd.auth.signup({
+        username: signupState.username,
+        email: signupState.email,
+        password: signupState.password,
+      })
+      if (error && response?.status !== 401) {
+        // Django Allauth returns 401 for a successful signup attempt
+        const errors = (error as { errors: { message: string; code: string; param: string }[] }).errors
+        setSignupErrors(
+          _.chain(errors)
+            .groupBy('param')
+            .mapValues((i) => i.map((i) => i.message))
+            .value()
+        )
+        toast('Signup failed.')
+      } else {
+        router.push('/auth/signup-email-sent')
+        toast('Signed up successfully. Please check your email for verification.')
+      }
+    } finally {
+      setRegistrationDisabled(false)
     }
   }
 
@@ -94,7 +102,7 @@ export default function SignupForm() {
             autoComplete="new-password"
           />
         </div>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" disabled={registrationDisabled}>
           Signup
         </Button>
       </div>
