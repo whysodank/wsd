@@ -22,6 +22,7 @@ services:
       args:
         SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN}
         NEXT_PUBLIC_WSD__DEBUG: ${NEXT_PUBLIC_WSD__DEBUG}
+        NEXT_PUBLIC_WSD__PROTOCOL: ${NEXT_PUBLIC_WSD__PROTOCOL}
         NEXT_PUBLIC_WSD__NAME: ${NEXT_PUBLIC_WSD__NAME}
         NEXT_PUBLIC_WSD__MOTTO: ${NEXT_PUBLIC_WSD__MOTTO}
         NEXT_PUBLIC_WSD__DOMAIN: ${NEXT_PUBLIC_WSD__DOMAIN}
@@ -104,6 +105,8 @@ services:
     image: wsd:latest
     command: celery -A wsd worker --pool=threads --concurrency=10  # threads option is important for tensorflow
     env_file: .env
+    volumes:
+      - user_uploads:/wsd/mediafiles
     depends_on:
       database:
         condition: service_healthy
@@ -120,6 +123,8 @@ services:
     image: wsd:latest
     command: celery -A wsd beat
     env_file: .env
+    volumes:
+      - user_uploads:/wsd/mediafiles
     depends_on:
       database:
         condition: service_healthy

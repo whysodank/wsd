@@ -8,6 +8,7 @@ CONFIG = config(
         "NAME": string(),
         "NAME_SHORT": string(),
         "DEBUG": boolean(),
+        "PROTOCOL": string(),
         "DB": {
             "NAME": string(),
             "USER": string(),

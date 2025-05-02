@@ -2,6 +2,7 @@ import { booleanConfig, numberConfig, stringConfig } from '~/src/config/parsers'
 
 const RAW = Object.freeze({
   debug: process.env.NEXT_PUBLIC_WSD__DEBUG,
+  protocol: process.env.NEXT_PUBLIC_WSD__PROTOCOL,
   name: process.env.NEXT_PUBLIC_WSD__NAME,
   motto: process.env.NEXT_PUBLIC_WSD__MOTTO,
   domain: process.env.NEXT_PUBLIC_WSD__DOMAIN,
@@ -29,14 +30,17 @@ const RAW = Object.freeze({
   githubLink: process.env.NEXT_PUBLIC_WSD__GITHUB_LINK,
 })
 
+const _protocol = stringConfig({ name: 'protocol', value: RAW.protocol, default: 'https' })
+const _domain = stringConfig({ name: 'domain', value: RAW.domain })
+
 export const config = Object.freeze({
   debug: booleanConfig({ name: 'debug', value: RAW.debug, default: false }),
   name: stringConfig({ name: 'name', value: RAW.name, default: 'WSD' }),
   motto: stringConfig({ name: 'motto', value: RAW.motto, default: 'Why So Dank?' }),
-  image: `https://${stringConfig({ name: 'domain', value: RAW.domain })}/og-image.jpg`,
-  nsfw_image: `https://${stringConfig({ name: 'domain', value: RAW.domain })}/og-image-nsfw.jpg`,
-  domain: stringConfig({ name: 'domain', value: RAW.domain }),
-  url: `https://${stringConfig({ name: 'domain', value: RAW.domain })}`,
+  image: `${_protocol}://${_domain}/og-image.jpg`,
+  nsfw_image: `${_protocol}://${_domain}/og-image-nsfw.jpg`,
+  domain: _domain,
+  url: `${_protocol}://${_domain}`,
   api: {
     baseURL: stringConfig({ name: 'api.baseURL', value: RAW.api.baseURL }),
     authBaseURL: stringConfig({ name: 'api.authBaseURL', value: RAW.api.authBaseURL }),
