@@ -27,8 +27,10 @@ I picked `local-whysodank.com` as the domain but you can pick anything and chang
 
 ## Run the project
 
-`docker compose up` should build the images and start the containers.
+- `docker compose build` Running `up` instead may give you errors about not being able to pull wsd:latest since it is built locally and reused
+- `docker compose up` After building it first, the wsd:latest will be reused successfull and everything should work out of the box
 
 ## Caveats
 
-It probably doesn't work in Apple Silicon and maybe not even on Windows.
+- Doesn't have volumes mounted for the actual workdir so you have to rebuild the image every time you change something (you can add the volumes manually and do `git update-index --assume-unchanged <file> docker-compose.yml`)
+- It probably doesn't work in Apple Silicon and maybe not even on Windows.
