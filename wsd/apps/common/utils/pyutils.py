@@ -166,3 +166,17 @@ def check_required_keys(obj, conditions):
         raise ValueError(f"Object keys do not match exactly one required condition. {conditions}")
 
     return matching_conditions[0]
+
+
+def enabled_if(condition, *, if_not_enabled_return_value):
+    if not condition:
+        return returns(returns(if_not_enabled_return_value))
+
+    def decorator(func):
+        @wraps(func)
+        def wrapper(*args, **kwargs):
+            return func(*args, **kwargs)
+
+        return wrapper
+
+    return decorator
