@@ -32,7 +32,7 @@ export const noDirectConsoleLog = withAttributes<Record<'__noDirectConsoleLog', 
       window.whysodank = whysodank
     }
   },
-  { __noDirectConsoleLog: true }
+  { __noDirectConsoleLog: false }
 )
 
 export function globalWSDAPI(window: Window) {

@@ -1,8 +1,9 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
@@ -12,15 +13,44 @@ import { WSDEditorRenderer } from '@/components/wsd/WSDEditor/Editor'
 
 import type { APIType, Includes } from '@/api'
 import { useWSDAPI } from '@/lib/serverHooks'
-import { cn, shortFormattedDateTime } from '@/lib/utils'
+import { InvalidHEXError, cn, shortFormattedDateTime, suppress, uuidV4toHEX } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
 import { toast } from 'sonner'
 
-export function MemeComment({ comment }: { comment: Includes<APIType<'PostComment'>, 'user', APIType<'User'>> }) {
+export function MemeComment({
+  comment,
+  targeted = false,
+}: {
+  comment: Includes<APIType<'PostComment'>, 'user', APIType<'User'>>
+  targeted?: boolean
+}) {
+  const router = useRouter()
+
+  const commentRef = useRef<HTMLElement>(null)
   const wsd = useWSDAPI()
   const [feedback, setFeedback] = useState<APIType<'VoteEnum'> | null>(comment.vote)
   const [voteCount, setVoteCount] = useState((comment.positive_vote_count || 0) - (comment.negative_vote_count || 0))
+  const postId = suppress<string, undefined>([InvalidHEXError], () => uuidV4toHEX(comment.post))
+  const commentId = suppress<string, undefined>([InvalidHEXError], () => uuidV4toHEX(comment.id))
+  console.log(postId)
+  console.log(commentId)
+
+  useEffect(() => {
+    if (targeted && commentRef.current) {
+      // Wait for the page to load completely
+      const scrollToComment = () => {
+        commentRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      }
+
+      // Use requestIdleCallback for better performance, falling back to setTimeout
+      if (typeof window.requestIdleCallback !== 'undefined') {
+        window.requestIdleCallback(scrollToComment)
+      } else {
+        setTimeout(scrollToComment, 100)
+      }
+    }
+  }, [targeted])
 
   function handleVote(vote: APIType<'VoteEnum'>) {
     return async () => {
@@ -66,9 +96,34 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
     }
   }
 
+  async function handleShare() {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: `Check out this comment by ${comment.user.username}`,
+          url: `${window.location.origin}/posts/${postId}/comment/${commentId}`,
+        })
+      } else if (navigator.clipboard) {
+        await navigator.clipboard.writeText(`${window.location.origin}/posts/${postId}/comment/${commentId}`)
+        toast('Link copied to clipboard!')
+      } else {
+        // Fallback for browsers that don't support the Web Share API or Clipboard API
+        console.log('Share API not supported')
+        toast("Couldn't share the comment")
+      }
+    } catch (e) {
+      console.log(e)
+      toast("Couldn't share the comment")
+    }
+    router.replace(`/posts/${postId}/comment/${commentId}`, { scroll: false })
+  }
+
   return (
-    <article className="flex flex-row gap-2 p-4 rounded-lg bg-background w-full">
-      <Link href={{ pathname: `/users/${comment?.user?.username}` }}>
+    <article
+      className={`flex flex-row gap-2 p-4 rounded-lg bg-background w-full ${targeted && 'border-2 border-accent bg-accent/10'}`}
+      ref={commentRef}
+    >
+      <Link href={{ pathname: `/users/${comment.user.username}` }}>
         <UserAvatar user={comment.user} className="w-12 h-12" />
       </Link>
       <div className="flex flex-col gap-1 w-full">
@@ -113,6 +168,14 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
               aria-label="Downvote"
             >
               <Icons.ArrowBigDown size={20} className={cn(feedback === -1 && 'text-destructive fill-destructive')} />
+            </Button>
+            <Button
+              onClick={handleShare}
+              size="sm"
+              className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
+              aria-label="Share"
+            >
+              <Icons.LucideLink size={20} />
             </Button>
           </div>
           <div className="flex items-center gap-1">
