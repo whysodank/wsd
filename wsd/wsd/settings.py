@@ -11,7 +11,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 DEBUG = config.DEBUG
 SECRET_KEY = config.SECRET_KEY
 ALLOWED_HOSTS = config.ALLOWED_HOSTS
-PROTOCOL = "https"
+PROTOCOL = config.PROTOCOL
 SECURE_SSL_REDIRECT = False  # Only because we use cloudflare without full or strict
 
 # Application definition
@@ -332,6 +332,8 @@ DEFAULT_AUTH_FROM_EMAIL = config.EMAIL.DEFAULT_AUTH_FROM_EMAIL
 CELERY_BROKER_URL = config.CELERY.BROKER_URL
 CELERY_RESULT_BACKEND = "django-db"
 CELERYD_POOL = "threads"
+
+ENABLE_NSFW_DETECTION = config.ENABLE_NSFW_DETECTION
 
 if not DEBUG:
     sentry_sdk.init(

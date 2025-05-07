@@ -8,6 +8,7 @@ CONFIG = config(
         "NAME": string(),
         "NAME_SHORT": string(),
         "DEBUG": boolean(),
+        "PROTOCOL": string(),
         "DB": {
             "NAME": string(),
             "USER": string(),
@@ -80,6 +81,7 @@ CONFIG = config(
         "CELERY": {
             "BROKER_URL": string(),
         },
+        "ENABLE_NSFW_DETECTION": boolean(missing_default=False),
     },
     prefix="WSD",
 )

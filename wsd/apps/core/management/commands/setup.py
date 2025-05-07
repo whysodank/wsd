@@ -1,3 +1,4 @@
+from allauth.account.models import EmailAddress
 from apps.user.models import User
 from django.core.management import BaseCommand
 
@@ -17,8 +18,15 @@ class Command(BaseCommand):
             self.stdout.write("Admin user already exists. Skipping admin user creation.")
         else:
             self.stdout.write("Admin user does not exist. Trying to create one from environment variables.")
-            User.objects.create_superuser(
+            user = User.objects.create_superuser(
                 username=CONFIG.SETUP.SUPERUSER.USERNAME,
                 email=CONFIG.SETUP.SUPERUSER.EMAIL,
                 password=CONFIG.SETUP.SUPERUSER.PASSWORD,
             )
+            EmailAddress.objects.create(
+                user=user,
+                email=CONFIG.SETUP.SUPERUSER.EMAIL,
+                verified=True,
+                primary=True,
+            )
+            self.stdout.write("Admin user created successfully.")
