@@ -1,0 +1,63 @@
+name: pre-commit
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  pre-commit:
+    runs-on: ubuntu-22.04
+
+    services:
+      postgres:
+        image: postgres:14
+        env:
+          POSTGRES_USER: wsd-db-user
+          POSTGRES_PASSWORD: wsd-db-password
+          POSTGRES_DB: wsd-db
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd="pg_isready"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=5
+
+    env:
+      WSD__DB__NAME: wsd-db
+      WSD__DB__USER: wsd-db-user
+      WSD__DB__PASSWORD: wsd-db-password
+      WSD__DB__HOST: localhost
+      WSD__DB__PORT: 5432
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up project (OS + Python + Node + deps)
+        uses: ./.github/actions/setup
+
+      - name: Export env vars from example.env
+        run: |
+          while IFS='=' read -r key value || [[ -n "$key" ]]; do
+            # Skip empty lines and comments
+            [[ -z "$key" || "$key" =~ ^# ]] && continue
+
+            # Strip quotes
+            value="${value%\"}"
+            value="${value#\"}"
+            value="${value%\'}"
+            value="${value#\'}"
+
+            # Skip lines without a valid key
+            if [[ -n "$key" ]]; then
+              echo "$key=$value" >> $GITHUB_ENV
+            fi
+          done < ./docs/example.env
+
+      - name: Show all environment variables
+        run: printenv | sort
+
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1
