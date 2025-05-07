@@ -1,4 +1,5 @@
 from contextlib import ContextDecorator, suppress
+from functools import wraps
 
 import sentry_sdk
 
@@ -35,6 +36,7 @@ def suppress_callable(*exceptions, func=print, return_value=None):
     """
 
     def decorator(f):
+        @wraps(f)
         def wrapper(*a, **kw):
             with SuppressAndRun(*exceptions, func=func):
                 return f(*a, **kw)

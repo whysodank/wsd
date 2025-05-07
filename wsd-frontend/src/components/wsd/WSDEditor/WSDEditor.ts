@@ -47,22 +47,15 @@ export function stripEmptyParagraphs(json: JSONContent): JSONContent {
   return json
 }
 
+const COMMON_WSD_EDITOR_EXTENSIONS = [Document, Text, Paragraph, HardBreak, Typography, Link]
+
 export function useWSDEditor({ content, editable = true }: { content?: object; editable?: boolean }) {
+  const clientWSDEditorExtensions = [History, WSDMention, Placeholder.configure({ placeholder: 'Write something...' })]
   return useEditor(
     {
       immediatelyRender: false,
       editable,
-      extensions: [
-        Document,
-        Text,
-        Paragraph,
-        HardBreak,
-        History,
-        Typography,
-        Link,
-        WSDMention,
-        Placeholder.configure({ placeholder: 'Write something...' }),
-      ],
+      extensions: [...COMMON_WSD_EDITOR_EXTENSIONS, ...clientWSDEditorExtensions],
       editorProps: {
         attributes: {
           class: cn(
@@ -79,5 +72,5 @@ export function useWSDEditor({ content, editable = true }: { content?: object; e
 }
 
 export function getWSDEditorHTML({ content }: { content: JSONContent }) {
-  return generateHTML(content, [Document, Text, Paragraph, WSDMentionSSR])
+  return generateHTML(content, [...COMMON_WSD_EDITOR_EXTENSIONS, WSDMentionSSR])
 }

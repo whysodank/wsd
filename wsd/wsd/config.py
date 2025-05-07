@@ -81,6 +81,7 @@ CONFIG = config(
         "CELERY": {
             "BROKER_URL": string(),
         },
+        "ENABLE_NSFW_DETECTION": boolean(missing_default=False),
     },
     prefix="WSD",
 )

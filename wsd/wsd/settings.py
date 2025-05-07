@@ -333,6 +333,8 @@ CELERY_BROKER_URL = config.CELERY.BROKER_URL
 CELERY_RESULT_BACKEND = "django-db"
 CELERYD_POOL = "threads"
 
+ENABLE_NSFW_DETECTION = config.ENABLE_NSFW_DETECTION
+
 if not DEBUG:
     sentry_sdk.init(
         dsn=config.DEVTOOLS.SENTRY.DSN,
