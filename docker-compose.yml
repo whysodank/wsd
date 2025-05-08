@@ -81,7 +81,7 @@ services:
     networks:
       - internal
     healthcheck:
-      test: ["CMD", "pg_isready", "-U", "${WSD__DB__USER}"]
+      test: [ "CMD", "pg_isready", "-U", "${WSD__DB__USER}" ]
       interval: 10s
       timeout: 10s
       retries: 10
@@ -90,6 +90,8 @@ services:
   rabbitmq:
     image: rabbitmq:3
     env_file: .env
+    ports:
+      - "5672:5672"
     networks:
       - internal
     restart: unless-stopped
