@@ -14,7 +14,6 @@ services:
       database:
         condition: service_healthy
     restart: unless-stopped
-
   frontend:
     build:
       context: ./wsd-frontend
@@ -44,7 +43,6 @@ services:
       backend:
         condition: service_started
     restart: unless-stopped
-
   server:
     build:
       context: ./wsd-server
@@ -66,7 +64,6 @@ services:
           - "${WSD_SERVER_NETWORK_AUTH_SUBDOMAIN_ALIAS}"
           - "${WSD_SERVER_NETWORK_ADMIN_SUBDOMAIN_ALIAS}"
     restart: unless-stopped
-
   database:
     build:
       context: ./wsd-database
@@ -81,26 +78,44 @@ services:
     networks:
       - internal
     healthcheck:
-      test: [ "CMD", "pg_isready", "-U", "${WSD__DB__USER}" ]
+      test: ["CMD", "pg_isready", "-U", "${WSD__DB__USER}"]
       interval: 10s
       timeout: 10s
       retries: 10
-    restart: unless-stopped
 
+    
+        
+          
+    
+
+        
+        Expand All
+    
+    @@ -90,6 +90,8 @@ services:
+  
+    restart: unless-stopped
   rabbitmq:
     image: rabbitmq:3
     env_file: .env
-    ports:
-      - "5672:5672"
     networks:
       - internal
     restart: unless-stopped
+
+    
+          
+            
+    
+
+          
+          Expand Down
+    
+    
+  
     healthcheck:
       test: [ "CMD", "rabbitmqctl", "status" ]
       interval: 10s
       timeout: 10s
       retries: 10
-
   celery:
     image: wsd:latest
     command: celery -A wsd worker --pool=threads --concurrency=10  # threads option is important for tensorflow
@@ -118,7 +133,6 @@ services:
       - internal
       - external  # Needs to download static files and send errors to sentry
     restart: unless-stopped
-
   celery-beat:
     image: wsd:latest
     command: celery -A wsd beat
@@ -136,13 +150,11 @@ services:
       - internal
       - external  # Needs to download static files and send errors to sentry
     restart: unless-stopped
-
 volumes:
   postgres_data:
   user_uploads:
-
 networks:
   internal:
     internal: true
   external:
-    driver: bridge
+driver: bridge
