@@ -124,7 +124,17 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
                 <SelectContent>
                   <SelectGroup>
                     {categories.map((category) => (
-                      <SelectItem value={category.id} key={category.name}>
+                      <SelectItem
+                        value={category.id}
+                        key={category.name}
+                        ref={(ref) => {
+                          // Bugfix for mobile devices ( see #9 )
+                          if (!ref) return
+                          ref.ontouchstart = (e) => {
+                            e.preventDefault()
+                          }
+                        }}
+                      >
                         <div className="flex flex-row gap-2 items-center">
                           <RawSVGIcon svg={category.icon} />
                           {category.name}
