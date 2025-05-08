@@ -33,8 +33,6 @@ export function MemeComment({
   const [voteCount, setVoteCount] = useState((comment.positive_vote_count || 0) - (comment.negative_vote_count || 0))
   const postId = suppress<string, undefined>([InvalidHEXError], () => uuidV4toHEX(comment.post))
   const commentId = suppress<string, undefined>([InvalidHEXError], () => uuidV4toHEX(comment.id))
-  console.log(postId)
-  console.log(commentId)
 
   useEffect(() => {
     if (targeted && commentRef.current) {
