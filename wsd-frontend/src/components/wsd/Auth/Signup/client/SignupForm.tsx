@@ -59,6 +59,8 @@ export default function SignupForm() {
         router.push('/auth/signup-email-sent')
         toast('Signed up successfully. Please check your email for verification.')
       }
+    } catch {
+      toast('Signup failed.')
     } finally {
       setRegistrationDisabled(false)
     }
