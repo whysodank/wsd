@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
@@ -16,6 +16,39 @@ import { cn, shortFormattedDateTime } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
 import { toast } from 'sonner'
+
+export function MemeCommentList({
+  comments,
+  scrollToComments = false,
+}: {
+  comments: Includes<APIType<'PostComment'>, 'user', APIType<'User'>>[]
+  scrollToComments?: boolean
+}) {
+  const listRef = useRef<HTMLDivElement>(null)
+  useEffect(() => {
+    if (scrollToComments && listRef.current) {
+      // Wait for the page to load completely
+      const scrollToComment = () => {
+        listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
+      }
+
+      // Use requestIdleCallback for better performance, falling back to setTimeout
+      if (typeof window.requestIdleCallback !== 'undefined') {
+        window.requestIdleCallback(scrollToComment)
+      } else {
+        setTimeout(scrollToComment, 100)
+      }
+    }
+  }, [scrollToComments])
+
+  return (
+    <div className="flex flex-col justify-center items-start" ref={listRef}>
+      {comments.map((comment) => (
+        <MemeComment key={comment.id} comment={comment} />
+      ))}
+    </div>
+  )
+}
 
 export function MemeComment({ comment }: { comment: Includes<APIType<'PostComment'>, 'user', APIType<'User'>> }) {
   const wsd = useWSDAPI()
