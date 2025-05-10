@@ -209,4 +209,8 @@ export class WSDAPI {
   public async patchNotification(id: string, data: APIType<'PatchedNotificationUpdateRequest'>) {
     return await this.client.PATCH('/v0/notifications/{id}/', { params: { path: { id } }, body: data })
   }
+
+  public async markAllNotificationsAsRead() {
+    return await this.client.POST('/v0/notifications/mark_all_as_read/', {})
+  }
 }

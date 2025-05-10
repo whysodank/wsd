@@ -274,6 +274,49 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
+  /v0/notifications/mark_all_as_read/:
+    post:
+      operationId: notifications_mark_all_as_read_create
+      description: Marks all notifications for the current user as read
+      summary: Mark all notifications as read
+      tags:
+      - notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/NotificationRequest'
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+          description: ''
+        '401':
+          description: No response body
+        '403':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  detail:
+                    type: string
+          description: ''
   /v0/post-categories/:
     get:
       operationId: post_categories_list
@@ -1936,6 +1979,36 @@ components:
       oneOf:
       - $ref: '#/components/schemas/PostRequest'
       - $ref: '#/components/schemas/PostCommentRequest'
+    NotificationRequest:
+      type: object
+      description: |-
+        Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+        read only.
+
+        GET /api/v1/people/5/
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [7]
+        }
+
+        GET /api/v1/people/5/?include=labels
+        {
+            "id": 5,
+            "first_name": "John",
+            "last_name": "Doe",
+            "labels": [
+                {
+                    "id": 7,
+                    "name": "label-name"
+                }
+            ]
+        }
+      properties:
+        is_read:
+          type: boolean
+          description: Whether the notification has been read or not.
     NotificationUpdateRequest:
       type: object
       description: |-
