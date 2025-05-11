@@ -39,10 +39,10 @@ export function Notifications({ hasNew }: { hasNew?: boolean }) {
       ordering: '-created_at',
       include: 'post',
     })
-    setNotifications((prev) => {
-      const newNotifications = [...prev, ...(notificationsData?.results || [])]
-      return _.uniqBy(newNotifications, 'id')
-    })
+    const newNotifications = _.uniqBy([...notifications, ...(notificationsData?.results || [])], 'id')
+
+    setHasNewState(_.some(newNotifications, (notification) => !notification.is_read))
+    setNotifications(newNotifications)
     setHasMore(page !== notificationsData?.total_pages)
     setLoading(false)
   }
