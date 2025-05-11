@@ -1,4 +1,4 @@
-import { DependencyList, EffectCallback, useEffect, useRef, useState } from 'react'
+import { DependencyList, EffectCallback, useCallback, useEffect, useRef, useState } from 'react'
 
 export function useElementAttributes<T extends HTMLElement, K extends keyof T>(attributeKeys: K[]) {
   /**
@@ -16,24 +16,38 @@ export function useElementAttributes<T extends HTMLElement, K extends keyof T>(a
   const ref = useRef<T | null>(null)
   const [attributeValues, setAttributeValue] = useState<Partial<Pick<T, K>>>({})
 
-  useEffect(() => {
-    function updateAttribute() {
-      if (ref.current) {
-        const values = {} as Partial<Pick<T, K>>
-        for (const key of attributeKeys) {
-          values[key] = ref.current[key]
-        }
-        setAttributeValue(values)
+  const updateAttribute = useCallback(() => {
+    if (ref.current) {
+      const values = {} as Partial<Pick<T, K>>
+      for (const key of attributeKeys) {
+        values[key] = ref.current[key]
       }
-    }
 
+      setAttributeValue((prevValues) => {
+        const hasChanged = attributeKeys.some((key) => prevValues[key] !== values[key])
+        return hasChanged ? values : prevValues
+      })
+    }
+  }, [attributeKeys])
+
+  useEffect(() => {
     updateAttribute()
     window.addEventListener('resize', updateAttribute)
+
+    if (ref.current) {
+      const observer = new MutationObserver(updateAttribute)
+      observer.observe(ref.current, { attributes: true })
+
+      return () => {
+        window.removeEventListener('resize', updateAttribute)
+        observer.disconnect()
+      }
+    }
 
     return () => {
       window.removeEventListener('resize', updateAttribute)
     }
-  }, [attributeKeys])
+  }, [updateAttribute])
 
   return { ref, attributeValues }
 }
