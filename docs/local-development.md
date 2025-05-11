@@ -46,7 +46,7 @@ file.
 
 ## Run everything except backend
 
-- `docker compose -f docker-compose.frontend.yml up --build` This will build the images and start the containers
+- `docker compose -f docker-compose.backend.yml up --build` This will build the images and start the containers
 - (in the `wsd` folder)
 
 ```shell
