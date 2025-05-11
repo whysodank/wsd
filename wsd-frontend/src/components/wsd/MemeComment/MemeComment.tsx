@@ -26,20 +26,16 @@ export function MemeCommentList({
 }) {
   const listRef = useRef<HTMLDivElement>(null)
   useEffect(() => {
-    if (scrollToComments && listRef.current) {
-      // Wait for the page to load completely
-      const scrollToComment = () => {
-        listRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start', inline: 'nearest' })
-      }
-
-      // Use requestIdleCallback for better performance, falling back to setTimeout
-      if (typeof window.requestIdleCallback !== 'undefined') {
-        window.requestIdleCallback(scrollToComment)
-      } else {
-        setTimeout(scrollToComment, 100)
-      }
+    if (scrollToComments && listRef.current && comments.length > 0) {
+      requestAnimationFrame(() => {
+        if (!listRef.current) return
+        window.scrollTo({
+          top: listRef.current.offsetTop, // 16px additional padding
+          behavior: 'smooth',
+        })
+      })
     }
-  }, [scrollToComments])
+  }, [comments, scrollToComments])
 
   return (
     <div className="flex flex-col justify-center items-start" ref={listRef}>
