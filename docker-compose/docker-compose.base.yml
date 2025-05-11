@@ -1,0 +1,9 @@
+volumes:
+  postgres_data:
+  user_uploads:
+
+networks:
+  internal:
+    internal: true
+  external:
+    driver: bridge

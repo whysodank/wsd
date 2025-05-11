@@ -1,0 +1,20 @@
+services:
+  database:
+    build:
+      context: ../wsd-database
+      dockerfile: ../wsd-database/Dockerfile
+    env_file: ../.env
+    environment:
+      POSTGRES_DB: ${WSD__DB__NAME}
+      POSTGRES_USER: ${WSD__DB__USER}
+      POSTGRES_PASSWORD: ${WSD__DB__PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - internal
+    healthcheck:
+      test: ["CMD", "pg_isready", "-U", "${WSD__DB__USER}"]
+      interval: 10s
+      timeout: 10s
+      retries: 10
+    restart: unless-stopped

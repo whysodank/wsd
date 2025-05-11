@@ -39,10 +39,22 @@ file.
 
 ## Run everything except the frontend
 
-- `docker compose up -f docker-compose.frontend.dev.yml up --build` This will build the images and start the containers
+- `docker compose up -f docker-compose.frontend.yml up --build` This will build the images and start the containers
 - (in the `wsd-frontend` folder) `npm run dev` This will start the frontend in development mode (this is only needed if
   you want to run the frontend
   outside of docker)
+
+## Run everything except backend
+
+- `docker compose -f docker-compose.frontend.yml up --build` This will build the images and start the containers
+- (in the `wsd` folder)
+
+```shell
+python manage.py migrate
+python manage.py setup
+python manage.py collectstatic --noinput
+exec uwsgi --ini /wsd/uwsgi.ini
+```
 
 ## Caveats
 
