@@ -52,7 +52,7 @@ export interface paths {
     patch: operations['notifications_partial_update']
     trace?: never
   }
-  '/v0/notifications/mark_all_as_read/': {
+  '/v0/notifications/mark-all-as-read/': {
     parameters: {
       query?: never
       header?: never

@@ -63,36 +63,30 @@ export function Notifications({ hasNew }: { hasNew?: boolean }) {
   }
 
   async function markAllAsRead() {
-    return await wsd.markAllNotificationsAsRead()
-  }
-
-  function onMarkAllAsRead() {
-    markAllAsRead()
-      .then((data) => {
-        const { error } = data
-        if (error) {
-          const errors = error as { detail: string }
-          toast(errors.detail, {
-            description: 'There was an error marking notifications as read.',
-          })
-          return
-        }
-
-        setNotifications((prev) => {
-          return prev.map((notification) => ({
-            ...notification,
-            is_read: true,
-          }))
-        })
-        toast(data.data?.message || 'Notifications marked as read')
-        setHasNewState(false)
-      })
-      .catch((error) => {
-        console.error('Error marking notifications as read:', error)
-        toast('Error marking notifications as read', {
+    try {
+      const data = await wsd.markAllNotificationsAsRead()
+      const { error } = data
+      if (error) {
+        const errors = error as { detail: string }
+        toast(errors.detail, {
           description: 'There was an error marking notifications as read.',
         })
+        return
+      }
+      setNotifications((prev) => {
+        return prev.map((notification) => ({
+          ...notification,
+          is_read: true,
+        }))
       })
+      toast(data.data?.message || 'Notifications marked as read')
+      setHasNewState(false)
+    } catch (error) {
+      console.error('Error marking notifications as read:', error)
+      toast('Error marking notifications as read', {
+        description: 'There was an error marking notifications as read.',
+      })
+    }
   }
 
   return (
@@ -110,12 +104,7 @@ export function Notifications({ hasNew }: { hasNew?: boolean }) {
         <OverlayDescription className="hidden">Notifications</OverlayDescription>
         <ScrollArea className="max-h-[50vh] overflow-auto">
           {!loading && hasNewState && (
-            <Button
-              className="flex items-center gap-2 w-full"
-              variant={'outline'}
-              onClick={onMarkAllAsRead}
-              size={'sm'}
-            >
+            <Button className="flex items-center gap-2 w-full" variant="outline" onClick={markAllAsRead} size={'sm'}>
               <Icons.CheckCircle className="h-3 w-3" />
               Mark all as read
             </Button>

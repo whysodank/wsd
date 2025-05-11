@@ -274,7 +274,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/Forbidden'
           description: ''
-  /v0/notifications/mark_all_as_read/:
+  /v0/notifications/mark-all-as-read/:
     post:
       operationId: notifications_mark_all_as_read_create
       description: Marks all notifications for the current user as read

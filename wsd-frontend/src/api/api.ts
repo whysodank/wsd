@@ -211,6 +211,6 @@ export class WSDAPI {
   }
 
   public async markAllNotificationsAsRead() {
-    return await this.client.POST('/v0/notifications/mark_all_as_read/', {})
+    return await this.client.POST('/v0/notifications/mark-all-as-read/', {})
   }
 }

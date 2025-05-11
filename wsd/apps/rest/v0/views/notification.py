@@ -35,19 +35,18 @@ class NotificationViewSet(BaseModelViewSet):
             403: {"type": "object", "properties": {"detail": {"type": "string"}}},
         },
     )
-    @action(detail=False, methods=["post"])
+    @action(
+        detail=False,
+        methods=["post"],
+        url_path="mark-all-as-read",
+        permission_classes=[IsAuthenticatedANDSignupCompleted],
+    )
     def mark_all_as_read(self, request):
         """Mark all notifications as read for the current user."""
         user = request.user
-        if not user.is_authenticated:
-            return Response(
-                {"detail": "Authentication credentials were not provided."}, status=status.HTTP_401_UNAUTHORIZED
-            )
 
-        # Get all unread notifications for the user
         notifications = self.get_queryset().filter(is_read=False)
 
-        # Update all notifications to mark them as read
         count = notifications.update(is_read=True)
 
         return Response({"message": f"Successfully marked {count} notifications as read."}, status=status.HTTP_200_OK)
