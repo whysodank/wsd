@@ -1,1 +1,1 @@
-export { MemeComment as default, MemeCommentList } from './MemeComment'
+export { MemeComment as default } from './MemeComment'

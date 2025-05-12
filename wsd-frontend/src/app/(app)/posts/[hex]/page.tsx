@@ -6,23 +6,19 @@ import _ from 'lodash'
 
 import { Button, buttonVariants } from '@/components/shadcn/button'
 import { Overlay, OverlayClose, OverlayContent, OverlayTitle, OverlayTrigger } from '@/components/shadcn/overlay'
+import { ScrollToHashContainer } from '@/components/shadcn/scroll-to-hash-container'
 import { Separator } from '@/components/shadcn/separator'
 import AuthenticatedOnlyActionButton from '@/components/wsd/AuthenticatedOnlyActionButton'
 import Meme from '@/components/wsd/Meme'
-import { MemeCommentList } from '@/components/wsd/MemeComment'
+import MemeComment from '@/components/wsd/MemeComment'
 import NewComment from '@/components/wsd/NewComment'
 
 import { APIQuery, APIType, includesType } from '@/api'
-import { includesTypeArray } from '@/api/typeHelpers'
 import config from '@/config'
 import { getWSDMetadata } from '@/lib/metadata'
 import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
 import { getKeys } from '@/lib/typeHelpers'
 import { InvalidHEXError, cn, hexToUUIDv4, suppress } from '@/lib/utils'
-
-interface APIQueryPostComments extends APIQuery<'/v0/post-comments/'> {
-  scrollToComments?: boolean
-}
 
 export async function generateMetadata(props: { params: Promise<{ hex: string }> }): Promise<Metadata | undefined> {
   const params = await props.params
@@ -44,7 +40,7 @@ export async function generateMetadata(props: { params: Promise<{ hex: string }>
 
 export default async function PostPage(props: {
   params: Promise<{ hex: string }>
-  searchParams: Promise<APIQueryPostComments>
+  searchParams: Promise<APIQuery<'/v0/post-comments/'>>
 }) {
   const searchParams = await props.searchParams
   const params = await props.params
@@ -117,12 +113,14 @@ export default async function PostPage(props: {
               </div>
             )}
             {isAuthenticated && <NewComment post={post_} />}
-            {wsd.hasResults(comments) && (
-              <MemeCommentList
-                comments={includesTypeArray(comments.results, 'user', 'User')}
-                scrollToComments={searchParams.scrollToComments}
-              />
-            )}
+            <ScrollToHashContainer hash="comments">
+              <div className="flex flex-col justify-center items-start">
+                {wsd.hasResults(comments) &&
+                  comments.results.map((comment) => (
+                    <MemeComment comment={includesType(comment, 'user', 'User')} key={`meme-comment-${comment.id}`} />
+                  ))}
+              </div>
+            </ScrollToHashContainer>
           </div>
         </div>
       )
