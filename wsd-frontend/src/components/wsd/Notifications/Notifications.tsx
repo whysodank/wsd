@@ -103,7 +103,7 @@ export function Notifications({ hasNew }: { hasNew?: boolean }) {
         <OverlayTitle className="hidden">Notifications</OverlayTitle>
         <OverlayDescription className="hidden">Notifications</OverlayDescription>
         <ScrollArea className="max-h-[50vh] overflow-auto">
-          {!loading && hasNewState && (
+          {hasNewState && (
             <Button className="flex items-center gap-2 w-full" variant="outline" onClick={markAllAsRead} size={'sm'}>
               <Icons.CheckCircle className="h-3 w-3" />
               Mark all as read
