@@ -116,9 +116,7 @@ export default function FeedbackButtons({
       <Link
         href={{
           pathname: `/posts/${uuidV4toHEX(post.id)}`,
-          query: {
-            scrollToComments: true,
-          },
+          hash: 'comments',
         }}
         className={cn(
           buttonVariants({
