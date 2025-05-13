@@ -1060,12 +1060,20 @@ paths:
           type: string
           enum:
           - category
+          - category,comments
+          - comments
           - tags
           - tags,category
+          - tags,category,comments
+          - tags,comments
           - tags,user
           - tags,user,category
+          - tags,user,category,comments
+          - tags,user,comments
           - user
           - user,category
+          - user,category,comments
+          - user,comments
         explode: false
         style: form
       - in: query
@@ -1303,12 +1311,20 @@ paths:
           type: string
           enum:
           - category
+          - category,comments
+          - comments
           - tags
           - tags,category
+          - tags,category,comments
+          - tags,comments
           - tags,user
           - tags,user,category
+          - tags,user,category,comments
+          - tags,user,comments
           - user
           - user,category
+          - user,category,comments
+          - user,comments
         explode: false
         style: form
       tags:

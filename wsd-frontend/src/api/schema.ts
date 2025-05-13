@@ -2211,7 +2211,22 @@ export interface operations {
         created_at__gte?: string
         created_at__lt?: string
         created_at__lte?: string
-        include?: 'category' | 'tags' | 'tags,category' | 'tags,user' | 'tags,user,category' | 'user' | 'user,category'
+        include?:
+          | 'category'
+          | 'category,comments'
+          | 'comments'
+          | 'tags'
+          | 'tags,category'
+          | 'tags,category,comments'
+          | 'tags,comments'
+          | 'tags,user'
+          | 'tags,user,category'
+          | 'tags,user,category,comments'
+          | 'tags,user,comments'
+          | 'user'
+          | 'user,category'
+          | 'user,category,comments'
+          | 'user,comments'
         is_nsfw?: boolean
         is_original?: boolean
         is_repost?: boolean
@@ -2339,7 +2354,22 @@ export interface operations {
   posts_retrieve: {
     parameters: {
       query?: {
-        include?: 'category' | 'tags' | 'tags,category' | 'tags,user' | 'tags,user,category' | 'user' | 'user,category'
+        include?:
+          | 'category'
+          | 'category,comments'
+          | 'comments'
+          | 'tags'
+          | 'tags,category'
+          | 'tags,category,comments'
+          | 'tags,comments'
+          | 'tags,user'
+          | 'tags,user,category'
+          | 'tags,user,category,comments'
+          | 'tags,user,comments'
+          | 'user'
+          | 'user,category'
+          | 'user,category,comments'
+          | 'user,comments'
       }
       header?: never
       path: {
