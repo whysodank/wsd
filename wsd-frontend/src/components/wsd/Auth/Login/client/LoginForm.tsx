@@ -3,6 +3,8 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
+import { useState } from 'react'
+
 import _ from 'lodash'
 
 import { Button } from '@/components/shadcn/button'
@@ -18,6 +20,7 @@ import { toast } from 'sonner'
 export default function LoginForm() {
   const wsd = useWSDAPI()
   const router = useRouter()
+  const [loginDisabled, setLoginDisabled] = useState<boolean>(false)
 
   const {
     formState: loginState,
@@ -33,27 +36,34 @@ export default function LoginForm() {
   })
 
   async function handleLogin(event: React.FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    const usernameOREmail = loginState.usernameOREmail
-    const { error } = await wsd.auth.login({
-      username: usernameOREmail,
-      password: loginState.password,
-    })
-    if (error) {
-      const errors = (error as { errors: { message: string; code: string; param: string }[] }).errors
-      const fieldErrors = _.chain(errors)
-        .groupBy('param')
-        .mapValues((i) => i.map((i) => i.message))
-        .value()
-      setLoginErrors({
-        usernameOREmail: [...(fieldErrors?.username || []), ...(fieldErrors?.email || [])],
-        password: fieldErrors?.password,
+    try {
+      setLoginDisabled(true)
+      event.preventDefault()
+      const usernameOREmail = loginState.usernameOREmail
+      const { error } = await wsd.auth.login({
+        username: usernameOREmail,
+        password: loginState.password,
       })
+      if (error) {
+        const errors = (error as { errors: { message: string; code: string; param: string }[] }).errors
+        const fieldErrors = _.chain(errors)
+          .groupBy('param')
+          .mapValues((i) => i.map((i) => i.message))
+          .value()
+        setLoginErrors({
+          usernameOREmail: [...(fieldErrors?.username || []), ...(fieldErrors?.email || [])],
+          password: fieldErrors?.password,
+        })
+        toast('Login failed.')
+      } else {
+        router.push('/')
+        router.refresh()
+        toast('Logged in successfully.')
+      }
+    } catch {
       toast('Login failed.')
-    } else {
-      router.push('/')
-      router.refresh()
-      toast('Logged in successfully.')
+    } finally {
+      setLoginDisabled(false)
     }
   }
 
@@ -89,7 +99,7 @@ export default function LoginForm() {
             </Link>
           </div>
         </div>
-        <Button type="submit" className="w-full">
+        <Button type="submit" className="w-full" disabled={loginDisabled}>
           Login
         </Button>
       </div>

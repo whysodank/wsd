@@ -52,6 +52,26 @@ export interface paths {
     patch: operations['notifications_partial_update']
     trace?: never
   }
+  '/v0/notifications/mark-all-as-read/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Mark all notifications as read
+     * @description Marks all notifications for the current user as read
+     */
+    post: operations['notifications_mark_all_as_read_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/v0/post-categories/': {
     parameters: {
       query?: never
@@ -562,6 +582,33 @@ export interface components {
     NotificationObjectOfInterestRequest:
       | components['schemas']['PostRequest']
       | components['schemas']['PostCommentRequest']
+    /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
+     *     read only.
+     *
+     *     GET /api/v1/people/5/
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [7]
+     *     }
+     *
+     *     GET /api/v1/people/5/?include=labels
+     *     {
+     *         "id": 5,
+     *         "first_name": "John",
+     *         "last_name": "Doe",
+     *         "labels": [
+     *             {
+     *                 "id": 7,
+     *                 "name": "label-name"
+     *             }
+     *         ]
+     *     } */
+    NotificationRequest: {
+      /** @description Whether the notification has been read or not. */
+      is_read?: boolean
+    }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
      *
@@ -1545,6 +1592,50 @@ export interface operations {
         }
         content: {
           'application/json': components['schemas']['Forbidden']
+        }
+      }
+    }
+  }
+  notifications_mark_all_as_read_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: {
+      content: {
+        'application/json': components['schemas']['NotificationRequest']
+        'application/x-www-form-urlencoded': components['schemas']['NotificationRequest']
+        'multipart/form-data': components['schemas']['NotificationRequest']
+      }
+    }
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            message?: string
+          }
+        }
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': {
+            detail?: string
+          }
         }
       }
     }

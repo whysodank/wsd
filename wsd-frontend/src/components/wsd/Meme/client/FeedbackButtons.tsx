@@ -114,7 +114,10 @@ export default function FeedbackButtons({
         <Icons.ArrowBigDown size={24} className={cn(feedback === -1 && 'text-destructive fill-destructive')} />
       </AuthenticatedOnlyActionButton>
       <Link
-        href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}
+        href={{
+          pathname: `/posts/${uuidV4toHEX(post.id)}`,
+          hash: 'comments',
+        }}
         className={cn(
           buttonVariants({
             variant: 'default',

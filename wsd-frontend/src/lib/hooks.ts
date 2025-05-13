@@ -1,37 +1,55 @@
-import { DependencyList, EffectCallback, useEffect, useRef, useState } from 'react'
+import { DependencyList, EffectCallback, useCallback, useEffect, useRef, useState } from 'react'
 
-export function useElementAttribute<T extends HTMLElement, K extends keyof T>(attributeKey: K) {
+export function useElementAttributes<T extends HTMLElement, K extends keyof T>(attributeKeys: K[]) {
   /**
-   * Get the value of an attribute of an element for the given ref.
+   * Get the value of given attributes of an element for the given ref.
    */
   // Usage
   //
   // const {
   //   ref: targetElementRef,
-  //   attributeValue: requestedAttributeValue,
-  // } = useElementAttribute<SomeJSXElementThatTakesARef, keyof SomeJSXElementThatTakesARef>('requestedAttributeValue')
+  //   attributeValues: { requestedAttributeValue },
+  // } = useElementAttributes<SomeJSXElementThatTakesARef, keyof SomeJSXElementThatTakesARef>('requestedAttributeValue')
   //
   // requestedAttributeValue should be a key of SomeJSXElementThatTakesARef in this case
   //
   const ref = useRef<T | null>(null)
-  const [attributeValue, setAttributeValue] = useState<T[K] | null>(null)
+  const [attributeValues, setAttributeValue] = useState<Partial<Pick<T, K>>>({})
+
+  const updateAttribute = useCallback(() => {
+    if (ref.current) {
+      const values = {} as Partial<Pick<T, K>>
+      for (const key of attributeKeys) {
+        values[key] = ref.current[key]
+      }
+
+      setAttributeValue((prevValues) => {
+        const hasChanged = attributeKeys.some((key) => prevValues[key] !== values[key])
+        return hasChanged ? values : prevValues
+      })
+    }
+  }, [attributeKeys])
 
   useEffect(() => {
-    function updateAttribute() {
-      if (ref.current) {
-        setAttributeValue(ref.current[attributeKey])
-      }
-    }
-
     updateAttribute()
     window.addEventListener('resize', updateAttribute)
+
+    if (ref.current) {
+      const observer = new MutationObserver(updateAttribute)
+      observer.observe(ref.current, { attributes: true })
+
+      return () => {
+        window.removeEventListener('resize', updateAttribute)
+        observer.disconnect()
+      }
+    }
 
     return () => {
       window.removeEventListener('resize', updateAttribute)
     }
-  }, [attributeKey])
+  }, [updateAttribute])
 
-  return { ref, attributeValue }
+  return { ref, attributeValues }
 }
 
 export function useFormState<T>(initialState: T) {

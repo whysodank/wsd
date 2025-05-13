@@ -26,3 +26,24 @@ export function includesType<
   // entry = includesType(entry, 'tags', 'Tag', true) makes entry.tags Tag[]
   return obj as unknown as Includes<T, K, IsArray extends true ? APIType<S>[] : APIType<S>>
 }
+
+export function includesTypeArray<
+  T extends object,
+  K extends keyof T,
+  S extends keyof components['schemas'],
+  IsArray extends boolean = false,
+>(obj: T[], _key: K, _type: S, _isArray?: IsArray): Includes<T, K, IsArray extends true ? APIType<S>[] : APIType<S>>[] {
+  /**
+   * This function is a type assertion function that allows you to assert
+   * that a property of an object is of a certain type.
+   */
+
+  // Usage example:
+  // entry = fetch_entry({include: author}) # The entry object has author because of the include
+  // But because openapi schema doesn't support dynamically changing the return types depending on path params
+  // TS thinks it is a string uuid
+  // we can do
+  // entry = includesType(entry, 'author', 'Author') which automagically changes the type of entry.author to Author
+  // entry = includesType(entry, 'tags', 'Tag', true) makes entry.tags Tag[]
+  return obj as unknown[] as Includes<T, K, IsArray extends true ? APIType<S>[] : APIType<S>>[]
+}
