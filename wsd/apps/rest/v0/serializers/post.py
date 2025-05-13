@@ -66,4 +66,5 @@ class PostSerializer(BaseModelSerializer):
             "tags": s("PostTagSerializer")(many=True),
             "user": s("PublicUserSerializer")(),
             "category": s("PostCategorySerializer")(),
+            "comments": s("PostCommentSerializer")(many=True),
         }
