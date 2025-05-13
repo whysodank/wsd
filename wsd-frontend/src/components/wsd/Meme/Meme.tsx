@@ -13,7 +13,7 @@ import { FeedbackButtons } from '@/components/wsd/Meme/client'
 import UserAvatar from '@/components/wsd/UserAvatar'
 
 import { APIType, Includes } from '@/api'
-import { useElementAttribute } from '@/lib/hooks'
+import { useElementAttributes } from '@/lib/hooks'
 import { cn, preventDefault, shortFormattedDateTime, uuidV4toHEX } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
@@ -33,12 +33,16 @@ export function Meme({
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isBlurred, setIsBlurred] = useState(true)
-  const { ref: imageRef, attributeValue: naturalHeight } = useElementAttribute<HTMLImageElement, 'naturalHeight'>(
-    'naturalHeight'
-  )
+  const { ref: imageRef, attributeValues: meme } = useElementAttributes<
+    HTMLImageElement,
+    'naturalHeight' | 'offsetWidth' | 'naturalWidth'
+  >(['naturalHeight', 'offsetWidth', 'naturalWidth'])
 
-  const showExpandButton = !fullScreen && naturalHeight !== null && naturalHeight > 900 && !isExpanded
-  const showShrinkButton = !fullScreen && naturalHeight !== null && naturalHeight > 900 && isExpanded
+  const scale = meme.offsetWidth && meme.naturalWidth ? meme.offsetWidth / meme.naturalWidth : 1
+  const scaledHeight = meme.naturalHeight ? meme.naturalHeight * scale : null
+
+  const showExpandButton = !fullScreen && scaledHeight !== null && scaledHeight > 900 && !isExpanded
+  const showShrinkButton = !fullScreen && scaledHeight !== null && scaledHeight > 900 && isExpanded
 
   const shouldApplyBlur = post.is_nsfw && isAuthenticated && isBlurred
 

@@ -60,6 +60,8 @@ export default function LoginForm() {
         router.refresh()
         toast('Logged in successfully.')
       }
+    } catch {
+      toast('Login failed.')
     } finally {
       setLoginDisabled(false)
     }

@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 
-import { useMemo, useState } from 'react'
+import { useEffect,useMemo, useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
@@ -21,6 +21,12 @@ export function Notification({ notification }: { notification: APIType<'Notifica
   const router = useRouter()
 
   const [isRead, setIsRead] = useState(notification.is_read)
+
+  useEffect(() => {
+    if (notification.is_read) {
+      setIsRead(notification.is_read)
+    }
+  }, [notification.is_read])
 
   const icons = {
     LIKE: Icons.Heart,

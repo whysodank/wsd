@@ -6,6 +6,7 @@ import _ from 'lodash'
 
 import { Button, buttonVariants } from '@/components/shadcn/button'
 import { Overlay, OverlayClose, OverlayContent, OverlayTitle, OverlayTrigger } from '@/components/shadcn/overlay'
+import { ScrollToHashContainer } from '@/components/shadcn/scroll-to-hash-container'
 import { Separator } from '@/components/shadcn/separator'
 import AuthenticatedOnlyActionButton from '@/components/wsd/AuthenticatedOnlyActionButton'
 import Meme from '@/components/wsd/Meme'
@@ -112,12 +113,14 @@ export default async function PostPage(props: {
               </div>
             )}
             {isAuthenticated && <NewComment post={post_} />}
-            <div className="flex flex-col justify-center items-start">
-              {wsd.hasResults(comments) &&
-                comments.results.map((comment) => (
-                  <MemeComment comment={includesType(comment, 'user', 'User')} key={`meme-comment-${comment.id}`} />
-                ))}
-            </div>
+            <ScrollToHashContainer hash="comments">
+              <div className="flex flex-col justify-center items-start">
+                {wsd.hasResults(comments) &&
+                  comments.results.map((comment) => (
+                    <MemeComment comment={includesType(comment, 'user', 'User')} key={`meme-comment-${comment.id}`} />
+                  ))}
+              </div>
+            </ScrollToHashContainer>
           </div>
         </div>
       )
