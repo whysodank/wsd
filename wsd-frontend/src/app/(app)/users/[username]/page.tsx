@@ -18,13 +18,13 @@ export default async function User(props: {
 
   if (wsd.hasResults(users)) {
     const isAuthenticated = await wsd.isAuthenticated()
-    const user = isAuthenticated ? await wsd.getCurrentUser() : null
+    const currentUser = await wsd.getCurrentUser()
+    const cardStyle = currentUser?.card_style || 'NORMAL'
     const postQuery = {
       ...searchParams,
       user__username: username,
       page_size: config.ux.defaultPostPerPage,
-      include:
-        user?.card_style === 'RELAXED' ? ('tags,user,category,comments' as const) : ('tags,user,category' as const),
+      include: cardStyle === 'RELAXED' ? ('tags,user,category,comments' as const) : ('tags,user,category' as const),
       ordering: searchParams?.ordering || ('-created_at' as const),
     }
     const { data } = await wsd.posts(postQuery)
@@ -36,7 +36,7 @@ export default async function User(props: {
           initialPosts={data?.results || []}
           hasMorePages={Boolean(data?.total_pages && data.total_pages > 1)}
           isAuthenticated={isAuthenticated}
-          cardStyle={user?.card_style}
+          cardStyle={cardStyle}
         />
       </>
     )

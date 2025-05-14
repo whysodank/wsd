@@ -844,12 +844,15 @@ export interface components {
       avatar?: string | null
       first_name?: string
       last_name?: string
-      /** @description User's card style.
+      /**
+       * @description User's card style.
        *
        *     * `RELAXED` - Relaxed
        *     * `NORMAL` - Normal
-       *     * `COMPACT` - Compact */
-      card_style?: components['schemas']['CardStyleEnum']
+       *     * `COMPACT` - Compact
+       * @default NORMAL
+       */
+      card_style: components['schemas']['CardStyleEnum']
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -920,6 +923,7 @@ export interface components {
       readonly positive_vote_count: number | null
       readonly negative_vote_count: number | null
       readonly comment_count: number | null
+      readonly comments: string[]
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -1103,6 +1107,7 @@ export interface components {
       readonly positive_vote_count: string[]
       readonly negative_vote_count: string[]
       readonly comment_count: string[]
+      readonly comments: string[]
       readonly non_field_errors: string[]
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
@@ -1310,12 +1315,15 @@ export interface components {
       /** Format: date-time */
       readonly updated_at: string
       readonly signup_completed: string
-      /** @description User's card style.
+      /**
+       * @description User's card style.
        *
        *     * `RELAXED` - Relaxed
        *     * `NORMAL` - Normal
-       *     * `COMPACT` - Compact */
-      card_style?: components['schemas']['CardStyleEnum']
+       *     * `COMPACT` - Compact
+       * @default NORMAL
+       */
+      card_style: components['schemas']['CardStyleEnum']
     }
     UserCompleteSignupError: {
       readonly username: string[]
@@ -1399,12 +1407,15 @@ export interface components {
       avatar?: string | null
       first_name?: string
       last_name?: string
-      /** @description User's card style.
+      /**
+       * @description User's card style.
        *
        *     * `RELAXED` - Relaxed
        *     * `NORMAL` - Normal
-       *     * `COMPACT` - Compact */
-      card_style?: components['schemas']['CardStyleEnum']
+       *     * `COMPACT` - Compact
+       * @default NORMAL
+       */
+      card_style: components['schemas']['CardStyleEnum']
     }
     /**
      * @description * `1` - Upvote

@@ -2320,6 +2320,7 @@ components:
         card_style:
           allOf:
           - $ref: '#/components/schemas/CardStyleEnum'
+          default: NORMAL
           description: |-
             User's card style.
 
@@ -2432,9 +2433,16 @@ components:
           type: integer
           readOnly: true
           nullable: true
+        comments:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
       required:
       - bookmarked
       - comment_count
+      - comments
       - created_at
       - id
       - image
@@ -2823,6 +2831,11 @@ components:
           items:
             type: string
           readOnly: true
+        comments:
+          type: array
+          items:
+            type: string
+          readOnly: true
         non_field_errors:
           type: array
           items:
@@ -2832,6 +2845,7 @@ components:
       - bookmarked
       - category
       - comment_count
+      - comments
       - created_at
       - id
       - image
@@ -3150,6 +3164,7 @@ components:
         card_style:
           allOf:
           - $ref: '#/components/schemas/CardStyleEnum'
+          default: NORMAL
           description: |-
             User's card style.
 
@@ -3373,6 +3388,7 @@ components:
         card_style:
           allOf:
           - $ref: '#/components/schemas/CardStyleEnum'
+          default: NORMAL
           description: |-
             User's card style.
 
