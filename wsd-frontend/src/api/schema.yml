@@ -1827,6 +1827,16 @@ paths:
           description: ''
 components:
   schemas:
+    CardStyleEnum:
+      enum:
+      - RELAXED
+      - NORMAL
+      - COMPACT
+      type: string
+      description: |-
+        * `RELAXED` - Relaxed
+        * `NORMAL` - Normal
+        * `COMPACT` - Compact
     EventEnum:
       enum:
       - LIKE
@@ -2307,6 +2317,15 @@ components:
         last_name:
           type: string
           maxLength: 150
+        card_style:
+          allOf:
+          - $ref: '#/components/schemas/CardStyleEnum'
+          description: |-
+            User's card style.
+
+            * `RELAXED` - Relaxed
+            * `NORMAL` - Normal
+            * `COMPACT` - Compact
     Post:
       type: object
       description: |-
@@ -3128,6 +3147,15 @@ components:
         signup_completed:
           type: string
           readOnly: true
+        card_style:
+          allOf:
+          - $ref: '#/components/schemas/CardStyleEnum'
+          description: |-
+            User's card style.
+
+            * `RELAXED` - Relaxed
+            * `NORMAL` - Normal
+            * `COMPACT` - Compact
       required:
       - created_at
       - date_joined
@@ -3277,6 +3305,11 @@ components:
           items:
             type: string
           readOnly: true
+        card_style:
+          type: array
+          items:
+            type: string
+          readOnly: true
         non_field_errors:
           type: array
           items:
@@ -3284,6 +3317,7 @@ components:
           readOnly: true
       required:
       - avatar
+      - card_style
       - created_at
       - date_joined
       - email
@@ -3336,6 +3370,15 @@ components:
         last_name:
           type: string
           maxLength: 150
+        card_style:
+          allOf:
+          - $ref: '#/components/schemas/CardStyleEnum'
+          description: |-
+            User's card style.
+
+            * `RELAXED` - Relaxed
+            * `NORMAL` - Normal
+            * `COMPACT` - Compact
     VoteEnum:
       enum:
       - 1

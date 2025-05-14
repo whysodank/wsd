@@ -26,17 +26,21 @@ export function Memes({
   initialPosts,
   hasMorePages,
   isAuthenticated = false,
+  cardStyle = 'NORMAL',
 }: {
   query?: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>
   initialPosts?: APIType<'Post'>[]
   hasMorePages?: boolean
   isAuthenticated?: boolean
+  cardStyle?: APIType<'CardStyleEnum'>
 }) {
   const wsd = useWSDAPI()
   const searchParams = useSearchParams()
 
   const defaultQuery = { page_size: config.ux.defaultPostPerPage }
-  const alwaysQuery = { include: 'tags,user,category' }
+  const alwaysQuery = {
+    include: cardStyle === 'RELAXED' ? 'tags,user,category,comments' : 'tags,user,category',
+  } as const
 
   const [posts, setPosts] = useState<APIType<'Post'>[]>(initialPosts || [])
   const [page, setPage] = useState(initialPosts && hasMorePages ? 2 : 1)

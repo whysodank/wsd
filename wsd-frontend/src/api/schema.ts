@@ -509,6 +509,13 @@ export type webhooks = Record<string, never>
 export interface components {
   schemas: {
     /**
+     * @description * `RELAXED` - Relaxed
+     *     * `NORMAL` - Normal
+     *     * `COMPACT` - Compact
+     * @enum {string}
+     */
+    CardStyleEnum: 'RELAXED' | 'NORMAL' | 'COMPACT'
+    /**
      * @description * `LIKE` - Like
      *     * `COMMENT` - Comment
      *     * `COMMENT_MENTION` - Comment Mention
@@ -837,6 +844,12 @@ export interface components {
       avatar?: string | null
       first_name?: string
       last_name?: string
+      /** @description User's card style.
+       *
+       *     * `RELAXED` - Relaxed
+       *     * `NORMAL` - Normal
+       *     * `COMPACT` - Compact */
+      card_style?: components['schemas']['CardStyleEnum']
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -1297,6 +1310,12 @@ export interface components {
       /** Format: date-time */
       readonly updated_at: string
       readonly signup_completed: string
+      /** @description User's card style.
+       *
+       *     * `RELAXED` - Relaxed
+       *     * `NORMAL` - Normal
+       *     * `COMPACT` - Compact */
+      card_style?: components['schemas']['CardStyleEnum']
     }
     UserCompleteSignupError: {
       readonly username: string[]
@@ -1346,6 +1365,7 @@ export interface components {
       readonly created_at: string[]
       readonly updated_at: string[]
       readonly signup_completed: string[]
+      readonly card_style: string[]
       readonly non_field_errors: string[]
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
@@ -1379,6 +1399,12 @@ export interface components {
       avatar?: string | null
       first_name?: string
       last_name?: string
+      /** @description User's card style.
+       *
+       *     * `RELAXED` - Relaxed
+       *     * `NORMAL` - Normal
+       *     * `COMPACT` - Compact */
+      card_style?: components['schemas']['CardStyleEnum']
     }
     /**
      * @description * `1` - Upvote
