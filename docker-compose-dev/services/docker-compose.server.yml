@@ -1,7 +1,7 @@
 services:
   server:
     build:
-      context: ../wsd-server
+      context: ../../wsd-server
       dockerfile: ../wsd-server/Dockerfile
     env_file: ../../.env
     ports:

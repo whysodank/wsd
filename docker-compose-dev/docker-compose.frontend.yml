@@ -7,9 +7,12 @@ services:
     extends:
       file: services/docker-compose.server.yml
       service: server
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     depends_on:
-      frontend:
+      backend:
         condition: service_started
     environment:
-        WSD__HOSTS__FRONTEND_DOMAIN: "frontend"
-        WSD__HOSTS__BACKEND_DOMAIN: "host.docker.internal"
+      WSD__HOSTS__FRONTEND_DOMAIN: "host.docker.internal"
+      WSD__HOSTS__BACKEND_DOMAIN: "backend"

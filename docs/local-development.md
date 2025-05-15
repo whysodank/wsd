@@ -39,17 +39,15 @@ file.
 
 ## Run everything except the frontend
 
-- `docker compose -f docker-compose-dev/docker-compose.frontend.yml up --build` This will build the images and start
-  the containers
+- `docker compose --env-file .env -f docker-compose-dev/docker-compose.backend.yml up --build` This will build the
+  images and start the containers
 - (in the `wsd-frontend` folder) `npm run dev` This will start the frontend in development mode (this is only needed if
-  you want to run the frontend
-  outside of docker)
+  you want to run the frontend outside of docker)
 
 ## Run everything except backend
 
-- `docker compose -f docker-compose-dev/docker-compose.backend.yml up --build` This will build the images and start the
-  containers
-- (in the `wsd` folder)
+- `docker compose --env-file .env -f docker-compose-dev/docker-compose.frontend.yml up --build` This will build the
+  images and start the containers
 
 ```shell
 python manage.py migrate
