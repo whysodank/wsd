@@ -2,7 +2,6 @@ services:
   database:
     build:
       context: ../../wsd-database
-      dockerfile: ../../wsd-database/Dockerfile
     env_file: ../../.env
     environment:
       POSTGRES_DB: ${WSD__DB__NAME}

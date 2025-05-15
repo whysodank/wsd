@@ -39,7 +39,7 @@ file.
 
 ## Run everything except the frontend
 
-- `docker compose up -f docker-compose-dev/docker-compose.frontend.yml up --build` This will build the images and start
+- `docker compose -f docker-compose-dev/docker-compose.frontend.yml up --build` This will build the images and start
   the containers
 - (in the `wsd-frontend` folder) `npm run dev` This will start the frontend in development mode (this is only needed if
   you want to run the frontend

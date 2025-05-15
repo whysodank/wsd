@@ -1,8 +1,8 @@
 services:
   frontend:
     build:
-      context: ../../wsd-frontend
-      dockerfile: ../../wsd-frontend/Dockerfile
+      context: ../wsd-frontend
+      dockerfile: ../wsd-frontend/Dockerfile
       args:
         SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN}
         NEXT_PUBLIC_WSD__DEBUG: ${NEXT_PUBLIC_WSD__DEBUG}

@@ -3,7 +3,6 @@ services:
     image: wsd:latest
     build:
       context: ../../wsd
-      dockerfile: ../../wsd/Dockerfile
     env_file: ../../.env
     networks:
       - internal
