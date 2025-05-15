@@ -13,4 +13,4 @@ services:
         condition: service_started
     environment:
       WSD__HOSTS__FRONTEND_DOMAIN: "host.docker.internal"
-      WSD__HOSTS__BACKEND_DOMAIN: "frontend"
+      WSD__HOSTS__BACKEND_DOMAIN: "backend"
