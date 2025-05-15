@@ -1,12 +1,12 @@
 include:
-  - docker-compose/docker-compose.base.yml
-  - docker-compose/docker-compose.backend.yml
-  - docker-compose/docker-compose.database.yml
+  - docker-compose-dev/services/docker-compose.base.yml
+  - docker-compose-dev/services/docker-compose.backend.yml
+  - docker-compose-dev/services/docker-compose.database.yml
 
 services:
   server:
     extends:
-      file: docker-compose/docker-compose.server.yml
+      file: docker-compose-dev/services/docker-compose.server.yml
       service: server
     depends_on:
       backend:

@@ -1,8 +1,8 @@
 services:
   frontend:
     build:
-      context: ../wsd-frontend
-      dockerfile: ../wsd-frontend/Dockerfile
+      context: ../../wsd-frontend
+      dockerfile: ../../wsd-frontend/Dockerfile
       args:
         SENTRY_AUTH_TOKEN: ${SENTRY_AUTH_TOKEN}
         NEXT_PUBLIC_WSD__DEBUG: ${NEXT_PUBLIC_WSD__DEBUG}
@@ -20,7 +20,7 @@ services:
         NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__GOOGLE_ANALYTICS__GA_ID: ${NEXT_PUBLIC_WSD__FRONT_END__DEVTOOLS__GOOGLE_ANALYTICS__GA_ID}
         NEXT_PUBLIC_WSD__VERIFICATION__MICROSOFT__ASSOCIATED_APPLICATION_ID: ${NEXT_PUBLIC_WSD__VERIFICATION__MICROSOFT__ASSOCIATED_APPLICATION_ID}
         NEXT_PUBLIC_WSD__GITHUB_LINK: ${NEXT_PUBLIC_WSD__GITHUB_LINK}
-    env_file: ../.env
+    env_file: ../../.env
     networks:
       - internal
       - external

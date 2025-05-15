@@ -2,9 +2,9 @@ services:
   backend:
     image: wsd:latest
     build:
-      context: ../wsd
-      dockerfile: ../wsd/Dockerfile
-    env_file: ../.env
+      context: ../../wsd
+      dockerfile: ../../wsd/Dockerfile
+    env_file: ../../.env
     networks:
       - internal
       - external
@@ -17,7 +17,7 @@ services:
   celery:
     image: wsd:latest
     command: celery -A wsd worker --pool=threads --concurrency=10  # threads option is important for tensorflow
-    env_file: ../.env
+    env_file: ../../.env
     volumes:
       - user_uploads:/wsd/mediafiles
     depends_on:
@@ -35,7 +35,7 @@ services:
   celery-beat:
     image: wsd:latest
     command: celery -A wsd beat
-    env_file: ../.env
+    env_file: ../../.env
     volumes:
       - user_uploads:/wsd/mediafiles
     depends_on:
@@ -51,7 +51,7 @@ services:
     restart: unless-stopped
   rabbitmq:
     image: rabbitmq:3
-    env_file: ../.env
+    env_file: ../../.env
     networks:
       - internal
     restart: unless-stopped

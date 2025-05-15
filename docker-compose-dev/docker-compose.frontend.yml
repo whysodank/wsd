@@ -1,11 +1,11 @@
 include:
-  - docker-compose/docker-compose.base.yml
-  - docker-compose/docker-compose.frontend.yml
+  - docker-compose-dev/services/docker-compose.base.yml
+  - docker-compose-dev/services/docker-compose.frontend.yml
 
 services:
   server:
     extends:
-      file: docker-compose/docker-compose.server.yml
+      file: docker-compose-dev/services/docker-compose.server.yml
       service: server
     depends_on:
       frontend:
