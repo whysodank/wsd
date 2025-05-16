@@ -1,1 +1,1 @@
-export { default as MemePage, generatePostAndCommentMetadata } from './MemePost'
+export { default as MemePage } from './MemePost'

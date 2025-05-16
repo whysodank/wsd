@@ -1,10 +1,31 @@
 import { type Metadata } from 'next'
 import { notFound } from 'next/navigation'
 
-import MemePost, { generatePostAndCommentMetadata } from '@/components/wsd/MemePost/MemePost'
+import _ from 'lodash'
 
-export async function generateMetadata(props: { params: Promise<{ hex: string }> }): Promise<Metadata> {
-  return (await generatePostAndCommentMetadata(props)) ?? notFound()
+import MemePost from '@/components/wsd/MemePost/MemePost'
+
+import config from '@/config'
+import { getWSDMetadata } from '@/lib/metadata'
+import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { InvalidHEXError, hexToUUIDv4, suppress } from '@/lib/utils'
+
+export async function generateMetadata(props: { params: Promise<{ hex: string }> }): Promise<Metadata | undefined> {
+  const params = await props.params
+  const wsd = sUseWSDAPI()
+  const postId = suppress<string, undefined>([InvalidHEXError], () => hexToUUIDv4(params.hex))
+
+  if (!_.isUndefined(postId)) {
+    const { data: post } = await wsd.post(postId, { include: 'tags' })
+    if (!_.isUndefined(post)) {
+      return await getWSDMetadata({
+        title: post.title,
+        description: post.title,
+        image: post.is_nsfw ? config.nsfw_image : post.image,
+      })
+    }
+  }
+  return notFound()
 }
 
 export default async function PostPage(props: { params: Promise<{ hex: string }>; searchParams: Promise<any> }) {
