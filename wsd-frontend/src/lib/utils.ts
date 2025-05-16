@@ -212,8 +212,8 @@ export class InvalidHEXError extends Error {
   }
 }
 
-export function hexToUUIDv4(hex: string): string {
-  if (!/^[0-9a-fA-F]{32}$/.test(hex)) {
+export function hexToUUIDv4(hex: string | undefined): string {
+  if (hex === undefined || !/^[0-9a-fA-F]{32}$/.test(hex)) {
     throw new InvalidHEXError('Invalid hex string. Must be 32 hexadecimal characters.')
   }
   return stringify(Buffer.from(hex, 'hex'))
