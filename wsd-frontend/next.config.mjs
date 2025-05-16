@@ -1,34 +1,32 @@
-import { withSentryConfig } from '@sentry/nextjs'
+import {withSentryConfig} from '@sentry/nextjs';
+import {createRequire} from "module";
 
-import { createRequire } from 'module'
-
-const require = createRequire(import.meta.url)
+const require = createRequire(import.meta.url);
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   experimental: {
     // For forbidden interrupts
     authInterrupts: true,
-    optimizePackageImports: ['lodash'],
+    optimizePackageImports: ["lodash"]
   },
-  allowedDevOrigins: ['localhost:3000', 'local-whysodank.com'],
   turbopack: {
     rules: {
       '*.svg': {
         loaders: ['@svgr/webpack'],
-        as: '*.js',
+        as: "*.js"
       },
-    },
+    }
   },
   webpack(config) {
     config.module.rules.push({
       test: /\.svg$/i,
       use: ['@svgr/webpack'],
-    })
+    });
 
     return config
-  },
-}
+  }
+};
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
   enabled: process.env.ANALYZE === 'true',
@@ -38,8 +36,8 @@ export default withSentryConfig(withBundleAnalyzer(nextConfig), {
   // For all available options, see:
   // https://github.com/getsentry/sentry-webpack-plugin#options
 
-  org: 'why-so-dank',
-  project: 'wsd-front-end',
+  org: "why-so-dank",
+  project: "wsd-front-end",
 
   // Only print logs for uploading source maps in CI
   silent: !process.env.CI,
@@ -59,7 +57,7 @@ export default withSentryConfig(withBundleAnalyzer(nextConfig), {
   // This can increase your server load as well as your hosting bill.
   // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
   // side errors will fail.
-  tunnelRoute: '/monitoring',
+  tunnelRoute: "/monitoring",
 
   // Hides source maps from generated client bundles
   hideSourceMaps: true,
@@ -72,4 +70,4 @@ export default withSentryConfig(withBundleAnalyzer(nextConfig), {
   // https://docs.sentry.io/product/crons/
   // https://vercel.com/docs/cron-jobs
   automaticVercelMonitors: true,
-})
+});
