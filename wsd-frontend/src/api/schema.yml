@@ -1060,12 +1060,20 @@ paths:
           type: string
           enum:
           - category
+          - category,comments
+          - comments
           - tags
           - tags,category
+          - tags,category,comments
+          - tags,comments
           - tags,user
           - tags,user,category
+          - tags,user,category,comments
+          - tags,user,comments
           - user
           - user,category
+          - user,category,comments
+          - user,comments
         explode: false
         style: form
       - in: query
@@ -1303,12 +1311,20 @@ paths:
           type: string
           enum:
           - category
+          - category,comments
+          - comments
           - tags
           - tags,category
+          - tags,category,comments
+          - tags,comments
           - tags,user
           - tags,user,category
+          - tags,user,category,comments
+          - tags,user,comments
           - user
           - user,category
+          - user,category,comments
+          - user,comments
         explode: false
         style: form
       tags:
@@ -1811,6 +1827,16 @@ paths:
           description: ''
 components:
   schemas:
+    CardStyleEnum:
+      enum:
+      - RELAXED
+      - NORMAL
+      - COMPACT
+      type: string
+      description: |-
+        * `RELAXED` - Relaxed
+        * `NORMAL` - Normal
+        * `COMPACT` - Compact
     EventEnum:
       enum:
       - LIKE
@@ -2291,6 +2317,16 @@ components:
         last_name:
           type: string
           maxLength: 150
+        card_style:
+          allOf:
+          - $ref: '#/components/schemas/CardStyleEnum'
+          default: NORMAL
+          description: |-
+            User's card style.
+
+            * `RELAXED` - Relaxed
+            * `NORMAL` - Normal
+            * `COMPACT` - Compact
     Post:
       type: object
       description: |-
@@ -2397,9 +2433,16 @@ components:
           type: integer
           readOnly: true
           nullable: true
+        comments:
+          type: array
+          items:
+            type: string
+            format: uuid
+          readOnly: true
       required:
       - bookmarked
       - comment_count
+      - comments
       - created_at
       - id
       - image
@@ -2788,6 +2831,11 @@ components:
           items:
             type: string
           readOnly: true
+        comments:
+          type: array
+          items:
+            type: string
+          readOnly: true
         non_field_errors:
           type: array
           items:
@@ -2797,6 +2845,7 @@ components:
       - bookmarked
       - category
       - comment_count
+      - comments
       - created_at
       - id
       - image
@@ -3112,6 +3161,16 @@ components:
         signup_completed:
           type: string
           readOnly: true
+        card_style:
+          allOf:
+          - $ref: '#/components/schemas/CardStyleEnum'
+          default: NORMAL
+          description: |-
+            User's card style.
+
+            * `RELAXED` - Relaxed
+            * `NORMAL` - Normal
+            * `COMPACT` - Compact
       required:
       - created_at
       - date_joined
@@ -3261,6 +3320,11 @@ components:
           items:
             type: string
           readOnly: true
+        card_style:
+          type: array
+          items:
+            type: string
+          readOnly: true
         non_field_errors:
           type: array
           items:
@@ -3268,6 +3332,7 @@ components:
           readOnly: true
       required:
       - avatar
+      - card_style
       - created_at
       - date_joined
       - email
@@ -3320,6 +3385,16 @@ components:
         last_name:
           type: string
           maxLength: 150
+        card_style:
+          allOf:
+          - $ref: '#/components/schemas/CardStyleEnum'
+          default: NORMAL
+          description: |-
+            User's card style.
+
+            * `RELAXED` - Relaxed
+            * `NORMAL` - Normal
+            * `COMPACT` - Compact
     VoteEnum:
       enum:
       - 1

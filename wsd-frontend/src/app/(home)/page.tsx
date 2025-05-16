@@ -8,10 +8,12 @@ export default async function Home(props: { searchParams?: Promise<APIQuery<'/v0
   const searchParams = await props.searchParams
   const wsd = sUseWSDAPI()
   const isAuthenticated = await wsd.isAuthenticated()
+  const currentUser = await wsd.getCurrentUser()
+  const cardStyle = currentUser?.card_style || 'NORMAL'
   const postQuery = {
     ...searchParams,
     page_size: config.ux.defaultPostPerPage,
-    include: 'tags,user,category' as const,
+    include: cardStyle === 'RELAXED' ? ('tags,user,category,comments' as const) : ('tags,user,category' as const),
     ordering: searchParams?.ordering || ('-created_at' as const),
   }
   const { data } = await wsd.posts(postQuery)
@@ -21,6 +23,7 @@ export default async function Home(props: { searchParams?: Promise<APIQuery<'/v0
       initialPosts={data?.results || []}
       hasMorePages={Boolean(data?.total_pages && data.total_pages > 1)}
       isAuthenticated={isAuthenticated}
+      cardStyle={cardStyle}
     />
   )
 }

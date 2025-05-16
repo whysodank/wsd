@@ -18,7 +18,8 @@ export default async function ProfileLayout({ children }: { children: React.Reac
     { name: 'Profile', href: '/profile/details', icon: Icons.User },
     { name: 'Password', href: '/profile/password', icon: Icons.Lock },
     { name: 'Emails', href: '/profile/emails', icon: Icons.Mail },
-    { name: 'Connections', href: '/profile/connections', icon: Icons.Link },
+    { name: 'Connections', href: '/profile/connections', icon: Icons.LinkIcon },
+    { name: 'Settings', href: '/profile/settings', icon: Icons.Settings },
   ]
 
   return (
@@ -30,10 +31,10 @@ export default async function ProfileLayout({ children }: { children: React.Reac
         </Link>
       </div>
       <div className="flex flex-col justify-center items-center mb-36 w-full gap-2">
-        <Card className="w-full max-w-xl">
+        <Card className="w-full max-w-2xl">
           <CardContent className="p-6 flex flex-col gap-4">
             <Tabs defaultValue={profileTabs[0].href}>
-              <TabsList className="grid w-full grid-cols-4">
+              <TabsList className="grid w-full grid-cols-5">
                 {profileTabs.map((tab) => (
                   <TabsTrigger key={tab.href} value={tab.href} asChild>
                     <Link href={tab.href} prefetch={true} className="flex gap-2">

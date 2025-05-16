@@ -48,6 +48,7 @@ class PostSerializer(BaseModelSerializer):
             "positive_vote_count",
             "negative_vote_count",
             "comment_count",
+            "comments",
         ]
         read_only_fields = [
             "id",
@@ -61,9 +62,11 @@ class PostSerializer(BaseModelSerializer):
             "positive_vote_count",
             "negative_vote_count",
             "comment_count",
+            "comments",
         ]
         relational_fields = {
             "tags": s("PostTagSerializer")(many=True),
             "user": s("PublicUserSerializer")(),
             "category": s("PostCategorySerializer")(),
+            "comments": s("PostCommentSerializer")(many=True),
         }
