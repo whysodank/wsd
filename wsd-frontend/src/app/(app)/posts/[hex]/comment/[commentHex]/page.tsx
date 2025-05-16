@@ -13,6 +13,5 @@ export default async function CommentPostPage(props: {
   params: Promise<{ hex: string; commentHex: string }>
   searchParams: Promise<any>
 }) {
-  console.log('OMMENT')
   return <MemePost params={props.params} searchParams={props.searchParams} />
 }
