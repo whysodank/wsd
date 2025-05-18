@@ -19,15 +19,14 @@ import { toast } from 'sonner'
 
 export function MemeComment({
   comment,
-  cardStyle = 'NORMAL',
+  compact = false,
 }: {
   comment: Includes<APIType<'PostComment'>, 'user', APIType<'User'>>
-  cardStyle?: APIType<'CardStyleEnum'>
+  compact?: boolean
 }) {
   const wsd = useWSDAPI()
   const [feedback, setFeedback] = useState<APIType<'VoteEnum'> | null>(comment.vote)
   const [voteCount, setVoteCount] = useState((comment.positive_vote_count || 0) - (comment.negative_vote_count || 0))
-  const [isRelaxed] = useState(cardStyle === 'RELAXED')
 
   function handleVote(vote: APIType<'VoteEnum'>) {
     return async () => {
@@ -74,20 +73,20 @@ export function MemeComment({
   }
 
   return (
-    <article className={cn('flex flex-row gap-2 p-4 rounded-lg bg-background w-full', isRelaxed && 'gap-2 p-0 pl-4')}>
+    <article className={cn('flex flex-row gap-2 p-4 rounded-lg bg-background w-full', compact && 'gap-2 p-0 pl-4')}>
       <Link href={{ pathname: `/users/${comment?.user?.username}` }} className={'z-0'}>
-        <UserAvatar user={comment.user} className={cn('w-12 h-12', isRelaxed && 'w-8 h-8 ')} />
+        <UserAvatar user={comment.user} className={cn('w-12 h-12', compact && 'w-8 h-8 ')} />
       </Link>
       <div className="flex flex-col gap-1 w-full">
         <div className="flex items-center gap-2">
           <Link
             href={`/users/${comment.user.username}`}
-            className={cn('text-sm font-semibold hover:underline text-foreground', isRelaxed && 'text-xs')}
+            className={cn('text-sm font-semibold hover:underline text-foreground', compact && 'text-xs')}
           >
             {comment.user.username}
           </Link>
           <span
-            className={cn('text-sm text-gray-500', isRelaxed && 'text-xs')}
+            className={cn('text-sm text-gray-500', compact && 'text-xs')}
             title={shortFormattedDateTime(new Date(comment.created_at))}
           >
             {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
@@ -96,14 +95,14 @@ export function MemeComment({
         <div className="text-sm text-muted-foreground whitespace-pre-line">
           <WSDEditorRenderer content={comment.body as object} />
         </div>
-        <div className={cn('flex items-center justify-between', isRelaxed && '-mt-4')}>
+        <div className={cn('flex items-center justify-between', compact && '-mt-4')}>
           <div className="flex items-center gap-1">
             <Button
               variant="link"
               size="sm"
               className={cn(
                 'px-0 hover:text-accent-foreground hover:no-underline text-muted-foreground',
-                isRelaxed && 'text-xs'
+                compact && 'text-xs'
               )}
             >
               Reply
@@ -116,15 +115,12 @@ export function MemeComment({
               aria-label="Upvote"
             >
               <Icons.ArrowBigUp
-                size={isRelaxed ? 12 : 20}
+                size={compact ? 12 : 20}
                 className={cn(feedback === 1 && 'text-green-500 fill-green-500')}
               />
             </Button>
             <span
-              className={cn(
-                'text-sm font-medium text-muted-foreground min-w-[20px] text-center',
-                isRelaxed && 'text-xs'
-              )}
+              className={cn('text-sm font-medium text-muted-foreground min-w-[20px] text-center', compact && 'text-xs')}
             >
               {voteCount}
             </span>
@@ -136,14 +132,14 @@ export function MemeComment({
               aria-label="Downvote"
             >
               <Icons.ArrowBigDown
-                size={isRelaxed ? 12 : 20}
+                size={compact ? 12 : 20}
                 className={cn(feedback === -1 && 'text-destructive fill-destructive')}
               />
             </Button>
           </div>
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="icon" className="text-muted-foreground" aria-label="More options">
-              <Icons.MoreHorizontal size={18} />
+              <Icons.MoreHorizontal size={compact ? 16 : 18} />
             </Button>
           </div>
         </div>

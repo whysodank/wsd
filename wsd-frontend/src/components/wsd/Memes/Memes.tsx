@@ -10,7 +10,7 @@ import _ from 'lodash'
 import { buttonVariants } from '@/components/shadcn/button'
 import { Separator } from '@/components/shadcn/separator'
 import { Skeleton } from '@/components/shadcn/skeleton'
-import Meme, { RelaxedMeme } from '@/components/wsd/Meme'
+import Meme, { CompactMeme, RelaxedMeme } from '@/components/wsd/Meme'
 
 import { APIQuery, APIType, includesType } from '@/api'
 import config from '@/config'
@@ -98,12 +98,15 @@ export function Memes({
       if (cardStyle === 'NORMAL') {
         return <Meme post={includedBasePost} withTags withRepostData isAuthenticated={isAuthenticated} />
       }
+      if (cardStyle === 'COMPACT') {
+        return <CompactMeme post={includedBasePost} withTags isAuthenticated={isAuthenticated} />
+      }
     },
     [cardStyle, isAuthenticated]
   )
 
   return (
-    <div className="flex flex-col gap-2 items-center md:min-w-[840px] w-full">
+    <div className={cn('flex flex-col gap-2 items-center md:min-w-[840px] w-full', cardStyle === 'COMPACT' && 'gap-0')}>
       {posts.map((post) => (
         <div className="contents" key={post.id}>
           {memeCard(post)}

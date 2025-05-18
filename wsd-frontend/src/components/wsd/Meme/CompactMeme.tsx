@@ -1,8 +1,10 @@
 'use client'
 
+import { PrefetchKind } from 'next/dist/client/components/router-reducer/router-reducer-types'
 import Link from 'next/link'
+import { useRouter } from 'next/navigation'
 
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
@@ -10,37 +12,31 @@ import { AspectRatio } from '@/components/shadcn/aspect-ratio'
 import { Badge } from '@/components/shadcn/badge'
 import { Button } from '@/components/shadcn/button'
 import { FeedbackButtons } from '@/components/wsd/Meme/client'
-import MemeComment from '@/components/wsd/MemeComment'
 import UserAvatar from '@/components/wsd/UserAvatar'
 
-import { APIType, Includes, includesType } from '@/api'
+import { APIType, Includes } from '@/api'
 import { useElementAttributes } from '@/lib/hooks'
 import { cn, preventDefault, shortFormattedDateTime, uuidV4toHEX } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
 
-export function RelaxedMeme({
+export function CompactMeme({
   post,
   withTags = false,
   withRepostData = false,
   fullScreen = false,
   isAuthenticated = false,
 }: {
-  post: Includes<
-    Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
-    'comments',
-    APIType<'PostComment'>[]
-  >
+  post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
   withTags?: boolean
   withRepostData?: boolean
   fullScreen?: boolean
   isAuthenticated?: boolean
 }) {
+  const router = useRouter()
   const [isExpanded, setIsExpanded] = useState(false)
   const [isBlurred, setIsBlurred] = useState(true)
-  const [areCommentsExpanded, setAreCommentsExpanded] = useState(false)
-  const commentRef = useRef<HTMLDivElement>(null)
-
+  const [isHovered, setIsHovered] = useState(false)
   const { ref: imageRef, attributeValues: meme } = useElementAttributes<
     HTMLImageElement,
     'naturalHeight' | 'offsetWidth' | 'naturalWidth'
@@ -66,31 +62,28 @@ export function RelaxedMeme({
     }
   }
 
-  function handleCollapseComments() {
-    const newAreCommentsExpanded = !areCommentsExpanded
-    setAreCommentsExpanded(newAreCommentsExpanded)
+  function handleAvatarClick() {
+    router.push(`/users/${post.user.username}/`)
+  }
 
-    if (newAreCommentsExpanded) {
-      // Scroll to the bottom of the comments section
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          const commentSection = commentRef.current
-          if (!commentSection) return
-          const top = commentSection.offsetTop + commentSection.offsetHeight - window.innerHeight + 100
-          window.scrollTo({ top, behavior: 'smooth' })
-        })
-      }, 300)
-    } else {
-      // Scroll that the last comment is visible bottom
-      setTimeout(() => {
-        requestAnimationFrame(() => {
-          const commentSection = commentRef.current
-          if (!commentSection) return
-          const top = commentSection.offsetTop + commentSection.offsetHeight - window.innerHeight + 100
-          window.scrollTo({ top, behavior: 'smooth' })
-        })
-      }, 300)
-    }
+  function handleAvatarHover() {
+    router.prefetch(`/users/${post.user.username}/`, { kind: PrefetchKind.AUTO })
+  }
+
+  function handlePostClick() {
+    router.push(`/posts/${uuidV4toHEX(post.id)}/`)
+  }
+
+  function handlePostHover() {
+    router.prefetch(`/posts/${uuidV4toHEX(post.id)}/`, { kind: PrefetchKind.AUTO })
+  }
+
+  function handleHover() {
+    setIsHovered(true)
+  }
+
+  function handleLeave() {
+    setIsHovered(false)
   }
 
   const originalSource = post.initial ? `/posts/${uuidV4toHEX(post.initial)}/` : post.original_source || undefined
@@ -101,32 +94,53 @@ export function RelaxedMeme({
         'shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md w-5/6 max-md:w-full',
         fullScreen && 'max-w-full w-full'
       )}
+      onMouseOver={handleHover}
+      onMouseLeave={handleLeave}
     >
-      <div className="flex flex-col gap-4 p-4 max-md:p-2 max-md:py-2">
-        <div className="flex items-center gap-4">
-          <Link href={{ pathname: `/users/${post.user.username}` }}>
-            <UserAvatar user={post.user} className="w-6 h-6" />
-          </Link>
-          <Link
-            href={{ pathname: `/users/${post.user.username}/` }}
-            className="text-sm text-muted-foreground hover:underline"
-            target="_blank"
+      <div className="flex flex-col gap-0 max-md:p-2 max-md:py-0">
+        <div className="relative w-full flex justify-center items-center bg-black overflow-hidden">
+          <div
+            className={cn(
+              'group flex items-center gap-0 absolute left-4 z-20 rounded-md pl-1 bg-black/50 hover:bg-black transition-all duration-150 hover:gap-1 hover:pl-2',
+              isHovered ? 'top-2 opacity-100 translate-y-0' : '-top-full opacity-0 translate-y-[-100%]'
+            )}
           >
-            {post.user.username}
-          </Link>
-          <span className="text-sm text-muted-foreground">•</span>
-          <span title={shortFormattedDateTime(new Date(post.created_at))} className="text-sm text-muted-foreground">
-            {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
-          </span>
-        </div>
-        <h2 className="text-2xl font-semibold">
-          <Link className="hover:underline break-word" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
-            {post.title}
-          </Link>
-        </h2>
-        <Link className="hover:underline break-word" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
-          <div className="relative w-full flex justify-center items-center bg-black overflow-hidden">
-            <div className="absolute inset-0 bg-black/60" />
+            <Button
+              className={cn(
+                'text-xs text-muted-foreground p-0 mr-1 gap-1 w-7 transition-all duration-300 flex items-center',
+                'group-hover:underline group-hover:bg-transparent group-hover:w-fit group-hover:pl-2'
+              )}
+              variant="ghost"
+              onClick={preventDefault(() => handleAvatarClick())}
+              onMouseOver={preventDefault(() => handleAvatarHover())}
+            >
+              <UserAvatar user={post.user} className="w-6 h-6" />
+              <span className={cn('overflow-hidden w-0 transition-all duration-100 group-hover:w-fit')}>
+                {post.user.username}
+              </span>
+            </Button>
+            <span className={cn('text-xs text-muted-foreground w-0 overflow-hidden group-hover:w-fit')}>•</span>
+            <span
+              title={shortFormattedDateTime(new Date(post.created_at))}
+              className={cn('text-xs w-0 text-nowrap overflow-hidden group-hover:w-fit')}
+            >
+              {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
+            </span>
+            <span className="text-xs text-muted-foreground">•</span>
+            <Button
+              className="break-word p-1 justify-center hover:underline hover:bg-transparent"
+              variant="ghost"
+              onClick={preventDefault(() => handlePostClick)}
+              onMouseOver={preventDefault(() => handlePostHover)}
+            >
+              <h2 className="text-xl font-semibold">{post.title}</h2>
+            </Button>
+          </div>
+          <div className="absolute inset-0 bg-black/60" />
+          <Link
+            className="hover:underline break-word z-0 w-full"
+            href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}
+          >
             {!isAuthenticated && post.is_nsfw ? (
               <AspectRatio ratio={16 / 9} className="text-white">
                 <div className="flex h-full w-full items-center justify-center">
@@ -170,27 +184,33 @@ export function RelaxedMeme({
                 )}
               </div>
             )}
-            {(showExpandButton || showShrinkButton) && (
-              <Button
-                onClick={preventDefault(() => setIsExpanded(!isExpanded))}
-                variant="ghost"
-                className="z-10 w-8 h-8 absolute bottom-4 right-4 rounded-full p-2"
-                aria-label={isExpanded ? 'Shrink' : 'Expand'}
-              >
-                {isExpanded ? <Icons.Minimize2 size={18} /> : <Icons.Maximize2 size={18} />}
-              </Button>
-            )}
-          </div>
-        </Link>
-        {withTags && post.tags.length > 0 && (
-          <div className="flex flex-wrap gap-2 py-2">
-            {post.tags.map((tag) => (
-              <Badge key={tag.name} variant="outline" className="px-4 py-1 text-xl">
-                {tag.name}
-              </Badge>
-            ))}
-          </div>
-        )}
+          </Link>
+          {(showExpandButton || showShrinkButton) && (
+            <Button
+              onClick={preventDefault(() => setIsExpanded(!isExpanded))}
+              variant="ghost"
+              className="z-10 w-8 h-8 absolute bottom-4 right-4 rounded-full p-2"
+              aria-label={isExpanded ? 'Shrink' : 'Expand'}
+            >
+              {isExpanded ? <Icons.Minimize2 size={16} /> : <Icons.Maximize2 size={16} />}
+            </Button>
+          )}
+          {withTags && (
+            <div
+              className={cn(
+                'group flex items-center gap-2 absolute left-4 z-20 rounded-xl p-1 bg-black/50 hover:bg-black transition-all duration-150 hover:p-2',
+                isHovered ? 'bottom-2 opacity-100 translate-y-0' : '-bottom-2 opacity-0 translate-y-2'
+              )}
+            >
+              {post.tags.map((tag) => (
+                <Badge key={tag.name} variant="outline" className="px-3 py-1 text-sm">
+                  {tag.name}
+                </Badge>
+              ))}
+            </div>
+          )}
+        </div>
+
         <div className="flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <FeedbackButtons post={post} isAuthenticated={isAuthenticated} />
@@ -216,7 +236,7 @@ export function RelaxedMeme({
                     size={14}
                     className="text-muted-foreground group-hover:text-secondary-foreground transition-colors"
                   />
-                  <span className="text-sm font-medium text-muted-foreground">Source</span>
+                  <span className="text-xs font-medium text-muted-foreground">Source</span>
                 </Badge>
               </Link>
             )}
@@ -224,39 +244,10 @@ export function RelaxedMeme({
               className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
               aria-label="More"
             >
-              <Icons.Ellipsis size={24} />
+              <Icons.Ellipsis size={20} />
             </Button>
           </div>
         </div>
-        {post.comments.length > 0 && (
-          <div
-            className="flex flex-col w-full gap-1 max-md:w-full transition-all duration-300 border border-border/15 pt-4 shadow-sm rounded-md overflow-hidden"
-            ref={commentRef}
-          >
-            <div
-              className={cn(
-                'flex flex-col gap-2 transition-all duration-300 ease-in-out',
-                areCommentsExpanded ? 'max-h-[500px] overflow-auto' : 'max-h-[100px]'
-              )}
-            >
-              {post.comments.map((comment) => (
-                <MemeComment key={comment.id} comment={includesType(comment, 'user', 'User')} compact />
-              ))}
-            </div>
-            {post.comments.length > 1 && (
-              <Button
-                variant={'ghost'}
-                className="text-sm hover:text-foreground bg-black  z-20 relative"
-                onClick={handleCollapseComments}
-              >
-                <Icons.ChevronDownIcon
-                  size={18}
-                  className={`${areCommentsExpanded ? 'rotate-180' : ''} transition-transform duration-200`}
-                />
-              </Button>
-            )}
-          </div>
-        )}
       </div>
     </article>
   )
