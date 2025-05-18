@@ -1,6 +1,5 @@
 import Link from 'next/link'
 
-// lucid icons
 import * as Icons from 'lucide-react'
 
 import { GitHub } from '@/components/icons/brands'
