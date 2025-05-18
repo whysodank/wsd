@@ -9,14 +9,13 @@ import * as Icons from 'lucide-react'
 import { AspectRatio } from '@/components/shadcn/aspect-ratio'
 import { Badge } from '@/components/shadcn/badge'
 import { Button } from '@/components/shadcn/button'
-import { FeedbackButtons } from '@/components/wsd/Meme/client'
+import { FeedbackButtons, MemeThreeDotMenu } from '@/components/wsd/Meme/client'
 import UserAvatar from '@/components/wsd/UserAvatar'
 
 import { APIType, Includes } from '@/api'
 import { useElementAttributes } from '@/lib/hooks'
 import { cn, preventDefault, shortFormattedDateTime, uuidV4toHEX } from '@/lib/utils'
 
-import MemeThreeDotMenu from '../Memes/client/MemeThreeDotMenu'
 import { formatDistanceToNow } from 'date-fns'
 
 export function Meme({

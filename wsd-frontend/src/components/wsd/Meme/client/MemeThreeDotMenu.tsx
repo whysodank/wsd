@@ -13,15 +13,13 @@ import { toast } from 'sonner'
 export default function MemeThreeDotMenu({
   post,
 }: {
-  post?: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
+  post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
 }) {
   const actions = [
     {
       label: 'Download',
       icon: Icons.Download,
       action: async () => {
-        if (!post?.image) return
-
         try {
           // Create an Image element to load the image
           const img = new Image()
