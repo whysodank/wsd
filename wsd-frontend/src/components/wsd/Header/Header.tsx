@@ -10,11 +10,11 @@ import UserAvatar from '@/components/wsd/UserAvatar'
 
 import { APIType } from '@/api'
 import config from '@/config'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { cn } from '@/lib/utils'
 
 export async function Header() {
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const user = (await wsd.getCurrentUser()) as APIType<'User'>
   const { data: notifications } = await wsd.notifications({ is_read: false })
 

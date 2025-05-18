@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/shadcn/button'
 
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 import { toast } from 'sonner'
 
@@ -12,7 +12,7 @@ export default function MarkEmailPrimaryButton(
   props: Omit<React.ComponentPropsWithoutRef<typeof Button>, 'onClick'> & { email: string }
 ) {
   const { email, children, ...buttonProps } = props
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const router = useRouter()
 
   async function handleMarkEmailPrimary() {

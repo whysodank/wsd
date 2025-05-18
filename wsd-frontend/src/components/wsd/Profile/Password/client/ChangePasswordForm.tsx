@@ -9,12 +9,12 @@ import { Label } from '@/components/shadcn/label'
 import PasswordInput from '@/components/wsd/PasswordInput'
 
 import { useFormState } from '@/lib/hooks'
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 import { toast } from 'sonner'
 
 export default function ChangePasswordForm() {
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const router = useRouter()
 
   const {

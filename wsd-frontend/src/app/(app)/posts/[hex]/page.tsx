@@ -16,13 +16,13 @@ import NewComment from '@/components/wsd/NewComment'
 import { APIQuery, APIType, includesType } from '@/api'
 import config from '@/config'
 import { getWSDMetadata } from '@/lib/metadata'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { getKeys } from '@/lib/typeHelpers'
 import { InvalidHEXError, cn, hexToUUIDv4, suppress } from '@/lib/utils'
 
 export async function generateMetadata(props: { params: Promise<{ hex: string }> }): Promise<Metadata | undefined> {
   const params = await props.params
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const postId = suppress<string, undefined>([InvalidHEXError], () => hexToUUIDv4(params.hex))
 
   if (!_.isUndefined(postId)) {
@@ -44,7 +44,7 @@ export default async function PostPage(props: {
 }) {
   const searchParams = await props.searchParams
   const params = await props.params
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const isAuthenticated = await wsd.isAuthenticated()
   const postId = suppress<string, undefined>([InvalidHEXError], () => hexToUUIDv4(params.hex))
 

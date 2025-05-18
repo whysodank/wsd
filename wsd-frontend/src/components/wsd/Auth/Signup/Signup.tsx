@@ -7,7 +7,7 @@ import { SignupForm } from '@/components/wsd/Auth/Signup/client'
 import { AutoFormButton } from '@/components/wsd/AutoFormButton/AutoFormButton'
 
 import config from '@/config'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 export async function Signup() {
   const providers = [
@@ -17,7 +17,7 @@ export async function Signup() {
     { name: 'Discord', icon: Brands.Discord, id: 'discord' },
     { name: 'Reddit', icon: Brands.Reddit, id: 'reddit' },
   ]
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const tos = (
     <Link href={{ pathname: '/legal/terms-of-service' }} className="text-white hover:underline transition">
       Terms of Service

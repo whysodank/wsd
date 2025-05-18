@@ -4,13 +4,13 @@ import { useRouter } from 'next/navigation'
 
 import { Button } from '@/components/shadcn/button'
 
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 import { toast } from 'sonner'
 
 export default function LogoutButton(props: Omit<React.ComponentPropsWithoutRef<typeof Button>, 'onClick'>) {
   const { children, ...buttonProps } = props
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const router = useRouter()
 
   async function handleLogout() {

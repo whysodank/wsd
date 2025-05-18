@@ -1,6 +1,6 @@
 import _ from 'lodash'
 
-import { useWSDAPI as getWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 import { MentionItem, MentionList, MentionListProps } from './WSDMentions'
 import Mention from '@tiptap/extension-mention'

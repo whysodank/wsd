@@ -10,7 +10,7 @@ import { Button, buttonVariants } from '@/components/shadcn/button'
 import AuthenticatedOnlyActionButton from '@/components/wsd/AuthenticatedOnlyActionButton'
 
 import { APIType, Includes } from '@/api/typeHelpers'
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { cn, uuidV4toHEX } from '@/lib/utils'
 
 import { toast } from 'sonner'
@@ -22,7 +22,7 @@ export default function FeedbackButtons({
   post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
   isAuthenticated: boolean
 }) {
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const [feedback, setFeedback] = useState<APIType<'VoteEnum'> | null>(post.vote)
   const [voteCount, setVoteCount] = useState((post.positive_vote_count || 0) - (post.negative_vote_count || 0))
   const [isBookmarked, setIsBookmarked] = useState<boolean>(post.bookmarked)

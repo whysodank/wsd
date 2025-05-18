@@ -4,10 +4,10 @@ import { RawSVGIcon } from '@/components/shadcn/raw-svg-icon'
 import { Separator } from '@/components/shadcn/separator'
 import CategoryLink from '@/components/wsd/CategoryLink'
 
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 export async function LeftColumn() {
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const { data: postCategoriesData } = await wsd.postCategories()
 
   function getQuickFilterHREF(params?: { [key: string]: string }) {

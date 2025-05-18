@@ -2,7 +2,7 @@
 
 import { Button } from '@/components/shadcn/button'
 
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 import { toast } from 'sonner'
 
@@ -10,7 +10,7 @@ export default function ResendVerificationEmailButton(
   props: Omit<React.ComponentPropsWithoutRef<typeof Button>, 'onClick'> & { email: string }
 ) {
   const { email, children, ...buttonProps } = props
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
 
   async function handleResendVerificationEmail() {
     const { error } = await wsd.auth.resendVerificationEmail({ email })

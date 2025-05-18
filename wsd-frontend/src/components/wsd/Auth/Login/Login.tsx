@@ -7,7 +7,7 @@ import { LoginForm } from '@/components/wsd/Auth/Login/client'
 import { AutoFormButton } from '@/components/wsd/AutoFormButton/AutoFormButton'
 
 import config from '@/config'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 export async function Login() {
   const providers = [
@@ -17,7 +17,7 @@ export async function Login() {
     { name: 'Discord', icon: Brands.Discord, id: 'discord' },
     { name: 'Reddit', icon: Brands.Reddit, id: 'reddit' },
   ]
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   return (
     <>
       <Card className="max-w-md w-full">

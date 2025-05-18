@@ -2,11 +2,11 @@ import Memes from '@/components/wsd/Memes'
 
 import { APIQuery } from '@/api'
 import config from '@/config'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 export default async function Home(props: { searchParams?: Promise<APIQuery<'/v0/posts/'>> }) {
   const searchParams = await props.searchParams
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const isAuthenticated = await wsd.isAuthenticated()
   const postQuery = {
     ...searchParams,
