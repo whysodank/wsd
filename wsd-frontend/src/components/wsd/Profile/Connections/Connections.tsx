@@ -10,10 +10,10 @@ import { AutoFormButton } from '@/components/wsd/AutoFormButton/AutoFormButton'
 import { DisconnectButton } from '@/components/wsd/Profile/Connections/client'
 
 import config from '@/config'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 export async function Connections() {
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const { data } = await wsd.auth.connections()
   const connections = data?.data as { uid: string; display: string; provider: { id: string; name: string } }[]
   const connectedAccounts: string[] = connections ? _.map(connections, 'provider.id') : []
