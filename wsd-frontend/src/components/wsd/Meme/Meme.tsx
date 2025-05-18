@@ -16,6 +16,7 @@ import { APIType, Includes } from '@/api'
 import { useElementAttributes } from '@/lib/hooks'
 import { cn, preventDefault, shortFormattedDateTime, uuidV4toHEX } from '@/lib/utils'
 
+import MemeThreeDotMenu from '../Memes/client/MemeThreeDotMenu'
 import { formatDistanceToNow } from 'date-fns'
 
 export function Meme({
@@ -185,12 +186,8 @@ export function Meme({
                 </Badge>
               </Link>
             )}
-            <Button
-              className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
-              aria-label="More"
-            >
-              <Icons.Ellipsis size={20} />
-            </Button>
+
+            <MemeThreeDotMenu post={post} />
           </div>
         </div>
       </div>
