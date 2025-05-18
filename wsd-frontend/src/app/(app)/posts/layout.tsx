@@ -1,5 +1,9 @@
 import Link from 'next/link'
 
+// lucid icons
+import * as Icons from 'lucide-react'
+
+import { GitHub } from '@/components/icons/brands'
 import { ScrollArea, ScrollBar } from '@/components/shadcn/scroll-area'
 import Header from '@/components/wsd/Header'
 import LeftColumn from '@/components/wsd/LeftColumn'
@@ -19,18 +23,29 @@ export default async function Layout({ children }: { children: React.ReactNode }
                     <LeftColumn />
                     <ScrollBar orientation="vertical" />
                   </ScrollArea>
-                  <div className="p-2 flex flex-col gap-1">
+                  <div className="p-2 flex flex-col gap-1 items-start">
                     <Link
                       href={{ pathname: '/legal/privacy-policy' }}
-                      className="text-muted-foreground text-sm hover:underline"
+                      className="text-muted-foreground text-sm hover:underline flex items-center gap-1 justify-between"
                     >
+                      <Icons.Cookie size={18} className="mr-1" />
                       Privacy Policy
                     </Link>
                     <Link
                       href={{ pathname: '/legal/terms-of-service' }}
-                      className="text-muted-foreground text-sm hover:underline"
+                      className="text-muted-foreground text-sm hover:underline flex items-center gap-1 justify-between"
                     >
+                      <Icons.FileTextIcon size={18} className="mr-1" />
                       Terms of Service
+                    </Link>
+                    <Link
+                      href={'https://github.com/whysodank/wsd'}
+                      className="text-muted-foreground text-sm hover:underline flex items-center gap-1 justify-between"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      <GitHub className="w-5 h-5 mr-1" />
+                      GitHub
                     </Link>
                   </div>
                 </aside>
