@@ -90,7 +90,11 @@ export function Memes({
       {posts.map((post) => (
         <div className="contents" key={post.id}>
           <Meme
-            post={includes(includes({ ...post }, 'user', 'User'), 'tags', 'PostTag', true)}
+            post={includes(
+              includes(includes({ ...post }, 'user', 'User'), 'tags', 'PostTag', true),
+              'category',
+              'PostCategory'
+            )}
             withTags
             withRepostData
             isAuthenticated={isAuthenticated}
