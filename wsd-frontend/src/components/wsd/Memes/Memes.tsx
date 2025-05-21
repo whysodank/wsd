@@ -3,17 +3,16 @@
 import Link from 'next/link'
 import { useSearchParams } from 'next/navigation'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 
 import _ from 'lodash'
 
 import { buttonVariants } from '@/components/shadcn/button'
 import { Separator } from '@/components/shadcn/separator'
 import { Skeleton } from '@/components/shadcn/skeleton'
-import Meme from '@/components/wsd/Meme'
+import Meme, { RelaxedMeme } from '@/components/wsd/Meme'
 
-import { APIQuery, APIType } from '@/api'
-import { includesType as includes } from '@/api/typeHelpers'
+import { APIQuery, APIType, includesType } from '@/api'
 import config from '@/config'
 import { useEffectAfterMount } from '@/lib/hooks'
 import { useWSDAPI } from '@/lib/serverHooks'
@@ -26,17 +25,21 @@ export function Memes({
   initialPosts,
   hasMorePages,
   isAuthenticated = false,
+  cardStyle = 'NORMAL',
 }: {
   query?: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>
   initialPosts?: APIType<'Post'>[]
   hasMorePages?: boolean
   isAuthenticated?: boolean
+  cardStyle?: APIType<'CardStyleEnum'>
 }) {
   const wsd = useWSDAPI()
   const searchParams = useSearchParams()
 
   const defaultQuery = { page_size: config.ux.defaultPostPerPage }
-  const alwaysQuery = { include: 'tags,user,category' }
+  const alwaysQuery = {
+    include: cardStyle === 'RELAXED' ? 'tags,user,category,comments' : 'tags,user,category',
+  } as const
 
   const [posts, setPosts] = useState<APIType<'Post'>[]>(initialPosts || [])
   const [page, setPage] = useState(initialPosts && hasMorePages ? 2 : 1)
@@ -85,16 +88,25 @@ export function Memes({
     }
   }, [inView, hasMore, loading])
 
+  const memeCard = useCallback(
+    (post: APIType<'Post'>) => {
+      const includedBasePost = includesType(includesType(post, 'user', 'User'), 'tags', 'PostTag', true)
+      if (cardStyle === 'RELAXED') {
+        const includeRelaxedPost = includesType(includedBasePost, 'comments', 'PostComment', true)
+        return <RelaxedMeme post={includeRelaxedPost} withTags withRepostData isAuthenticated={isAuthenticated} />
+      }
+
+      // Because the Compact card is not yet implemented we default to the normal card
+      return <Meme post={includedBasePost} withTags withRepostData isAuthenticated={isAuthenticated} />
+    },
+    [cardStyle, isAuthenticated]
+  )
+
   return (
-    <div className="flex flex-col gap-2 items-center md:min-w-[840px] w-full">
+    <div className={cn('flex flex-col gap-2 items-center md:min-w-[840px] w-full', cardStyle === 'COMPACT' && 'gap-0')}>
       {posts.map((post) => (
         <div className="contents" key={post.id}>
-          <Meme
-            post={includes(includes({ ...post }, 'user', 'User'), 'tags', 'PostTag', true)}
-            withTags
-            withRepostData
-            isAuthenticated={isAuthenticated}
-          />
+          {memeCard(post)}
           <Separator className="max-sm:w-[calc(100%-8px)] w-5/6" />
         </div>
       ))}

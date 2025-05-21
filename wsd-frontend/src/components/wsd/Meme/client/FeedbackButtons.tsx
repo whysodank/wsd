@@ -18,9 +18,17 @@ import { toast } from 'sonner'
 export default function FeedbackButtons({
   post,
   isAuthenticated,
+  cardStyle: _cardStyle,
 }: {
-  post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
+  post:
+    | Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
+    | Includes<
+        Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
+        'comments',
+        APIType<'PostComment'>[]
+      >
   isAuthenticated: boolean
+  cardStyle?: APIType<'CardStyleEnum'>
 }) {
   const wsd = useWSDAPI()
   const [feedback, setFeedback] = useState<APIType<'VoteEnum'> | null>(post.vote)

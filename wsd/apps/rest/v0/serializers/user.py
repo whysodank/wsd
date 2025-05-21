@@ -34,6 +34,13 @@ class UserSerializer(BaseModelSerializer):
         allow_null=True,
     )
 
+    card_style = serializers.ChoiceField(
+        choices=User.CARDSTYLE.choices,
+        default=User.CARDSTYLE.NORMAL,
+        help_text="User's card style.",
+        required=False,
+    )
+
     def get_signup_completed(self, obj) -> str:
         return getattr(obj, self.Meta.model.SIGNUP_COMPLETED_FIELD, False)
 
@@ -54,6 +61,7 @@ class UserSerializer(BaseModelSerializer):
             "created_at",
             "updated_at",
             "signup_completed",
+            "card_style",
         ]
         read_only_fields = [
             "id",

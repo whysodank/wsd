@@ -17,7 +17,13 @@ import { cn, shortFormattedDateTime } from '@/lib/utils'
 import { formatDistanceToNow } from 'date-fns'
 import { toast } from 'sonner'
 
-export function MemeComment({ comment }: { comment: Includes<APIType<'PostComment'>, 'user', APIType<'User'>> }) {
+export function MemeComment({
+  comment,
+  compact = false,
+}: {
+  comment: Includes<APIType<'PostComment'>, 'user', APIType<'User'>>
+  compact?: boolean
+}) {
   const wsd = useWSDAPI()
   const [feedback, setFeedback] = useState<APIType<'VoteEnum'> | null>(comment.vote)
   const [voteCount, setVoteCount] = useState((comment.positive_vote_count || 0) - (comment.negative_vote_count || 0))
@@ -67,31 +73,37 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
   }
 
   return (
-    <article className="flex flex-row gap-2 p-4 rounded-lg bg-background w-full">
-      <Link href={{ pathname: `/users/${comment?.user?.username}` }}>
-        <UserAvatar user={comment.user} className="w-12 h-12" />
+    <article className={cn('flex flex-row gap-2 p-4 rounded-lg bg-background w-full', compact && 'gap-2 p-0 pl-4')}>
+      <Link href={{ pathname: `/users/${comment?.user?.username}` }} className={'z-0'}>
+        <UserAvatar user={comment.user} className={cn('w-12 h-12', compact && 'w-8 h-8 ')} />
       </Link>
       <div className="flex flex-col gap-1 w-full">
         <div className="flex items-center gap-2">
           <Link
             href={`/users/${comment.user.username}`}
-            className="text-sm font-semibold hover:underline text-foreground"
+            className={cn('text-sm font-semibold hover:underline text-foreground', compact && 'text-xs')}
           >
             {comment.user.username}
           </Link>
-          <span className="text-sm text-gray-500" title={shortFormattedDateTime(new Date(comment.created_at))}>
+          <span
+            className={cn('text-sm text-gray-500', compact && 'text-xs')}
+            title={shortFormattedDateTime(new Date(comment.created_at))}
+          >
             {formatDistanceToNow(new Date(comment.created_at), { addSuffix: true })}
           </span>
         </div>
         <div className="text-sm text-muted-foreground whitespace-pre-line">
           <WSDEditorRenderer content={comment.body as object} />
         </div>
-        <div className="flex items-center justify-between">
+        <div className={cn('flex items-center justify-between', compact && '-mt-4')}>
           <div className="flex items-center gap-1">
             <Button
               variant="link"
               size="sm"
-              className="px-0 hover:text-accent-foreground hover:no-underline text-muted-foreground"
+              className={cn(
+                'px-0 hover:text-accent-foreground hover:no-underline text-muted-foreground',
+                compact && 'text-xs'
+              )}
             >
               Reply
             </Button>
@@ -102,9 +114,16 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
               className="text-muted-foreground hover:bg-transparent px-2"
               aria-label="Upvote"
             >
-              <Icons.ArrowBigUp size={20} className={cn(feedback === 1 && 'text-green-500 fill-green-500')} />
+              <Icons.ArrowBigUp
+                size={compact ? 12 : 20}
+                className={cn(feedback === 1 && 'text-green-500 fill-green-500')}
+              />
             </Button>
-            <span className="text-sm font-medium text-muted-foreground min-w-[20px] text-center">{voteCount}</span>
+            <span
+              className={cn('text-sm font-medium text-muted-foreground min-w-[20px] text-center', compact && 'text-xs')}
+            >
+              {voteCount}
+            </span>
             <Button
               onClick={handleVote(-1)}
               variant="ghost"
@@ -112,12 +131,15 @@ export function MemeComment({ comment }: { comment: Includes<APIType<'PostCommen
               className="text-muted-foreground hover:bg-transparent px-2"
               aria-label="Downvote"
             >
-              <Icons.ArrowBigDown size={20} className={cn(feedback === -1 && 'text-destructive fill-destructive')} />
+              <Icons.ArrowBigDown
+                size={compact ? 12 : 20}
+                className={cn(feedback === -1 && 'text-destructive fill-destructive')}
+              />
             </Button>
           </div>
           <div className="flex items-center gap-1">
             <Button variant="ghost" size="icon" className="text-muted-foreground" aria-label="More options">
-              <Icons.MoreHorizontal size={18} />
+              <Icons.MoreHorizontal size={compact ? 16 : 18} />
             </Button>
           </div>
         </div>
