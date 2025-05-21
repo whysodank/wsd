@@ -509,6 +509,13 @@ export type webhooks = Record<string, never>
 export interface components {
   schemas: {
     /**
+     * @description * `RELAXED` - Relaxed
+     *     * `NORMAL` - Normal
+     *     * `COMPACT` - Compact
+     * @enum {string}
+     */
+    CardStyleEnum: 'RELAXED' | 'NORMAL' | 'COMPACT'
+    /**
      * @description * `LIKE` - Like
      *     * `COMMENT` - Comment
      *     * `COMMENT_MENTION` - Comment Mention
@@ -837,6 +844,15 @@ export interface components {
       avatar?: string | null
       first_name?: string
       last_name?: string
+      /**
+       * @description User's card style.
+       *
+       *     * `RELAXED` - Relaxed
+       *     * `NORMAL` - Normal
+       *     * `COMPACT` - Compact
+       * @default NORMAL
+       */
+      card_style: components['schemas']['CardStyleEnum']
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -907,6 +923,7 @@ export interface components {
       readonly positive_vote_count: number | null
       readonly negative_vote_count: number | null
       readonly comment_count: number | null
+      readonly comments: string[]
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -1090,6 +1107,7 @@ export interface components {
       readonly positive_vote_count: string[]
       readonly negative_vote_count: string[]
       readonly comment_count: string[]
+      readonly comments: string[]
       readonly non_field_errors: string[]
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
@@ -1297,6 +1315,15 @@ export interface components {
       /** Format: date-time */
       readonly updated_at: string
       readonly signup_completed: string
+      /**
+       * @description User's card style.
+       *
+       *     * `RELAXED` - Relaxed
+       *     * `NORMAL` - Normal
+       *     * `COMPACT` - Compact
+       * @default NORMAL
+       */
+      card_style: components['schemas']['CardStyleEnum']
     }
     UserCompleteSignupError: {
       readonly username: string[]
@@ -1346,6 +1373,7 @@ export interface components {
       readonly created_at: string[]
       readonly updated_at: string[]
       readonly signup_completed: string[]
+      readonly card_style: string[]
       readonly non_field_errors: string[]
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
@@ -1379,6 +1407,15 @@ export interface components {
       avatar?: string | null
       first_name?: string
       last_name?: string
+      /**
+       * @description User's card style.
+       *
+       *     * `RELAXED` - Relaxed
+       *     * `NORMAL` - Normal
+       *     * `COMPACT` - Compact
+       * @default NORMAL
+       */
+      card_style: components['schemas']['CardStyleEnum']
     }
     /**
      * @description * `1` - Upvote
@@ -2211,7 +2248,22 @@ export interface operations {
         created_at__gte?: string
         created_at__lt?: string
         created_at__lte?: string
-        include?: 'category' | 'tags' | 'tags,category' | 'tags,user' | 'tags,user,category' | 'user' | 'user,category'
+        include?:
+          | 'category'
+          | 'category,comments'
+          | 'comments'
+          | 'tags'
+          | 'tags,category'
+          | 'tags,category,comments'
+          | 'tags,comments'
+          | 'tags,user'
+          | 'tags,user,category'
+          | 'tags,user,category,comments'
+          | 'tags,user,comments'
+          | 'user'
+          | 'user,category'
+          | 'user,category,comments'
+          | 'user,comments'
         is_nsfw?: boolean
         is_original?: boolean
         is_repost?: boolean
@@ -2339,7 +2391,22 @@ export interface operations {
   posts_retrieve: {
     parameters: {
       query?: {
-        include?: 'category' | 'tags' | 'tags,category' | 'tags,user' | 'tags,user,category' | 'user' | 'user,category'
+        include?:
+          | 'category'
+          | 'category,comments'
+          | 'comments'
+          | 'tags'
+          | 'tags,category'
+          | 'tags,category,comments'
+          | 'tags,comments'
+          | 'tags,user'
+          | 'tags,user,category'
+          | 'tags,user,category,comments'
+          | 'tags,user,comments'
+          | 'user'
+          | 'user,category'
+          | 'user,category,comments'
+          | 'user,comments'
       }
       header?: never
       path: {

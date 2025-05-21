@@ -4,6 +4,7 @@ from io import BytesIO
 import robohash
 from apps.common.models.base import BaseModel
 from apps.common.utils import track_events
+from apps.common.utils.db import get_longest_choice_length
 from apps.core.managers import UserManager
 from apps.feedback import UserBookmarkMixin, UserVoteMixin
 from django.contrib.auth.models import AbstractUser
@@ -20,6 +21,11 @@ class User(UserVoteMixin, UserBookmarkMixin, AbstractUser, BaseModel):
 
     UNUSABLE_USERNAME_PREFIX = "!"
     SIGNUP_COMPLETED_FIELD = "signup_completed"
+
+    class CARDSTYLE(models.TextChoices):
+        RELAXED = "RELAXED", _("Relaxed")
+        NORMAL = "NORMAL", _("Normal")
+        COMPACT = "COMPACT", _("Compact")
 
     AVATAR_DIRECTORY = "avatars"
 
@@ -45,6 +51,15 @@ class User(UserVoteMixin, UserBookmarkMixin, AbstractUser, BaseModel):
         blank=True,
         null=True,
         help_text=_("User's avatar image."),
+    )
+    card_style = models.CharField(
+        verbose_name=_("Card Style"),
+        max_length=get_longest_choice_length(CARDSTYLE),
+        choices=CARDSTYLE.choices,
+        default=CARDSTYLE.NORMAL,
+        help_text=_("User's card style."),
+        null=False,
+        blank=False,
     )
 
     objects = UserManager()
