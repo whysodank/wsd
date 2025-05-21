@@ -3,7 +3,7 @@
 import Link from 'next/link'
 
 import { Card, CardContent } from '@/components/shadcn/card'
-import ProfileTabsList from '@/components/wsd/Profile/ProfileTabsList'
+import ProfileTabsList from '@/components/wsd/Profile/ProfileTabsList/client'
 import UserAvatar from '@/components/wsd/UserAvatar'
 
 import { APIType } from '@/api'

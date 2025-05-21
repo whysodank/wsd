@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
@@ -19,18 +19,8 @@ export function ProfileTabsList() {
   ])
   const defaultValue = tabs[0].href
 
-  const [value, setValue] = useState(defaultValue)
-  useEffect(() => {
-    const currentTab = tabs.find((tab) => currentPath.startsWith(tab.href))
-    if (currentTab) {
-      setValue(currentTab.href)
-    } else {
-      setValue(defaultValue)
-    }
-  }, [currentPath, defaultValue, tabs, value])
-
   return (
-    <Tabs defaultValue={value} value={value} onValueChange={setValue} className="w-full">
+    <Tabs defaultValue={defaultValue} value={currentPath} className="w-full">
       <TabsList className="grid w-full grid-cols-4">
         {tabs.map((tab) => (
           <TabsTrigger key={tab.href} value={tab.href} asChild>
