@@ -43,7 +43,7 @@ export default function MemeThreeDotMenu({
       <OverlayContent
         className="z-50 min-w-[50px] w-full md:w-fit bg-black p-1 shadow-md rounded-md"
         popoverContentProps={{
-          align: 'center',
+          align: 'start',
           side: 'bottom',
         }}
         side="bottom"
