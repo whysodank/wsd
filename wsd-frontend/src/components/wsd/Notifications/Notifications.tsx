@@ -22,7 +22,7 @@ import { toast } from 'sonner'
 
 export function Notifications({ hasNew }: { hasNew?: boolean }) {
   const wsd = useWSDAPI()
-
+  const [open, setOpen] = useState(false)
   const [notifications, setNotifications] = useState<APIType<'Notification'>[]>([])
   const [page, setPage] = useState(1)
   const [loading, setLoading] = useState(false)
@@ -48,17 +48,19 @@ export function Notifications({ hasNew }: { hasNew?: boolean }) {
   }
 
   useEffect(() => {
-    if (inView && hasMore && !loading) {
+    if (open && inView && hasMore && !loading) {
       setPage((prev) => prev + 1)
       fetchNotifications(page)
     }
-  }, [inView, hasMore, loading]) // eslint-disable-line react-hooks/exhaustive-deps -- what we have is enough
+  }, [inView, hasMore, loading, open]) // eslint-disable-line react-hooks/exhaustive-deps -- what we have is enough
 
   function onOverlayOpenChange(open: boolean) {
+    setOpen(open)
     if (!open) {
-      setNotifications([])
       setPage(1)
+      setNotifications([])
       setHasMore(true)
+      setLoading(false)
     }
   }
 
@@ -103,7 +105,7 @@ export function Notifications({ hasNew }: { hasNew?: boolean }) {
         <OverlayTitle className="hidden">Notifications</OverlayTitle>
         <OverlayDescription className="hidden">Notifications</OverlayDescription>
         <ScrollArea className="max-h-[50vh] overflow-auto">
-          {hasNewState && (
+          {hasNewState && !loading && (
             <Button className="flex items-center gap-2 w-full" variant="outline" onClick={markAllAsRead} size={'sm'}>
               <Icons.CheckCircle className="h-3 w-3" />
               Mark all as read
