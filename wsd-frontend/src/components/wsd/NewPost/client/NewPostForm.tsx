@@ -112,6 +112,10 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
               value={postState.title}
               onChange={handlePostStateEvent('title')}
               errorText={postErrors?.title?.join('\n')}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              aria-autocomplete="none"
             />
           </div>
           {categories.length > 0 && (
@@ -185,6 +189,10 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
                 value={postState.original_source}
                 onChange={handlePostStateEvent('original_source')}
                 errorText={postErrors?.original_source?.join('\n')}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                aria-autocomplete="none"
               />
             </div>
             <small className="text-muted-foreground">Meme's youtube/reddit/blog link</small>
