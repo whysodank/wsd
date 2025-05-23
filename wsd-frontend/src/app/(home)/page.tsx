@@ -1,3 +1,4 @@
+import BackToTopButton from '@/components/wsd/BackToTopButton/client'
 import Memes from '@/components/wsd/Memes'
 
 import { APIQuery } from '@/api'
@@ -16,11 +17,14 @@ export default async function Home(props: { searchParams?: Promise<APIQuery<'/v0
   }
   const { data } = await wsd.posts(postQuery)
   return (
-    <Memes
-      query={postQuery}
-      initialPosts={data?.results || []}
-      hasMorePages={Boolean(data?.total_pages && data.total_pages > 1)}
-      isAuthenticated={isAuthenticated}
-    />
+    <>
+      <Memes
+        query={postQuery}
+        initialPosts={data?.results || []}
+        hasMorePages={Boolean(data?.total_pages && data.total_pages > 1)}
+        isAuthenticated={isAuthenticated}
+      />
+      <BackToTopButton />
+    </>
   )
 }
