@@ -1,6 +1,12 @@
 {
+  "id": "com.whysodank",
+  "author": "Işık Kaplan",
+  "contributors": ["Işık Kaplan", "Pdzly"],
   "name": "Why So Dank?",
   "short_name": "WSD",
+  "description": "Dank memes. Viral chaos. Strange news. Regular people.",
+  "start_url": "/",
+  "scope": "/",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -13,6 +19,18 @@
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "maskable"
+    },
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any"
     }
   ],
   "theme_color": "#ffffff",
