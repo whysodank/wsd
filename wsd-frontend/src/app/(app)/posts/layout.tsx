@@ -8,6 +8,8 @@ import Header from '@/components/wsd/Header'
 import LeftColumn from '@/components/wsd/LeftColumn'
 import RightColumn from '@/components/wsd/RightColumn'
 
+import config from '@/config'
+
 export default async function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
@@ -37,15 +39,17 @@ export default async function Layout({ children }: { children: React.ReactNode }
                       <Icons.FileTextIcon size={18} className="mr-1" />
                       Terms of Service
                     </Link>
-                    <Link
-                      href={'https://github.com/whysodank/wsd'}
-                      className="text-muted-foreground text-sm hover:underline flex items-center gap-1 justify-between"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      <GitHub className="w-5 h-5 mr-1" />
-                      GitHub
-                    </Link>
+                    {config.githubLink && (
+                      <Link
+                        href={config.githubLink}
+                        className="text-muted-foreground text-sm hover:underline flex items-center gap-1 justify-between"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        <GitHub className="w-5 h-5 mr-1" />
+                        GitHub
+                      </Link>
+                    )}
                   </div>
                 </aside>
                 <main className="flex min-h-screen flex-col items-center pt-2">{children}</main>
