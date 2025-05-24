@@ -7,6 +7,7 @@ import type { Metadata } from 'next'
 import { Toaster } from '@/components/shadcn/sonner'
 
 import MonkeyPatches from '@/app/monkeypatches'
+import { PWARegister } from '@/app/pwaRegister'
 import config from '@/config'
 import { getWSDMetadata } from '@/lib/metadata'
 
@@ -34,6 +35,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <link rel="apple-touch-icon" href="/apple-icon.png" />
         <title>{config.motto}</title>
         {gaID && <GoogleAnalytics gaId={gaID} />}
+        <PWARegister />
       </head>
       <body className="min-h-screen font-sans antialiased dark">
         {children}
