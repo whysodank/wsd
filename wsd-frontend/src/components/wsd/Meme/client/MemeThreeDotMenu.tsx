@@ -33,17 +33,18 @@ export default function MemeThreeDotMenu({
   return (
     <Overlay breakpoint="md">
       <OverlayTrigger>
-        <a
+        <Button
+          variant="ghost"
           className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
           aria-label="More"
         >
           <Icons.Ellipsis size={20} />
-        </a>
+        </Button>
       </OverlayTrigger>
       <OverlayContent
         className="z-50 min-w-[50px] w-full md:w-fit bg-black p-1 shadow-md rounded-md"
         popoverContentProps={{
-          align: 'start',
+          align: 'end',
           side: 'bottom',
         }}
         side="bottom"

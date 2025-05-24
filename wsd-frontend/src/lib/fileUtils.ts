@@ -49,9 +49,8 @@ export async function downloadAndFormatImage(
 ) {
   name = safeFileName(name)
   try {
-    // Create an Image element to load the image
     const img = new Image()
-    img.crossOrigin = 'anonymous' // Handle CORS
+    img.crossOrigin = 'anonymous'
 
     await new Promise((resolve, reject) => {
       img.onload = resolve
@@ -59,7 +58,6 @@ export async function downloadAndFormatImage(
       img.src = src
     })
 
-    // Create canvas and context
     const canvas = document.createElement('canvas')
     canvas.width = img.width
     canvas.height = img.height
@@ -69,16 +67,13 @@ export async function downloadAndFormatImage(
       throw new Error('Could not get canvas context')
     }
 
-    // Draw image to canvas
     ctx.drawImage(img, 0, 0)
 
-    // Convert to PNG
     canvas.toBlob(
       (blob) => {
         if (!blob) {
           throw new Error('Could not generate blob')
         }
-        // Create download URL and trigger download
         const link = document.createElement('a')
         const downloadUrl = URL.createObjectURL(blob)
         try {
