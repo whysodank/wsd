@@ -33,10 +33,8 @@ export function MemesOption({
 
   const {
     formState: memesOptionState,
-    //   handleFormStateEvent: handleMemesOptionStateEvent,
     handleFormStateValue: handleMemesOptionStateValue,
-    // formErrors: memesOptionErrors,
-    // setFormErrors: setMemesOptionErrors,
+    resetFormState: resetMemesOptionState,
   } = useFormState<Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>>({
     // Because the searchParams are Strings when passed from Memes component
     is_repost: searchParams.is_repost ? String(searchParams.is_repost) === 'true' : undefined,
@@ -51,8 +49,14 @@ export function MemesOption({
     toast('Memes options applied successfully.')
   }
 
+  function onOverlayChange(open: boolean) {
+    if (!open) {
+      resetMemesOptionState()
+    }
+  }
+
   return (
-    <Overlay breakpoint="md">
+    <Overlay breakpoint="md" onOpenChange={onOverlayChange}>
       <OverlayTrigger>
         <Button
           variant="ghost"
@@ -67,8 +71,8 @@ export function MemesOption({
         popoverContentProps={{
           align: 'end',
           side: 'bottom',
-          sideOffset: 5, // Adds some space between trigger and content
-          alignOffset: -5, // Adjusts horizontal alignment
+          sideOffset: 5,
+          alignOffset: -5,
         }}
         side="bottom"
       >
