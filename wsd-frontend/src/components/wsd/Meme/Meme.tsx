@@ -9,7 +9,7 @@ import * as Icons from 'lucide-react'
 import { AspectRatio } from '@/components/shadcn/aspect-ratio'
 import { Badge } from '@/components/shadcn/badge'
 import { Button } from '@/components/shadcn/button'
-import { FeedbackButtons } from '@/components/wsd/Meme/client'
+import { FeedbackButtons, MemeThreeDotMenu } from '@/components/wsd/Meme/client'
 import UserAvatar from '@/components/wsd/UserAvatar'
 
 import { APIType, Includes } from '@/api'
@@ -185,12 +185,8 @@ export function Meme({
                 </Badge>
               </Link>
             )}
-            <Button
-              className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
-              aria-label="More"
-            >
-              <Icons.Ellipsis size={20} />
-            </Button>
+
+            <MemeThreeDotMenu post={post} />
           </div>
         </div>
       </div>
