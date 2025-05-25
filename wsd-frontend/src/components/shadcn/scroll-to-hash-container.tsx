@@ -1,28 +1,38 @@
 'use client'
 
-import { useEffect, useRef, PropsWithChildren } from 'react'
+import { PropsWithChildren, useEffect, useRef } from 'react'
 
 type ScrollToHashContainerProps = PropsWithChildren<{
-  hash: string
+  hash?: string
+  shouldScroll?: boolean
   offset?: number
+  className?: string
 }>
 
-function ScrollToHashContainer({ hash, offset = 0, children }: ScrollToHashContainerProps) {
+function ScrollToHashContainer({ hash, shouldScroll, className, offset = 0, children }: ScrollToHashContainerProps) {
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    const shouldScroll = window.location.hash === `#${hash}`
-    if (shouldScroll && ref.current) {
+    if (hash === undefined && shouldScroll === undefined) return
+    let shouldScrollPage = false
+    if (hash && window.location.hash === `#${hash}`) {
+      shouldScrollPage = true
+    }
+    if (shouldScroll !== undefined && shouldScroll !== shouldScrollPage) {
+      shouldScrollPage = shouldScroll
+    }
+    if (shouldScrollPage && ref.current) {
       requestAnimationFrame(() => {
         if (!ref.current) return
         const top = ref.current.offsetTop - offset
         window.scrollTo({ top, behavior: 'smooth' })
       })
     }
-  }, [hash])
+  }, [hash, shouldScroll, offset])
 
   return (
-    <div ref={ref}>  {/* Adding id here causes the browser's auto scroll behavior to kick in */}
+    <div ref={ref}
+         className={className}>  {/* Adding id here causes the browser's auto scroll behavior to kick in */}
       {children}
     </div>
   )
