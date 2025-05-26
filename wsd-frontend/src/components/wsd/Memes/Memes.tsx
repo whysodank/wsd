@@ -42,6 +42,7 @@ export function Memes({
   const [page, setPage] = useState(initialPosts && hasMorePages ? 2 : 1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [memeQuery, setMemeQuery] = useState<Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>>(query || {})
 
   const { ref: loaderRef, inView } = useInView({ threshold: 1 })
 
@@ -49,7 +50,7 @@ export function Memes({
     setLoading(true)
     const fullQuery = {
       ...defaultQuery,
-      ...query,
+      ...memeQuery,
       ...alwaysQuery,
       page: pageNum,
     } as APIQuery<'/v0/posts/'>
@@ -64,7 +65,13 @@ export function Memes({
   }
 
   useEffectAfterMount(() => {
+    setMemeQuery(
+      searchParams
+        ? (Object.fromEntries(searchParams.entries()) as Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>)
+        : {}
+    )
     setLoading(true)
+    setPosts([])
     setHasMore(true)
     setPage(1)
     fetchPosts(1, true)
@@ -86,7 +93,7 @@ export function Memes({
   }, [inView, hasMore, loading])
 
   return (
-    <div className="flex flex-col gap-2 items-center md:min-w-[840px] w-full">
+    <div className="relative flex flex-col gap-2 items-center md:min-w-[840px] w-full">
       {posts.map((post) => (
         <div className="contents" key={post.id}>
           <Meme
