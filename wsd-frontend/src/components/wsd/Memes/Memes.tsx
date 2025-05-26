@@ -11,7 +11,6 @@ import { buttonVariants } from '@/components/shadcn/button'
 import { Separator } from '@/components/shadcn/separator'
 import { Skeleton } from '@/components/shadcn/skeleton'
 import Meme from '@/components/wsd/Meme'
-import MemesOption from '@/components/wsd/MemesOptions/client'
 
 import { APIQuery, APIType } from '@/api'
 import { includesType as includes } from '@/api/typeHelpers'
@@ -43,7 +42,7 @@ export function Memes({
   const [page, setPage] = useState(initialPosts && hasMorePages ? 2 : 1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const [memeOptionQuery, setMemeOptionQuery] = useState<Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>>(query || {})
+  const [memeQuery, setMemeQuery] = useState<Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>>(query || {})
 
   const { ref: loaderRef, inView } = useInView({ threshold: 1 })
 
@@ -51,7 +50,7 @@ export function Memes({
     setLoading(true)
     const fullQuery = {
       ...defaultQuery,
-      ...memeOptionQuery,
+      ...memeQuery,
       ...alwaysQuery,
       page: pageNum,
     } as APIQuery<'/v0/posts/'>
@@ -66,8 +65,13 @@ export function Memes({
   }
 
   useEffectAfterMount(() => {
-    setMemeOptionQuery(query || {})
+    setMemeQuery(
+      searchParams
+        ? (Object.fromEntries(searchParams.entries()) as Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>)
+        : {}
+    )
     setLoading(true)
+    setPosts([])
     setHasMore(true)
     setPage(1)
     fetchPosts(1, true)
@@ -88,16 +92,8 @@ export function Memes({
     }
   }, [inView, hasMore, loading])
 
-  const setNewQueryHandler = (params: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>) => {
-    setMemeOptionQuery(params)
-    setPage(1)
-    setHasMore(true)
-    fetchPosts(1, true)
-  }
-
   return (
     <div className="relative flex flex-col gap-2 items-center md:min-w-[840px] w-full">
-      <MemesOption searchParams={query || {}} onChange={setNewQueryHandler} />
       {posts.map((post) => (
         <div className="contents" key={post.id}>
           <Meme

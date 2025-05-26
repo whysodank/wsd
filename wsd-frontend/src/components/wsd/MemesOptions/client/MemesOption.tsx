@@ -1,5 +1,9 @@
 'use client'
 
+import { useSearchParams } from 'next/navigation'
+
+import { useEffect, useState } from 'react'
+
 import * as Icons from 'lucide-react'
 
 import { Button } from '@/components/shadcn/button'
@@ -13,12 +17,58 @@ import { useFormState } from '@/lib/hooks'
 import { toast } from 'sonner'
 
 export function MemesOption({
-  searchParams,
+  params,
   onChange,
 }: {
-  searchParams: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>
+  params?: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>
   onChange?: (params: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>) => void
 }) {
+  const browserSearchParams = useSearchParams()
+
+  const [searchParams, setSearchParamsState] = useState<Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>>(
+    params ||
+      browserSearchParams
+        .toString()
+        .split('&')
+        .reduce(
+          (acc, param) => {
+            const [key, value] = param.split('=')
+            if (key && value) {
+              // Handle boolean values
+              if (value === 'true' || value === 'false') {
+                acc[key as keyof typeof acc] = (value === 'true') as any
+              } else {
+                // For other values, you might need to add specific type handling
+                acc[key as keyof typeof acc] = decodeURIComponent(value) as any
+              }
+            }
+
+            return acc
+          },
+          {} as Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>
+        )
+  )
+
+  useEffect(() => {
+    // Update the state when the params change
+    if (params) {
+      setSearchParamsState(params)
+    } else {
+      const newParams: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'> = {}
+      browserSearchParams.forEach((value, key) => {
+        // Type assertion to handle the dynamic key access
+        const typedKey = key as keyof typeof newParams
+        if (value === 'true' || value === 'false') {
+          // Use type assertion to handle the assignment
+          newParams[typedKey] = (value === 'true') as any
+        } else {
+          newParams[typedKey] = decodeURIComponent(value) as any
+        }
+      })
+      setSearchParamsState(newParams)
+    }
+  }, [params, browserSearchParams])
+
   const setSearchParams = (params: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>) => {
     const url = new URL(window.location.href)
     Object.entries(params).forEach(([key, value]) => {
@@ -60,19 +110,19 @@ export function MemesOption({
       <OverlayTrigger>
         <Button
           variant="ghost"
-          className="absolute top-4 right-4 flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
+          className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
           aria-label="Memes Options"
         >
           <Icons.Settings size={20} />
         </Button>
       </OverlayTrigger>
       <OverlayContent
-        className="z-50 min-w-[200px] w-full md:w-fit bg-background p-4 shadow-md rounded-md"
+        className="z-50 min-w-[175] w-full md:w-fit bg-background p-4 shadow-md rounded-md"
         popoverContentProps={{
-          align: 'end',
+          align: 'start',
+          alignOffset: -4,
           side: 'bottom',
-          sideOffset: 5,
-          alignOffset: -5,
+          sideOffset: 2,
         }}
         side="bottom"
       >
