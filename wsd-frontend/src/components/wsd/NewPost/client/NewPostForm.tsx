@@ -19,7 +19,7 @@ import { Switch } from '@/components/shadcn/switch'
 import { APIType } from '@/api'
 import { useFormState } from '@/lib/hooks'
 import { useWSDAPI } from '@/lib/serverHooks'
-import { fileToBase64, uuidV4toHEX } from '@/lib/utils'
+import { cn, fileToBase64, uuidV4toHEX } from '@/lib/utils'
 
 import { Tag, TagInput } from 'emblor'
 import { toast } from 'sonner'
@@ -33,6 +33,7 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [transitionIsPending, startTransition] = useTransition()
+  const [isDraggingOver, setIsDraggingOver] = useState(false)
 
   function setPostTags(input: SetStateAction<Tag[]>) {
     setTags((prevTags) => {
@@ -98,8 +99,56 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
     }
   }
 
+  function handleDragOver(event: React.DragEvent<HTMLFormElement>) {
+    if (
+      !event.dataTransfer ||
+      !event.dataTransfer.items ||
+      event.dataTransfer.items.length === 0 ||
+      !Array.from(event.dataTransfer.items).some((item) => item.kind === 'file' && item.type.startsWith('image/'))
+    ) {
+      return
+    }
+    event.preventDefault()
+    event.stopPropagation()
+
+    event.dataTransfer.dropEffect = 'copy'
+    setIsDraggingOver(true)
+  }
+
+  function handleDragLeave() {
+    setIsDraggingOver(false)
+  }
+
+  function handleDrop(event: React.DragEvent<HTMLFormElement>) {
+    const file = Array.from(event.dataTransfer.files).find((file) => file.type.startsWith('image/')) || null
+    if (file) {
+      event.preventDefault()
+      event.stopPropagation()
+      fileInputRef.current?.setFile(file)
+      toast('Image selected successfully!')
+    }
+    setIsDraggingOver(false)
+  }
+
   return (
-    <form className="flex items-end gap-2 w-full justify-center" onSubmit={handleCreatePost}>
+    <form
+      className="flex items-end gap-2 w-full justify-center"
+      onSubmit={handleCreatePost}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDrop}
+    >
+      <div
+        className={cn(
+          'fixed inset-0 bg-black/25 z-50 flex items-center justify-center pointer-events-none transition-opacity duration-300',
+          isDraggingOver ? 'opacity-100' : 'opacity-0'
+        )}
+      >
+        <div className="flex flex-column bg-primary p-4 rounded-lg shadow-lg gap-2">
+          <Icons.Upload size={24} className="text-black" />
+          <p className="text-black text-lg font-semibold">Drop your image here</p>
+        </div>
+      </div>
       <div className="bg-background p-6 w-full sm:w-4/5 md:w-4/5 lg:w-3/5 xl:w-2/5">
         <div className="flex flex-col gap-6">
           <h1 className="text-2xl font-bold">Create Post</h1>
@@ -160,7 +209,7 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
             </Label>
             <div className="border-2 border-dashed rounded-lg p-12 text-center">
               <div className="flex flex-col items-center gap-4">
-                {!(fileInputRef.current?.hasFile() === true) && (
+                {!fileInputRef.current?.hasFile() && (
                   <>
                     <div className="p-4 bg-muted rounded-full">
                       <Icons.Image className="w-8 h-8 text-muted-foreground" />
