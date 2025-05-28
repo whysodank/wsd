@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 
-import { SetStateAction, useRef, useState, useTransition } from 'react'
+import { SetStateAction, useEffect, useRef, useState, useTransition } from 'react'
 
 import * as Icons from 'lucide-react'
 
@@ -47,6 +47,32 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
       handlePostStateValue('image')(await fileToBase64(file))
     }
   }
+
+  async function handlePaste(e: ClipboardEvent) {
+    const items = e.clipboardData?.items
+
+    if (!items) {
+      return
+    }
+
+    // Check if the clipboard contains image data
+    const imageFile = Array.from(items)
+      .find((item) => item.type.startsWith('image/') && item.kind === 'file' && item.getAsFile() !== null)
+      ?.getAsFile()
+
+    if (imageFile) {
+      e.preventDefault()
+      if (fileInputRef.current) {
+        fileInputRef.current.setFile(imageFile)
+      }
+      toast.success('Image pasted successfully!')
+    }
+  }
+
+  useEffect(() => {
+    window.addEventListener('paste', handlePaste)
+    return () => window.removeEventListener('paste', handlePaste)
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps -- We want this to run only once on mount
 
   const {
     formState: postState,
