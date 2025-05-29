@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useSearchParams } from 'next/navigation'
 
 import { useState } from 'react'
 
@@ -37,7 +38,7 @@ export function Meme({
     HTMLImageElement,
     'naturalHeight' | 'offsetWidth' | 'naturalWidth'
   >(['naturalHeight', 'offsetWidth', 'naturalWidth'])
-
+  const searchParams = useSearchParams()
   const scale = meme.offsetWidth && meme.naturalWidth ? meme.offsetWidth / meme.naturalWidth : 1
   const scaledHeight = meme.naturalHeight ? meme.naturalHeight * scale : null
 
@@ -56,6 +57,27 @@ export function Meme({
     if (post.is_nsfw && isAuthenticated) {
       setIsBlurred(true)
     }
+  }
+
+  function handleTagClick(tagName: string) {
+    const currentParams = new URLSearchParams(searchParams.toString())
+    const currentTags = currentParams.getAll('tags')
+
+    if (currentTags.includes(tagName)) {
+      // Remove this tag
+      currentParams.delete('tags') // Clear all tags first
+      // Re-add all tags except the one clicked
+      currentTags
+        .filter((tag) => tag !== tagName)
+        .forEach((tag) => {
+          currentParams.append('tags', tag)
+        })
+    } else {
+      // Add this tag to existing tags
+      currentParams.append('tags', tagName)
+    }
+
+    window.history.replaceState({}, '', `?${currentParams.toString()}`)
   }
 
   const originalSource = post.initial ? `/posts/${uuidV4toHEX(post.initial)}/` : post.original_source || undefined
@@ -150,7 +172,16 @@ export function Meme({
         {withTags && (
           <div className="flex flex-wrap gap-2 py-2">
             {post.tags.map((tag) => (
-              <Badge key={tag.name} variant="outline" className="px-3 py-1 text-sm">
+              <Badge
+                key={tag.name}
+                variant="outline"
+                className={cn(
+                  'px-3 py-1 text-sm cursor-pointer hover:bg-secondary hover:text-secondary-foreground transition-colors',
+                  searchParams.getAll('tags').includes(tag.id) &&
+                    'bg-accent text-secondary-foreground border-white border'
+                )}
+                onClick={preventDefault(() => handleTagClick(tag.id))}
+              >
                 {tag.name}
               </Badge>
             ))}
