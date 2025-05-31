@@ -19,7 +19,7 @@ import { Switch } from '@/components/shadcn/switch'
 import { APIType } from '@/api'
 import { useFormState } from '@/lib/hooks'
 import { useWSDAPI } from '@/lib/serverHooks'
-import { cn, fileToBase64, uuidV4toHEX } from '@/lib/utils'
+import { cn, fileToBase64, getImageFromDataTransfer, uuidV4toHEX } from '@/lib/utils'
 
 import { Tag, TagInput } from 'emblor'
 import { toast } from 'sonner'
@@ -100,12 +100,7 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
   }
 
   function handleDragOver(event: React.DragEvent<HTMLFormElement>) {
-    if (
-      !event.dataTransfer ||
-      !event.dataTransfer.items ||
-      event.dataTransfer.items.length === 0 ||
-      !Array.from(event.dataTransfer.items).some((item) => item.kind === 'file' && item.type.startsWith('image/'))
-    ) {
+    if (!getImageFromDataTransfer(event.dataTransfer)) {
       return
     }
     event.preventDefault()
@@ -120,7 +115,7 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
   }
 
   function handleDrop(event: React.DragEvent<HTMLFormElement>) {
-    const file = Array.from(event.dataTransfer.files).find((file) => file.type.startsWith('image/')) || null
+    const file = getImageFromDataTransfer(event.dataTransfer)
     if (file) {
       event.preventDefault()
       event.stopPropagation()
