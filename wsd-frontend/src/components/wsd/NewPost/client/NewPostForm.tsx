@@ -17,7 +17,7 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Switch } from '@/components/shadcn/switch'
 
 import { APIType } from '@/api'
-import { useFormState } from '@/lib/hooks'
+import { useFilePaste, useFormState } from '@/lib/hooks'
 import { useWSDAPI } from '@/lib/serverHooks'
 import { fileToBase64, uuidV4toHEX } from '@/lib/utils'
 
@@ -48,31 +48,26 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
     }
   }
 
-  async function handlePaste(e: ClipboardEvent) {
-    const items = e.clipboardData?.items
+  // Use the useFilePaste hook to handle image paste
+  const { files: pastedFiles, error: pasteError } = useFilePaste({
+    acceptedTypes: ['image/*'],
+    enabled: true,
+  })
 
-    if (!items) {
-      return
-    }
-
-    // Check if the clipboard contains image data
-    const imageFile = Array.from(items)
-      .find((item) => item.type.startsWith('image/') && item.kind === 'file' && item.getAsFile() !== null)
-      ?.getAsFile()
-
-    if (imageFile) {
-      e.preventDefault()
-      if (fileInputRef.current) {
-        fileInputRef.current.setFile(imageFile)
-      }
+  // Process pasted files whenever they change
+  useEffect(() => {
+    if (pastedFiles.length > 0 && fileInputRef.current) {
+      const imageFile = pastedFiles[0]
+      fileInputRef.current.setFile(imageFile)
       toast.success('Image pasted successfully!')
     }
-  }
+  }, [pastedFiles])
 
   useEffect(() => {
-    window.addEventListener('paste', handlePaste)
-    return () => window.removeEventListener('paste', handlePaste)
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps -- We want this to run only once on mount
+    if (pasteError) {
+      toast.error(pasteError)
+    }
+  }, [pasteError])
 
   const {
     formState: postState,
@@ -191,7 +186,7 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
                     <div className="p-4 bg-muted rounded-full">
                       <Icons.Image className="w-8 h-8 text-muted-foreground" />
                     </div>
-                    <p className="font-medium">Choose a photo to upload</p>
+                    <p className="font-medium">Choose a photo to upload or paste from clipboard</p>
                   </>
                 )}
                 <FileInputButton onFileSelect={onFileSelect} ref={fileInputRef} id="postMedia" />
