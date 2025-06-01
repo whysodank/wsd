@@ -19,7 +19,7 @@ export default async function LegalLayout({ children }: { children: React.ReactN
             {legalTabs.map((tab) => (
               <TabsTrigger key={tab.href} value={tab.href} asChild>
                 <Link href={tab.href} prefetch={true} className="flex gap-2">
-                  <span className="hidden sm:flex">{tab.name}</span>
+                  <span className="flex">{tab.name}</span>
                 </Link>
               </TabsTrigger>
             ))}
