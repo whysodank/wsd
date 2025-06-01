@@ -13,7 +13,11 @@ import { toast } from 'sonner'
 export default function MemeThreeDotMenu({
   post,
 }: {
-  post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
+  post: Includes<
+    Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
+    'category',
+    APIType<'PostCategory'>
+  >
 }) {
   const actions = [
     {

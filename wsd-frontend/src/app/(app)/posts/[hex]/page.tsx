@@ -62,14 +62,18 @@ export default async function PostPage(props: {
   const currentOrdering = _.get(orderingLabels, searchParams.ordering || 'created_at', orderingLabels.created_at)
 
   if (!_.isUndefined(postId)) {
-    const { data: post } = await wsd.post(postId, { include: 'tags,user' })
+    const { data: post } = await wsd.post(postId, { include: 'tags,user,category' })
     if (!_.isUndefined(post)) {
       const { data: comments } = await wsd.postComments({
         post: post.id,
         include: 'user',
         ordering: searchParams?.ordering || 'positive_vote_count',
       })
-      const post_ = includesType(includesType(post as APIType<'Post'>, 'user', 'User'), 'tags', 'PostTag', true)
+      const post_ = includesType(
+        includesType(includesType(post as APIType<'Post'>, 'user', 'User'), 'tags', 'PostTag', true),
+        'category',
+        'PostCategory'
+      )
       return (
         <div className="flex flex-col gap-2 items-center lg:w-5/6 w-full">
           <div className="w-full min-h-[130vh]">

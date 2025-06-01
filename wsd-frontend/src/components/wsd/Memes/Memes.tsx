@@ -13,7 +13,7 @@ import { Skeleton } from '@/components/shadcn/skeleton'
 import Meme from '@/components/wsd/Meme'
 
 import { APIQuery, APIType } from '@/api'
-import { includesType as includes } from '@/api/typeHelpers'
+import { includesType } from '@/api/typeHelpers'
 import config from '@/config'
 import { useEffectAfterMount } from '@/lib/hooks'
 import { useWSDAPI } from '@/lib/serverHooks'
@@ -90,7 +90,11 @@ export function Memes({
       {posts.map((post) => (
         <div className="contents" key={post.id}>
           <Meme
-            post={includes(includes({ ...post }, 'user', 'User'), 'tags', 'PostTag', true)}
+            post={includesType(
+              includesType(includesType({ ...post }, 'user', 'User'), 'tags', 'PostTag', true),
+              'category',
+              'PostCategory'
+            )}
             withTags
             withRepostData
             isAuthenticated={isAuthenticated}
