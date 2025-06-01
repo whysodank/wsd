@@ -17,9 +17,9 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Switch } from '@/components/shadcn/switch'
 
 import { APIType } from '@/api'
-import { useFormState } from '@/lib/hooks'
+import { useFileDragDrop, useFormState } from '@/lib/hooks'
 import { useWSDAPI } from '@/lib/serverHooks'
-import { cn, fileToBase64, getImageFromDataTransfer, uuidV4toHEX } from '@/lib/utils'
+import { cn, fileToBase64, uuidV4toHEX } from '@/lib/utils'
 
 import { Tag, TagInput } from 'emblor'
 import { toast } from 'sonner'
@@ -33,7 +33,6 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
   const [activeTagIndex, setActiveTagIndex] = useState<number | null>(null)
   const [loading, setLoading] = useState(false)
   const [transitionIsPending, startTransition] = useTransition()
-  const [isDraggingOver, setIsDraggingOver] = useState(false)
 
   function setPostTags(input: SetStateAction<Tag[]>) {
     setTags((prevTags) => {
@@ -99,44 +98,30 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
     }
   }
 
-  function handleDragOver(event: React.DragEvent<HTMLFormElement>) {
-    if (!getImageFromDataTransfer(event.dataTransfer)) {
-      return
-    }
-    event.preventDefault()
-    event.stopPropagation()
-
-    event.dataTransfer.dropEffect = 'copy'
-    setIsDraggingOver(true)
-  }
-
-  function handleDragLeave() {
-    setIsDraggingOver(false)
-  }
-
-  function handleDrop(event: React.DragEvent<HTMLFormElement>) {
-    const file = getImageFromDataTransfer(event.dataTransfer)
-    if (file) {
-      event.preventDefault()
-      event.stopPropagation()
-      fileInputRef.current?.setFile(file)
-      toast('Image selected successfully!')
-    }
-    setIsDraggingOver(false)
-  }
+  // Implement useFileDragDrop hook for better drag and drop handling
+  const { ref: dragDropRef, isDragging } = useFileDragDrop<HTMLFormElement>({
+    onDrop: async (droppedFiles) => {
+      if (droppedFiles.length > 0) {
+        const file = droppedFiles[0]
+        // Check if it's an image
+        if (file.type.startsWith('image/')) {
+          fileInputRef.current?.setFile(file)
+          toast('Image selected successfully!')
+        } else {
+          toast.error('Please upload an image file')
+        }
+      }
+    },
+    acceptedFileTypes: ['image/*'],
+    multiple: false,
+  })
 
   return (
-    <form
-      className="flex items-end gap-2 w-full justify-center"
-      onSubmit={handleCreatePost}
-      onDragOver={handleDragOver}
-      onDragLeave={handleDragLeave}
-      onDrop={handleDrop}
-    >
+    <form className="flex items-end gap-2 w-full justify-center" onSubmit={handleCreatePost} ref={dragDropRef}>
       <div
         className={cn(
           'fixed inset-0 bg-black/25 z-50 flex items-center justify-center pointer-events-none transition-opacity duration-300',
-          isDraggingOver ? 'opacity-100' : 'opacity-0'
+          isDragging ? 'opacity-100' : 'opacity-0'
         )}
       >
         <div className="flex flex-column bg-primary p-4 rounded-lg shadow-lg gap-2">
@@ -202,14 +187,19 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
               <Icons.Shell size={16} />
               Meme
             </Label>
-            <div className="border-2 border-dashed rounded-lg p-12 text-center">
+            <div
+              className={cn(
+                'border-2 border-dashed rounded-lg p-12 text-center',
+                isDragging && 'border-primary bg-primary/10'
+              )}
+            >
               <div className="flex flex-col items-center gap-4">
                 {!fileInputRef.current?.hasFile() && (
                   <>
                     <div className="p-4 bg-muted rounded-full">
                       <Icons.Image className="w-8 h-8 text-muted-foreground" />
                     </div>
-                    <p className="font-medium">Choose a photo to upload</p>
+                    <p className="font-medium">Choose a photo to upload or drag and drop here</p>
                   </>
                 )}
                 <FileInputButton onFileSelect={onFileSelect} ref={fileInputRef} id="postMedia" />
