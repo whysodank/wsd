@@ -261,15 +261,3 @@ export function noopLayout() {
     return React.createElement(React.Fragment, null, children)
   }
 }
-
-export function getImageFromDataTransfer(dataTransfer: DataTransfer): File | null {
-  /**
-   * Get the first image file from a DataTransfer object.
-   * Used for drag-and-drop file uploads.
-   */
-  if (dataTransfer.files.length > 0) {
-    const files = Array.from(dataTransfer.files)
-    return files.find((file) => file.type.startsWith('image/')) || null
-  }
-  return null
-}
