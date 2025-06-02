@@ -51,6 +51,7 @@ class PostViewSet(BaseModelViewSet):
         "tags": ["exact", "isnull"],
         "category": ["exact", "isnull"],
         "category__handle": ["exact"],
+        "tags__name": ["exact", "icontains", "in"],
         "is_repost": ["exact"],
         "is_nsfw": ["exact"],
         "is_original": ["exact"],

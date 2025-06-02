@@ -1169,6 +1169,23 @@ paths:
         schema:
           type: boolean
       - in: query
+        name: tags__name
+        schema:
+          type: string
+      - in: query
+        name: tags__name__icontains
+        schema:
+          type: string
+      - in: query
+        name: tags__name__in
+        schema:
+          type: array
+          items:
+            type: string
+        description: Multiple values may be separated by commas.
+        explode: false
+        style: form
+      - in: query
         name: title
         schema:
           type: string
