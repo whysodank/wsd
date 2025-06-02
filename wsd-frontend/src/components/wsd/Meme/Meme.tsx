@@ -1,7 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { useState } from 'react'
 
@@ -32,6 +32,7 @@ export function Meme({
   fullScreen?: boolean
   isAuthenticated?: boolean
 }) {
+  const router = useRouter()
   const [isExpanded, setIsExpanded] = useState(false)
   const [isBlurred, setIsBlurred] = useState(true)
   const { ref: imageRef, attributeValues: meme } = useElementAttributes<
@@ -61,23 +62,26 @@ export function Meme({
 
   function handleTagClick(tagName: string) {
     const currentParams = new URLSearchParams(searchParams.toString())
-    const currentTags = currentParams.getAll('tags')
+    const currentTags = currentParams.get('tags__name__in')
 
-    if (currentTags.includes(tagName)) {
-      // Remove this tag
-      currentParams.delete('tags') // Clear all tags first
-      // Re-add all tags except the one clicked
-      currentTags
-        .filter((tag) => tag !== tagName)
-        .forEach((tag) => {
-          currentParams.append('tags', tag)
-        })
-    } else {
-      // Add this tag to existing tags
-      currentParams.append('tags', tagName)
+    if (currentTags) {
+      const tagsArray = currentTags.split(',')
+      if (tagsArray.includes(tagName)) {
+        const newTags = tagsArray.filter((tag) => tag !== tagName)
+        if (newTags.length > 0) {
+          currentParams.set('tags__name__in', newTags.join(','))
+        } else {
+          currentParams.delete('tags__name__in')
+        }
+      } else {
+        tagsArray.push(tagName)
+        currentParams.set('tags__name__in', tagsArray.join(','))
+      }
     }
 
-    window.history.replaceState({}, '', `?${currentParams.toString()}`)
+    router.replace(`${window.location.pathname}?${currentParams.toString()}`, {
+      scroll: true,
+    })
   }
 
   const originalSource = post.initial ? `/posts/${uuidV4toHEX(post.initial)}/` : post.original_source || undefined
@@ -177,10 +181,10 @@ export function Meme({
                 variant="outline"
                 className={cn(
                   'px-3 py-1 text-sm cursor-pointer hover:bg-secondary hover:text-secondary-foreground transition-colors',
-                  searchParams.getAll('tags').includes(tag.id) &&
+                  searchParams.get('tags__name__in')?.split(',')?.includes(tag.name) &&
                     'bg-accent text-secondary-foreground border-white border'
                 )}
-                onClick={preventDefault(() => handleTagClick(tag.id))}
+                onClick={preventDefault(() => handleTagClick(tag.name))}
               >
                 {tag.name}
               </Badge>

@@ -57,8 +57,6 @@ export function Memes({
       ...alwaysQuery,
       page: pageNum,
     } as APIQuery<'/v0/posts/'>
-
-    console.log('fullQuery', fullQuery)
     const { data: postsData } = await wsd.posts(fullQuery)
     setPosts((prev) => {
       const newPosts = resetPosts ? postsData?.results || [] : [...prev, ...(postsData?.results || [])]

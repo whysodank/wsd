@@ -2244,6 +2244,10 @@ export interface operations {
         search?: string
         tags?: string[]
         tags__isnull?: boolean
+        tags__name?: string
+        tags__name__icontains?: string
+        /** @description Multiple values may be separated by commas. */
+        tags__name__in?: string[]
         title?: string
         updated_at?: string
         updated_at__gt?: string

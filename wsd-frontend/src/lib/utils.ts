@@ -277,15 +277,10 @@ export function searchParamsToRecord<T = string | number | boolean>(
 ): Record<string, T | T[]> {
   return Array.from(searchParamsObj).reduce(
     (data, [key, value]) => {
-      // Transform the value if a transformer is provided
       const transformedValue = valueTransformer ? valueTransformer(value, key) : (value as unknown as T)
 
       if (key in data) {
-        if (Array.isArray(data[key])) {
-          ;(data[key] as T[]).push(transformedValue)
-        } else {
-          data[key] = [data[key] as T, transformedValue]
-        }
+        data[key] = `${data[key]},${transformedValue}` as T
       } else {
         data[key] = transformedValue
       }
