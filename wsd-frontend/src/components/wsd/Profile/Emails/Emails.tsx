@@ -12,10 +12,10 @@ import {
   ResendVerificationEmailButton,
 } from '@/components/wsd/Profile/Emails/client'
 
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 export async function Emails() {
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const { data } = await wsd.auth.emails()
   const emails = data?.data as { email: string; primary: boolean; verified: boolean }[] | undefined
   return (

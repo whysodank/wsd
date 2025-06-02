@@ -1,43 +1,52 @@
-import {withSentryConfig} from '@sentry/nextjs';
-import {createRequire} from "module";
+import { withSentryConfig } from '@sentry/nextjs'
 
-const require = createRequire(import.meta.url);
+import { createRequire } from 'module'
+
+const require = createRequire(import.meta.url)
+
+const withPWA = require('next-pwa')({
+  dest: 'public',
+  register: true,
+  skipWaiting: true,
+  disable: false,
+})
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-    experimental: {
-        // For forbidden interrupts
-        authInterrupts: true,
-        optimizePackageImports: ["lodash"]
+  experimental: {
+    // For forbidden interrupts
+    authInterrupts: true,
+    optimizePackageImports: ['lodash'],
+  },
+  turbopack: {
+    rules: {
+      '*.svg': {
+        loaders: ['@svgr/webpack'],
+        as: '*.js',
+      },
     },
-    turbopack: {
-        rules: {
-            '*.svg': {
-                loaders: ['@svgr/webpack'],
-                as: "*.js"
-            },
-        }
-    },
-    webpack(config) {
-        config.module.rules.push({
-            test: /\.svg$/i,
-            use: ['@svgr/webpack'],
-        });
+  },
+  webpack(config) {
+    config.module.rules.push({
+      test: /\.svg$/i,
+      use: ['@svgr/webpack'],
+    })
 
-        return config
-    }
-};
+    return config
+  },
+}
 
 const withBundleAnalyzer = require('@next/bundle-analyzer')({
-    enabled: process.env.ANALYZE === 'true',
+  enabled: process.env.ANALYZE === 'true',
 })
 
-export default withSentryConfig(withBundleAnalyzer(nextConfig), {
+export default withPWA(
+  withSentryConfig(withBundleAnalyzer(nextConfig), {
     // For all available options, see:
     // https://github.com/getsentry/sentry-webpack-plugin#options
 
-    org: "why-so-dank",
-    project: "wsd-front-end",
+    org: 'why-so-dank',
+    project: 'wsd-front-end',
 
     // Only print logs for uploading source maps in CI
     silent: !process.env.CI,
@@ -50,14 +59,14 @@ export default withSentryConfig(withBundleAnalyzer(nextConfig), {
 
     // Automatically annotate React components to show their full name in breadcrumbs and session replay
     reactComponentAnnotation: {
-        enabled: true,
+      enabled: true,
     },
 
     // Route browser requests to Sentry through a Next.js rewrite to circumvent ad-blockers.
     // This can increase your server load as well as your hosting bill.
     // Note: Check that the configured route will not match with your Next.js middleware, otherwise reporting of client-
     // side errors will fail.
-    tunnelRoute: "/monitoring",
+    tunnelRoute: '/monitoring',
 
     // Hides source maps from generated client bundles
     hideSourceMaps: true,
@@ -70,4 +79,5 @@ export default withSentryConfig(withBundleAnalyzer(nextConfig), {
     // https://docs.sentry.io/product/crons/
     // https://vercel.com/docs/cron-jobs
     automaticVercelMonitors: true,
-});
+  })
+)

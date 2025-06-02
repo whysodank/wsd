@@ -265,3 +265,191 @@ export function useFilePaste({
 
   return { files, isLoading, error, clearFiles }
 }
+
+type FileDragDropState = {
+  isDragging: boolean
+  files: File[] | null
+}
+
+type FileDragDropOptions = {
+  onDrop?: (files: File[]) => void
+  onDragOver?: (e: React.DragEvent<HTMLElement>) => void
+  onDragLeave?: (e: React.DragEvent<HTMLElement>) => void
+  acceptedFileTypes?: string[]
+  maxFileSize?: number
+  multiple?: boolean
+}
+
+export function useFileDragDrop<T extends HTMLElement = HTMLDivElement>(options: FileDragDropOptions = {}) {
+  /***
+   * A hook to handle file drag and drop functionality.
+   * It provides a ref to attach to an element, and state to track dragging and dropped files.
+   *
+   * Usage:
+   * const { ref, isDragging, files, reset } = useFileDragDrop({
+   *   onDrop: (files) => console.log(files),
+   *   acceptedFileTypes: ['image/*', 'application/pdf'],
+   *   maxFileSize: 5000000, // 5MB
+   * });
+   *
+   * <div ref={ref}>Drop files here</div>
+   */
+  const { onDrop, onDragOver, onDragLeave, acceptedFileTypes, maxFileSize, multiple = true } = options
+
+  const [state, setState] = useState<FileDragDropState>({
+    isDragging: false,
+    files: null,
+  })
+
+  const ref = useRef<T | null>(null)
+  const dragCounter = useRef(0)
+
+  const handleDragOver = useCallback(
+    (e: React.DragEvent<T>) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      onDragOver?.(e)
+    },
+    [onDragOver]
+  )
+
+  const handleDragEnter = useCallback(
+    (e: React.DragEvent<T>) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      dragCounter.current += 1
+
+      if (e.dataTransfer.items && e.dataTransfer.items.length > 0) {
+        const hasValidItems = Array.from(e.dataTransfer.items).some((item) => {
+          if (item.kind !== 'file') {
+            return false
+          }
+
+          if (acceptedFileTypes && acceptedFileTypes.length > 0) {
+            return acceptedFileTypes.some((type) => {
+              if (type.endsWith('/*')) {
+                const category = type.split('/')[0]
+                return item.type.startsWith(`${category}/`)
+              }
+              return item.type === type
+            })
+          }
+
+          return true
+        })
+
+        if (hasValidItems) {
+          setState((prevState) => ({
+            ...prevState,
+            isDragging: true,
+          }))
+        }
+      }
+    },
+    [acceptedFileTypes]
+  )
+
+  const handleDragLeave = useCallback(
+    (e: React.DragEvent<T>) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      dragCounter.current -= 1
+
+      if (dragCounter.current === 0) {
+        setState((prevState) => ({
+          ...prevState,
+          isDragging: false,
+        }))
+      }
+
+      onDragLeave?.(e)
+    },
+    [onDragLeave]
+  )
+
+  const handleDrop = useCallback(
+    (e: React.DragEvent<T>) => {
+      e.preventDefault()
+      e.stopPropagation()
+
+      dragCounter.current = 0
+      setState((prevState) => ({
+        ...prevState,
+        isDragging: false,
+      }))
+
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        let validFiles = Array.from(e.dataTransfer.files)
+
+        if (acceptedFileTypes && acceptedFileTypes.length > 0) {
+          validFiles = validFiles.filter((file) =>
+            acceptedFileTypes.some((type) => {
+              // Handle wildcards like "image/*"
+              if (type.endsWith('/*')) {
+                const category = type.split('/')[0]
+                return file.type.startsWith(`${category}/`)
+              }
+              return file.type === type
+            })
+          )
+        }
+
+        // Filter by file size if specified
+        if (maxFileSize) {
+          validFiles = validFiles.filter((file) => file.size <= maxFileSize)
+        }
+
+        // Limit to a single file if multiple is false
+        if (!multiple && validFiles.length > 0) {
+          validFiles = [validFiles[0]]
+        }
+
+        if (validFiles.length > 0) {
+          setState((prevState) => ({
+            ...prevState,
+            files: validFiles,
+          }))
+
+          onDrop?.(validFiles)
+        }
+      }
+    },
+    [onDrop, acceptedFileTypes, maxFileSize, multiple]
+  )
+
+  // Attach and clean up event listeners
+  useEffect(() => {
+    const currentRef = ref.current
+    if (currentRef) {
+      currentRef.addEventListener('dragover', handleDragOver as unknown as EventListener)
+      currentRef.addEventListener('dragenter', handleDragEnter as unknown as EventListener)
+      currentRef.addEventListener('dragleave', handleDragLeave as unknown as EventListener)
+      currentRef.addEventListener('drop', handleDrop as unknown as EventListener)
+
+      return () => {
+        currentRef.removeEventListener('dragover', handleDragOver as unknown as EventListener)
+        currentRef.removeEventListener('dragenter', handleDragEnter as unknown as EventListener)
+        currentRef.removeEventListener('dragleave', handleDragLeave as unknown as EventListener)
+        currentRef.removeEventListener('drop', handleDrop as unknown as EventListener)
+      }
+    }
+    return undefined
+  }, [handleDragOver, handleDragEnter, handleDragLeave, handleDrop])
+
+  const reset = useCallback(() => {
+    setState({
+      isDragging: false,
+      files: null,
+    })
+  }, [])
+
+  return {
+    ref,
+    isDragging: state.isDragging,
+    files: state.files,
+    reset,
+  }
+}

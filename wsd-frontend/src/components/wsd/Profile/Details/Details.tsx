@@ -5,12 +5,12 @@ import * as Icons from 'lucide-react'
 import LogoutButton from '@/components/wsd/LogoutButton'
 import { InfoItem } from '@/components/wsd/Profile/Details/InfoItem'
 
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 import { format } from 'date-fns'
 
 export async function Details() {
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const { data: userData } = await wsd.me()
   return (
     userData && (

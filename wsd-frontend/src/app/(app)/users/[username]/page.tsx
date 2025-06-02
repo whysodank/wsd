@@ -5,7 +5,7 @@ import UserProfile from '@/components/wsd/UserProfile'
 
 import { APIQuery, APIType } from '@/api'
 import config from '@/config'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 export default async function User(props: {
   params: Promise<{ username: string }>
@@ -13,7 +13,7 @@ export default async function User(props: {
 }) {
   const { username } = await props.params
   const searchParams = await props.searchParams
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const { data: users } = await wsd.users({ username })
 
   if (wsd.hasResults(users)) {
