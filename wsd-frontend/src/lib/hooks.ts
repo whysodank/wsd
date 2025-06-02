@@ -146,26 +146,22 @@ export function useEffectAfterMount(effect: EffectCallback, deps: DependencyList
   }, deps)
 }
 
-type UseFilePasteOptions = {
-  acceptedTypes?: string[]
-  maxSize?: number
-  targetElement?: HTMLElement | null
-  enabled?: boolean
-}
-
-type UseFilePasteResult = {
-  files: File[]
-  isLoading: boolean
-  error: string | null
-  clearFiles: () => void
-}
-
 export function useFilePaste({
   acceptedTypes,
   maxSize,
   targetElement,
   enabled = true,
-}: UseFilePasteOptions = {}): UseFilePasteResult {
+}: {
+  acceptedTypes?: string[]
+  maxSize?: number
+  targetElement?: HTMLElement | null
+  enabled?: boolean
+} = {}): {
+  files: File[]
+  isLoading: boolean
+  error: string | null
+  clearFiles: () => void
+} {
   const [files, setFiles] = useState<File[]>([])
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
@@ -181,9 +177,7 @@ export function useFilePaste({
         return { valid: false, error: 'No files found in clipboard' }
       }
 
-      // Check file types if specified
       if (acceptedTypes && acceptedTypes.length > 0) {
-        // if it ends with /*, it means we accept all types of that. For example, image/* means we accept all image types.
         const wildcardAcceptedTypes = acceptedTypes
           .filter((type) => type.endsWith('/*'))
           .map((type) => type.slice(0, -2))
@@ -269,10 +263,5 @@ export function useFilePaste({
     }
   }, [enabled, handlePaste, targetElement])
 
-  return {
-    files,
-    isLoading,
-    error,
-    clearFiles,
-  }
+  return { files, isLoading, error, clearFiles }
 }

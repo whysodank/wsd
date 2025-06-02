@@ -186,7 +186,7 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
                     <div className="p-4 bg-muted rounded-full">
                       <Icons.Image className="w-8 h-8 text-muted-foreground" />
                     </div>
-                    <p className="font-medium">Choose a photo to upload or paste from clipboard</p>
+                    <p className="font-medium">Choose, paste or drag and drop a photo to upload</p>
                   </>
                 )}
                 <FileInputButton onFileSelect={onFileSelect} ref={fileInputRef} id="postMedia" />
