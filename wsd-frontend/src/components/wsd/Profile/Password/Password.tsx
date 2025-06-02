@@ -2,10 +2,10 @@
 
 import { ChangePasswordForm, SetPasswordForm } from '@/components/wsd/Profile/Password/client'
 
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 export async function Password() {
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const { data } = await wsd.auth.session()
   const hasPassword = (data?.data as Record<'user', Record<'has_usable_password', boolean>>).user?.has_usable_password
   return (

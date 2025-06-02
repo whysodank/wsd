@@ -10,7 +10,7 @@ import UserAvatar from '@/components/wsd/UserAvatar'
 import { WSDEditor, isEditorEmpty, stripEmptyParagraphs, useWSDEditor } from '@/components/wsd/WSDEditor'
 
 import { APIType, Includes } from '@/api'
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 import { toast } from 'sonner'
 
@@ -25,7 +25,7 @@ export default function NewCommentForm({
   >
   user: APIType<'User'>
 }) {
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const router = useRouter()
   const editor = useWSDEditor({})
   const [loading, setLoading] = useState(false)

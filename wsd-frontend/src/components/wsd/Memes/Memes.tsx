@@ -16,7 +16,7 @@ import { APIQuery, APIType } from '@/api'
 import { includesType } from '@/api/typeHelpers'
 import config from '@/config'
 import { useEffectAfterMount } from '@/lib/hooks'
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { cn } from '@/lib/utils'
 
 import { useInView } from 'react-intersection-observer'
@@ -32,7 +32,7 @@ export function Memes({
   hasMorePages?: boolean
   isAuthenticated?: boolean
 }) {
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const searchParams = useSearchParams()
 
   const defaultQuery = { page_size: config.ux.defaultPostPerPage }

@@ -18,14 +18,14 @@ import { Switch } from '@/components/shadcn/switch'
 
 import { APIType } from '@/api'
 import { useFileDragDrop, useFormState } from '@/lib/hooks'
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { cn, fileToBase64, uuidV4toHEX } from '@/lib/utils'
 
 import { Tag, TagInput } from 'emblor'
 import { toast } from 'sonner'
 
 export default function NewPostForm({ categories }: { categories: APIType<'PostCategory'>[] }) {
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const router = useRouter()
   const fileInputRef = useRef<FileInputButtonRef>(null)
 

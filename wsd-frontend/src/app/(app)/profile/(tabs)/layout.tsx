@@ -7,10 +7,10 @@ import ProfileTabsList from '@/components/wsd/Profile/ProfileTabsList/client'
 import UserAvatar from '@/components/wsd/UserAvatar'
 
 import { APIType } from '@/api'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 export default async function ProfileLayout({ children }: { children: React.ReactNode }) {
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
 
   const { data: user } = await wsd.me()
 
