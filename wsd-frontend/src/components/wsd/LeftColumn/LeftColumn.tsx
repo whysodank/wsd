@@ -33,7 +33,7 @@ export async function LeftColumn() {
           </CategoryLink>
         ))}
         <Separator />
-        <div className="ml-auto">
+        <div>
           <MemesOption />
         </div>
       </div>

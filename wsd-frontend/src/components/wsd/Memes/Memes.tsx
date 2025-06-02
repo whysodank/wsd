@@ -42,12 +42,15 @@ export function Memes({
   const [page, setPage] = useState(initialPosts && hasMorePages ? 2 : 1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const [memeQuery, setMemeQuery] = useState<Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>>(query || {})
+  const [memeQuery, setMemeQuery] = useState<Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>>(
+    query || Object.fromEntries(searchParams.entries()) || {}
+  )
 
   const { ref: loaderRef, inView } = useInView({ threshold: 1 })
 
   async function fetchPosts(pageNum: number, resetPosts = false) {
     setLoading(true)
+
     const fullQuery = {
       ...defaultQuery,
       ...memeQuery,
@@ -64,18 +67,16 @@ export function Memes({
     setLoading(false)
   }
 
+  useEffect(() => {
+    setMemeQuery(Object.fromEntries(searchParams.entries()) as Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>)
+  }, [searchParams])
+
   useEffectAfterMount(() => {
-    setMemeQuery(
-      searchParams
-        ? (Object.fromEntries(searchParams.entries()) as Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>)
-        : {}
-    )
     setLoading(true)
-    setPosts([])
     setHasMore(true)
     setPage(1)
     fetchPosts(1, true)
-  }, [searchParams])
+  }, [memeQuery])
 
   useEffect(() => {
     if (initialPosts && hasMorePages) {

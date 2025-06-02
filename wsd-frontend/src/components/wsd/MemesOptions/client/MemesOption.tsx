@@ -6,10 +6,10 @@ import { useEffect, useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/shadcn/accordion'
 import { Button } from '@/components/shadcn/button'
 import { Checkbox } from '@/components/shadcn/checkbox'
 import { Label } from '@/components/shadcn/label'
-import { Overlay, OverlayContent, OverlayTrigger } from '@/components/shadcn/overlay'
 
 import { APIQuery } from '@/api'
 import { useFormState } from '@/lib/hooks'
@@ -24,6 +24,7 @@ export function MemesOption({
   onChange?: (params: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>) => void
 }) {
   const browserSearchParams = useSearchParams()
+  const [isOpen, setIsOpen] = useState(false)
 
   const [searchParams, setSearchParamsState] = useState<Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>>(
     params ||
@@ -86,8 +87,8 @@ export function MemesOption({
     handleFormStateValue: handleMemesOptionStateValue,
     resetFormState: resetMemesOptionState,
   } = useFormState<Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>>({
-    // Because the searchParams are Strings when passed from Memes component
-    is_repost: searchParams.is_repost ? String(searchParams.is_repost) === 'true' : undefined,
+    is_repost: searchParams.is_repost !== undefined ? String(searchParams.is_repost) === 'true' : undefined,
+    is_original: searchParams.is_original !== undefined ? String(searchParams.is_original) === 'true' : undefined,
   })
 
   async function handleApplyMemesOption(event: React.FormEvent<HTMLFormElement>) {
@@ -99,54 +100,58 @@ export function MemesOption({
     toast('Memes options applied successfully.')
   }
 
-  function onOverlayChange(open: boolean) {
-    if (!open) {
-      resetMemesOptionState()
-    }
+  function onOverlayChange() {
+    resetMemesOptionState()
+  }
+
+  function handleAccordionChange(value: string[]) {
+    setIsOpen(value.includes('options'))
   }
 
   return (
-    <Overlay breakpoint="md" onOpenChange={onOverlayChange}>
-      <OverlayTrigger>
-        <Button
-          variant="ghost"
-          className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
-          aria-label="Memes Options"
-        >
-          <Icons.Settings size={20} />
-        </Button>
-      </OverlayTrigger>
-      <OverlayContent
-        className="z-50 min-w-[175] w-full md:w-fit bg-background p-4 shadow-md rounded-md"
-        popoverContentProps={{
-          align: 'start',
-          alignOffset: -4,
-          side: 'bottom',
-          sideOffset: 2,
-        }}
-        side="bottom"
-      >
-        <form onSubmit={handleApplyMemesOption} className="flex flex-col gap-4">
-          <div className="flex flex-row gap-2 items-center">
-            <Checkbox
-              id="isRepost"
-              checked={memesOptionState.is_repost !== false}
-              onCheckedChange={(checked) =>
-                handleMemesOptionStateValue('is_repost')(checked === false ? false : undefined)
-              }
-              className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-            />
-            <Label htmlFor="isRepost">Show reposts</Label>
-          </div>
-          <Button
-            type="submit"
-            variant={'ghost'}
-            className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700"
-          >
-            Apply
-          </Button>
-        </form>
-      </OverlayContent>
-    </Overlay>
+    <Accordion type={'multiple'} onValueChange={handleAccordionChange}>
+      <AccordionItem value={'options'}>
+        <AccordionTrigger onChange={onOverlayChange} className="flex hover:bg-gray-500 rounded-md mb-2  h-4" hideArrow>
+          <Icons.Settings
+            size={16}
+            className={`w-full transition-transform duration-300 ease-in-out ${isOpen ? 'rotate-90' : ''}`}
+          />
+        </AccordionTrigger>
+        <AccordionContent>
+          <form onSubmit={handleApplyMemesOption} className="flex flex-col gap-5">
+            <div className="flex flex-row gap-2 items-center">
+              <Checkbox
+                id="isRepost"
+                checked={memesOptionState.is_repost === false}
+                onCheckedChange={(checked) =>
+                  handleMemesOptionStateValue('is_repost')(checked === true ? false : undefined)
+                }
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <Label htmlFor="isRepost">Hide reposts</Label>
+            </div>
+            <div className="flex flex-row gap-2 items-center">
+              <Checkbox
+                id="isOriginal"
+                checked={memesOptionState.is_original === true}
+                onCheckedChange={(checked) =>
+                  handleMemesOptionStateValue('is_original')(checked === false ? undefined : true)
+                }
+                className="h-4 w-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <Label htmlFor="isOriginal">Show only original posts</Label>
+            </div>
+            <Button
+              type="submit"
+              size="sm"
+              variant="ghost"
+              className="w-full bg-blue-600 text-white rounded hover:bg-blue-700"
+            >
+              Apply
+            </Button>
+          </form>
+        </AccordionContent>
+      </AccordionItem>
+    </Accordion>
   )
 }
