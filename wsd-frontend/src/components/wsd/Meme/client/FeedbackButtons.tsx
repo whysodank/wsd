@@ -19,7 +19,13 @@ export default function FeedbackButtons({
   post,
   isAuthenticated,
 }: {
-  post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
+  post:
+    | Includes<
+        Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
+        'category',
+        APIType<'PostCategory'>
+      >
+    | Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
   isAuthenticated: boolean
 }) {
   const wsd = getWSDAPI()

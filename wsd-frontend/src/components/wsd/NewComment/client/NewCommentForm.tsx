@@ -18,7 +18,11 @@ export default function NewCommentForm({
   post,
   user,
 }: {
-  post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
+  post: Includes<
+    Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
+    'category',
+    APIType<'PostCategory'>
+  >
   user: APIType<'User'>
 }) {
   const wsd = getWSDAPI()

@@ -6,7 +6,11 @@ import { getWSDAPI } from '@/lib/serverHooks'
 export async function NewComment({
   post,
 }: {
-  post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
+  post: Includes<
+    Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
+    'category',
+    APIType<'PostCategory'>
+  >
 }) {
   const wsd = getWSDAPI()
   const user = (await wsd.getCurrentUser()) as APIType<'User'>
