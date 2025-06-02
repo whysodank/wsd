@@ -6,7 +6,7 @@ import _ from 'lodash'
 
 import { Button } from '@/components/shadcn/button'
 
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { getLazyValueAsync } from '@/lib/utils'
 
 // TODO@next15: Remove forwardRef and turn this back to a function component
@@ -18,7 +18,7 @@ export const AutoFormButton = forwardRef<
     payload?: Record<string, string>
   }
 >(({ action, method = 'POST', payload = {}, children, ...buttonProps }, ref) => {
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const formRef = useRef<HTMLFormElement | null>(null)
 
   async function handleClick() {

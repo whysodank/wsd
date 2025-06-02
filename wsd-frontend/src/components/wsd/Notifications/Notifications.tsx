@@ -15,13 +15,13 @@ import { Skeleton } from '@/components/shadcn/skeleton'
 import { Notification } from '@/components/wsd/Notifications/Notification'
 
 import { APIType } from '@/api'
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 import { useInView } from 'react-intersection-observer'
 import { toast } from 'sonner'
 
 export function Notifications({ hasNew }: { hasNew?: boolean }) {
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const [open, setOpen] = useState(false)
   const [notifications, setNotifications] = useState<APIType<'Notification'>[]>([])
   const [page, setPage] = useState(1)

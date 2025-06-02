@@ -8,14 +8,14 @@ import { useEffect, useState } from 'react'
 import * as Icons from 'lucide-react'
 
 import { APIType, Includes } from '@/api'
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { forcedType } from '@/lib/typeHelpers'
 import { shortFormattedDateTime, uuidV4toHEX } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
 
 export function Notification({ notification }: { notification: APIType<'Notification'> }) {
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const router = useRouter()
 
   const [isRead, setIsRead] = useState(notification.is_read)

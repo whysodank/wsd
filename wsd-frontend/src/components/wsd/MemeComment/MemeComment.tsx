@@ -11,14 +11,14 @@ import UserAvatar from '@/components/wsd/UserAvatar'
 import { WSDEditorRenderer } from '@/components/wsd/WSDEditor/Editor'
 
 import type { APIType, Includes } from '@/api'
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { cn, shortFormattedDateTime } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
 import { toast } from 'sonner'
 
 export function MemeComment({ comment }: { comment: Includes<APIType<'PostComment'>, 'user', APIType<'User'>> }) {
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const [feedback, setFeedback] = useState<APIType<'VoteEnum'> | null>(comment.vote)
   const [voteCount, setVoteCount] = useState((comment.positive_vote_count || 0) - (comment.negative_vote_count || 0))
 
