@@ -1,46 +1,23 @@
-import { type Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 
 import _ from 'lodash'
 
-import MemePost from '@/components/wsd/MemePost/MemePost'
+import { Button, buttonVariants } from '@/components/shadcn/button'
+import { Overlay, OverlayClose, OverlayContent, OverlayTitle, OverlayTrigger } from '@/components/shadcn/overlay'
+import { Separator } from '@/components/shadcn/separator'
+import AuthenticatedOnlyActionButton from '@/components/wsd/AuthenticatedOnlyActionButton'
+import Meme from '@/components/wsd/Meme'
+import MemeComment from '@/components/wsd/MemeComment'
+import NewComment from '@/components/wsd/NewComment'
 
-import config from '@/config'
-import { getWSDMetadata } from '@/lib/metadata'
+import { APIQuery, APIType, includesType } from '@/api'
 import { getWSDAPI } from '@/lib/serverHooks'
-import { InvalidHEXError, hexToUUIDv4, suppress } from '@/lib/utils'
+import { getKeys } from '@/lib/typeHelpers'
+import { InvalidHEXError, cn, hexToUUIDv4, suppress } from '@/lib/utils'
 
-export async function generateMetadata(props: { params: Promise<{ hex: string }> }): Promise<Metadata | undefined> {
-  const params = await props.params
-  const wsd = getWSDAPI()
-  const postId = suppress<string, undefined>([InvalidHEXError], () => hexToUUIDv4(params.hex))
-
-  if (!_.isUndefined(postId)) {
-    const { data: post } = await wsd.post(postId, { include: 'tags' })
-    if (!_.isUndefined(post)) {
-      return await getWSDMetadata({
-        title: post.title,
-        description: post.title,
-        image: post.is_nsfw ? config.nsfw_image : post.image,
-      })
-    }
-  }
-  return notFound()
-}
-
-export default async function PostPage(props: { params: Promise<{ hex: string }>; searchParams: Promise<any> }) {
-  const postHex = (await props.params).hex
-  const params = new Promise<{
-    hex: string
-    commentHex?: string
-  }>((resolve) => {
-    resolve({ hex: postHex, commentHex: undefined })
-  })
-  return <MemePost params={params} searchParams={props.searchParams} />
-}
-/*
-export default async function PostPage(props: {
-  params: Promise<{ hex: string }>
+export default async function MemePost(props: {
+  params: Promise<{ hex: string; commentHex?: string }>
   searchParams: Promise<APIQuery<'/v0/post-comments/'>>
 }) {
   const searchParams = await props.searchParams
@@ -48,6 +25,9 @@ export default async function PostPage(props: {
   const wsd = getWSDAPI()
   const isAuthenticated = await wsd.isAuthenticated()
   const postId = suppress<string, undefined>([InvalidHEXError], () => hexToUUIDv4(params.hex))
+  const targetCommentId = !_.isUndefined(params.commentHex)
+    ? suppress<string, undefined>([InvalidHEXError], () => hexToUUIDv4(params.commentHex))
+    : undefined
 
   const orderingLabels = {
     created_at: 'Oldest',
@@ -63,7 +43,7 @@ export default async function PostPage(props: {
   const currentOrdering = _.get(orderingLabels, searchParams.ordering || 'created_at', orderingLabels.created_at)
 
   if (!_.isUndefined(postId)) {
-    const { data: post } = await wsd.post(postId, { include: 'tags,user,category' })
+    const { data: post } = await wsd.post(postId, { include: 'tags,user' })
     if (!_.isUndefined(post)) {
       const { data: comments } = await wsd.postComments({
         post: post.id,
@@ -118,14 +98,16 @@ export default async function PostPage(props: {
               </div>
             )}
             {isAuthenticated && <NewComment post={post_} />}
-            <ScrollToHashContainer hash="comments">
-              <div className="flex flex-col justify-center items-start">
-                {wsd.hasResults(comments) &&
-                  comments.results.map((comment) => (
-                    <MemeComment comment={includesType(comment, 'user', 'User')} key={`meme-comment-${comment.id}`} />
-                  ))}
-              </div>
-            </ScrollToHashContainer>
+            <div className="flex flex-col justify-center items-start">
+              {wsd.hasResults(comments) &&
+                comments.results.map((comment) => (
+                  <MemeComment
+                    comment={includesType(comment, 'user', 'User')}
+                    key={`meme-comment-${comment.id}`}
+                    targeted={targetCommentId === comment.id}
+                  />
+                ))}
+            </div>
           </div>
         </div>
       )
@@ -133,5 +115,3 @@ export default async function PostPage(props: {
   }
   return notFound()
 }
-
- */
