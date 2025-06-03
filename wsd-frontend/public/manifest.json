@@ -7,6 +7,10 @@
   "description": "Dank memes. Viral chaos. Strange news. Regular people.",
   "start_url": "/",
   "scope": "/",
+  "theme_color": "#000000",
+  "background_color": "#000000",
+  "display": "standalone",
+  "orientation": "portrait",
   "icons": [
     {
       "src": "/web-app-manifest-192x192.png",
@@ -40,8 +44,5 @@
       "type": "image/png",
       "form_factor": "wide"
     }
-  ],
-  "theme_color": "#ffffff",
-  "background_color": "#000000",
-  "display": "standalone"
+  ]
 }
