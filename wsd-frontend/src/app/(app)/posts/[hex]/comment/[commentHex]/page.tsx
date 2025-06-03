@@ -8,14 +8,14 @@ import MemePost from '@/components/wsd/MemePost/MemePost'
 import { includesType } from '@/api'
 import config from '@/config'
 import { getWSDMetadata } from '@/lib/metadata'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { InvalidHEXError, hexToUUIDv4, suppress } from '@/lib/utils'
 
 export async function generateMetadata(props: {
   params: Promise<{ hex: string; commentHex?: string }>
 }): Promise<Metadata | undefined> {
   const params = await props.params
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const postId = suppress<string, undefined>([InvalidHEXError], () => hexToUUIDv4(params.hex))
   const commentParamId = params.commentHex
 

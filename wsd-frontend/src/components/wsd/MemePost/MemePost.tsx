@@ -12,7 +12,7 @@ import MemeComment from '@/components/wsd/MemeComment'
 import NewComment from '@/components/wsd/NewComment'
 
 import { APIQuery, APIType, includesType } from '@/api'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { getKeys } from '@/lib/typeHelpers'
 import { InvalidHEXError, cn, hexToUUIDv4, suppress } from '@/lib/utils'
 
@@ -22,7 +22,7 @@ export default async function MemePost(props: {
 }) {
   const searchParams = await props.searchParams
   const params = await props.params
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
   const isAuthenticated = await wsd.isAuthenticated()
   const postId = suppress<string, undefined>([InvalidHEXError], () => hexToUUIDv4(params.hex))
   const targetCommentId = !_.isUndefined(params.commentHex)
@@ -50,7 +50,11 @@ export default async function MemePost(props: {
         include: 'user',
         ordering: searchParams?.ordering || 'positive_vote_count',
       })
-      const post_ = includesType(includesType(post as APIType<'Post'>, 'user', 'User'), 'tags', 'PostTag', true)
+      const post_ = includesType(
+        includesType(includesType(post as APIType<'Post'>, 'user', 'User'), 'tags', 'PostTag', true),
+        'category',
+        'PostCategory'
+      )
       return (
         <div className="flex flex-col gap-2 items-center lg:w-5/6 w-full">
           <div className="w-full min-h-[130vh]">
