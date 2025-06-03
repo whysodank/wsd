@@ -1,19 +1,20 @@
-"use client"
+'use client'
 
-import type React from "react"
-import {forwardRef, useEffect, useImperativeHandle, useRef, useState} from "react"
-import {Button} from "@/components/shadcn/button"
-import {Upload} from "lucide-react"
+import type React from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useRef, useState } from 'react'
+import { Button } from '@/components/shadcn/button'
+import { Upload } from 'lucide-react'
 
 export type FileInputButtonRef = {
   getFile: () => File | null
   hasFile: () => boolean
+  setFile: (file: File | null) => void
 }
 
 const FileInputButton = forwardRef(
-  function (
-    {onFileSelect, id, previewPosition="top"}:
-    { onFileSelect?: (file: File | null) => Promise<void>, id?: string, previewPosition?: "top" | "bottom" }, ref
+  function(
+    { onFileSelect, id, previewPosition = 'top' }:
+    { onFileSelect?: (file: File | null) => Promise<void>, id?: string, previewPosition?: 'top' | 'bottom' }, ref,
   ) {
     const [imagePreview, setImagePreview] = useState<string | null>(null)
     const fileInputRef = useRef<HTMLInputElement>(null)
@@ -45,25 +46,37 @@ const FileInputButton = forwardRef(
     useImperativeHandle(ref, () => ({
       getFile: () => selectedFile,
       hasFile: () => !!selectedFile,
+      setFile: (file: File | null) => {
+        if (file) {
+          const imageUrl = URL.createObjectURL(file)
+          setImagePreview(imageUrl)
+          setSelectedFile(file)
+          onFileSelect?.(file)
+        } else {
+          setImagePreview(null)
+          setSelectedFile(null)
+          onFileSelect?.(null)
+        }
+      },
     }))
 
     return (
       <div className="flex flex-col items-center gap-4">
-        {imagePreview && previewPosition === "top" && (
+        {imagePreview && previewPosition === 'top' && (
           <img src={imagePreview} alt="Selected preview" className="mt-2 w-full object-cover rounded-lg shadow" />
         )}
         <Button onClick={handleButtonClick} variant="outline" role="button" type="button">
           <Upload className="mr-2 h-4 w-4" />
-          {imagePreview ? "Change Image" : "Choose a file..."}
+          {imagePreview ? 'Change Image' : 'Choose a file...'}
         </Button>
         <input type="file" id={id} ref={fileInputRef} onChange={handleFileChange} className="hidden" accept="image/*" />
-        {imagePreview && previewPosition === "bottom" && (
+        {imagePreview && previewPosition === 'bottom' && (
           <img src={imagePreview} alt="Selected preview" className="mt-2 w-full object-cover rounded-lg shadow" />
         )}
       </div>
     )
-  }
+  },
 )
 
 export default FileInputButton
-FileInputButton.displayName = "FileInputButton"
+FileInputButton.displayName = 'FileInputButton'

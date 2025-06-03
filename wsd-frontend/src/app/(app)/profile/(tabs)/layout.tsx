@@ -1,25 +1,18 @@
+'use server'
+
 import Link from 'next/link'
 
-import * as Icons from 'lucide-react'
-
 import { Card, CardContent } from '@/components/shadcn/card'
-import { Tabs, TabsList, TabsTrigger } from '@/components/shadcn/tabs'
+import ProfileTabsList from '@/components/wsd/Profile/ProfileTabsList/client'
 import UserAvatar from '@/components/wsd/UserAvatar'
 
 import { APIType } from '@/api'
-import { useWSDAPI as sUseWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 
 export default async function ProfileLayout({ children }: { children: React.ReactNode }) {
-  const wsd = sUseWSDAPI()
+  const wsd = getWSDAPI()
 
   const { data: user } = await wsd.me()
-
-  const profileTabs = [
-    { name: 'Profile', href: '/profile/details', icon: Icons.User },
-    { name: 'Password', href: '/profile/password', icon: Icons.Lock },
-    { name: 'Emails', href: '/profile/emails', icon: Icons.Mail },
-    { name: 'Connections', href: '/profile/connections', icon: Icons.Link },
-  ]
 
   return (
     <div className="min-h-screen flex flex-col gap-1 items-center justify-center p-4">
@@ -32,18 +25,7 @@ export default async function ProfileLayout({ children }: { children: React.Reac
       <div className="flex flex-col justify-center items-center mb-36 w-full gap-2">
         <Card className="w-full max-w-xl">
           <CardContent className="p-6 flex flex-col gap-4">
-            <Tabs defaultValue={profileTabs[0].href}>
-              <TabsList className="grid w-full grid-cols-4">
-                {profileTabs.map((tab) => (
-                  <TabsTrigger key={tab.href} value={tab.href} asChild>
-                    <Link href={tab.href} prefetch={true} className="flex gap-2">
-                      <tab.icon className="h-5 w-5" />
-                      <span className="hidden sm:flex">{tab.name}</span>
-                    </Link>
-                  </TabsTrigger>
-                ))}
-              </TabsList>
-            </Tabs>
+            <ProfileTabsList />
             {children}
           </CardContent>
         </Card>

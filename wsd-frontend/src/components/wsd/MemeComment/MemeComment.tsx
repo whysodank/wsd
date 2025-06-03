@@ -13,7 +13,7 @@ import UserAvatar from '@/components/wsd/UserAvatar'
 import { WSDEditorRenderer } from '@/components/wsd/WSDEditor/Editor'
 
 import type { APIType, Includes } from '@/api'
-import { useWSDAPI } from '@/lib/serverHooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { InvalidHEXError, cn, shortFormattedDateTime, suppress, uuidV4toHEX } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
@@ -28,7 +28,7 @@ export function MemeComment({
 }) {
   const router = useRouter()
 
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const [feedback, setFeedback] = useState<APIType<'VoteEnum'> | null>(comment.vote)
   const [voteCount, setVoteCount] = useState((comment.positive_vote_count || 0) - (comment.negative_vote_count || 0))
   const postId = suppress<string, undefined>([InvalidHEXError], () => uuidV4toHEX(comment.post))

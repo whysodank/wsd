@@ -9,14 +9,20 @@ import * as Icons from 'lucide-react'
 import { AspectRatio } from '@/components/shadcn/aspect-ratio'
 import { Badge } from '@/components/shadcn/badge'
 import { Button } from '@/components/shadcn/button'
-import { FeedbackButtons } from '@/components/wsd/Meme/client'
+import { RawSVGIcon } from '@/components/shadcn/raw-svg-icon'
+import CategoryLink from '@/components/wsd/CategoryLink'
+import { FeedbackButtons, MemeThreeDotMenu } from '@/components/wsd/Meme/client'
 import UserAvatar from '@/components/wsd/UserAvatar'
 
-import { APIType, Includes } from '@/api'
+import { APIType, Includes, includesType } from '@/api'
 import { useElementAttributes } from '@/lib/hooks'
 import { cn, preventDefault, shortFormattedDateTime, uuidV4toHEX } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
+
+function getQuickFilterHREF(params?: { [key: string]: string }) {
+  return { pathname: '/', query: params }
+}
 
 export function Meme({
   post,
@@ -25,7 +31,11 @@ export function Meme({
   fullScreen = false,
   isAuthenticated = false,
 }: {
-  post: Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>
+  post: Includes<
+    Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
+    'category',
+    APIType<'PostCategory'>
+  >
   withTags?: boolean
   withRepostData?: boolean
   fullScreen?: boolean
@@ -60,6 +70,9 @@ export function Meme({
 
   const originalSource = post.initial ? `/posts/${uuidV4toHEX(post.initial)}/` : post.original_source || undefined
 
+  const category =
+    typeof post.category === 'object' ? includesType(post, 'category', 'PostCategory').category : undefined
+
   return (
     <article
       className={cn(
@@ -69,6 +82,16 @@ export function Meme({
     >
       <div className="flex flex-col gap-1 p-4 max-md:p-2 max-md:py-0">
         <div className="flex items-center gap-2">
+          {category && (
+            <CategoryLink
+              href={getQuickFilterHREF({ category__handle: category.handle })}
+              key={category.handle}
+              icon={<RawSVGIcon svg={category.icon} />}
+              className="text-xs text-muted-foreground hover:underline w-fit p-1 pr-2 border border-border/50 rounded-xl"
+            >
+              {category.name}
+            </CategoryLink>
+          )}
           <Link href={{ pathname: `/users/${post.user.username}` }}>
             <UserAvatar user={post.user} className="w-6 h-6" />
           </Link>
@@ -185,12 +208,8 @@ export function Meme({
                 </Badge>
               </Link>
             )}
-            <Button
-              className="flex items-center gap-1 p-2 rounded-md transition-colors text-gray-500 hover:bg-secondary bg-transparent"
-              aria-label="More"
-            >
-              <Icons.Ellipsis size={20} />
-            </Button>
+
+            <MemeThreeDotMenu post={post} />
           </div>
         </div>
       </div>
