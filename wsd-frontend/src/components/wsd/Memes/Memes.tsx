@@ -17,7 +17,7 @@ import { includesType as includes } from '@/api/typeHelpers'
 import config from '@/config'
 import { useEffectAfterMount } from '@/lib/hooks'
 import { useWSDAPI } from '@/lib/serverHooks'
-import { cn } from '@/lib/utils'
+import { cn, searchParamsToRecord } from '@/lib/utils'
 
 import { useInView } from 'react-intersection-observer'
 
@@ -42,9 +42,7 @@ export function Memes({
   const [page, setPage] = useState(initialPosts && hasMorePages ? 2 : 1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
-  const [memeQuery, setMemeQuery] = useState<Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>>(
-    query || Object.fromEntries(searchParams.entries()) || {}
-  )
+  const [memeQuery, setMemeQuery] = useState<APIQuery<'/v0/posts/'>>(query || searchParamsToRecord(searchParams))
 
   const { ref: loaderRef, inView } = useInView({ threshold: 1 })
 
@@ -68,7 +66,7 @@ export function Memes({
   }
 
   useEffect(() => {
-    setMemeQuery(Object.fromEntries(searchParams.entries()) as Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>)
+    setMemeQuery(searchParamsToRecord(searchParams))
   }, [searchParams])
 
   useEffectAfterMount(() => {
