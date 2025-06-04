@@ -42,15 +42,15 @@ export function Memes({
   const [page, setPage] = useState(initialPosts && hasMorePages ? 2 : 1)
   const [loading, setLoading] = useState(false)
   const [hasMore, setHasMore] = useState(true)
+  const [memeQuery, setMemeQuery] = useState<APIQuery<'/v0/posts/'>>(query || searchParamsToRecord(searchParams))
 
   const { ref: loaderRef, inView } = useInView({ threshold: 1 })
 
   async function fetchPosts(pageNum: number, resetPosts = false) {
     setLoading(true)
-    const searchParamsRecord = searchParamsToRecord(searchParams)
     const fullQuery = {
       ...defaultQuery,
-      ...searchParamsRecord,
+      ...memeQuery,
       ...alwaysQuery,
       page: pageNum,
     } as APIQuery<'/v0/posts/'>
@@ -64,12 +64,16 @@ export function Memes({
     setLoading(false)
   }
 
+  useEffect(() => {
+    setMemeQuery(searchParamsToRecord(searchParams))
+  }, [searchParams])
+
   useEffectAfterMount(() => {
     setLoading(true)
     setHasMore(true)
     setPage(1)
     fetchPosts(1, true)
-  }, [searchParams])
+  }, [memeQuery])
 
   useEffect(() => {
     if (initialPosts && hasMorePages) {
