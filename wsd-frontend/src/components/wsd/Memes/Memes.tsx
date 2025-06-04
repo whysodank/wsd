@@ -17,7 +17,7 @@ import { includesType } from '@/api/typeHelpers'
 import config from '@/config'
 import { useEffectAfterMount } from '@/lib/hooks'
 import { getWSDAPI } from '@/lib/serverHooks'
-import { cn } from '@/lib/utils'
+import { cn, searchParamsToRecord } from '@/lib/utils'
 
 import { useInView } from 'react-intersection-observer'
 
@@ -47,9 +47,10 @@ export function Memes({
 
   async function fetchPosts(pageNum: number, resetPosts = false) {
     setLoading(true)
+    const searchParamsRecord = searchParamsToRecord(searchParams)
     const fullQuery = {
       ...defaultQuery,
-      ...query,
+      ...searchParamsRecord,
       ...alwaysQuery,
       page: pageNum,
     } as APIQuery<'/v0/posts/'>
