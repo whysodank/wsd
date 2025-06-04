@@ -17,15 +17,15 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Switch } from '@/components/shadcn/switch'
 
 import { APIType } from '@/api'
-import { useFormState } from '@/lib/hooks'
-import { useWSDAPI } from '@/lib/serverHooks'
-import { fileToBase64, uuidV4toHEX } from '@/lib/utils'
+import { useFileDragDrop, useFormState } from '@/lib/hooks'
+import { getWSDAPI } from '@/lib/serverHooks'
+import { cn, fileToBase64, uuidV4toHEX } from '@/lib/utils'
 
 import { Tag, TagInput } from 'emblor'
 import { toast } from 'sonner'
 
 export default function NewPostForm({ categories }: { categories: APIType<'PostCategory'>[] }) {
-  const wsd = useWSDAPI()
+  const wsd = getWSDAPI()
   const router = useRouter()
   const fileInputRef = useRef<FileInputButtonRef>(null)
 
@@ -98,8 +98,37 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
     }
   }
 
+  // Implement useFileDragDrop hook for better drag and drop handling
+  const { ref: dragDropRef, isDragging } = useFileDragDrop<HTMLFormElement>({
+    onDrop: async (droppedFiles) => {
+      if (droppedFiles.length > 0) {
+        const file = droppedFiles[0]
+        // Check if it's an image
+        if (file.type.startsWith('image/')) {
+          fileInputRef.current?.setFile(file)
+          toast('Image selected successfully!')
+        } else {
+          toast.error('Please upload an image file')
+        }
+      }
+    },
+    acceptedFileTypes: ['image/*'],
+    multiple: false,
+  })
+
   return (
-    <form className="flex items-end gap-2 w-full justify-center" onSubmit={handleCreatePost}>
+    <form className="flex items-end gap-2 w-full justify-center" onSubmit={handleCreatePost} ref={dragDropRef}>
+      <div
+        className={cn(
+          'fixed inset-0 bg-black/25 z-50 flex items-center justify-center pointer-events-none transition-opacity duration-300',
+          isDragging ? 'opacity-100' : 'opacity-0'
+        )}
+      >
+        <div className="flex flex-column bg-primary p-4 rounded-lg shadow-lg gap-2">
+          <Icons.Upload size={24} className="text-black" />
+          <p className="text-black text-lg font-semibold">Drop your image here</p>
+        </div>
+      </div>
       <div className="bg-background p-6 w-full sm:w-4/5 md:w-4/5 lg:w-3/5 xl:w-2/5">
         <div className="flex flex-col gap-6">
           <h1 className="text-2xl font-bold">Create Post</h1>
@@ -112,6 +141,10 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
               value={postState.title}
               onChange={handlePostStateEvent('title')}
               errorText={postErrors?.title?.join('\n')}
+              autoComplete="off"
+              autoCorrect="off"
+              autoCapitalize="off"
+              aria-autocomplete="none"
             />
           </div>
           {categories.length > 0 && (
@@ -154,14 +187,19 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
               <Icons.Shell size={16} />
               Meme
             </Label>
-            <div className="border-2 border-dashed rounded-lg p-12 text-center">
+            <div
+              className={cn(
+                'border-2 border-dashed rounded-lg p-12 text-center',
+                isDragging && 'border-primary bg-primary/10'
+              )}
+            >
               <div className="flex flex-col items-center gap-4">
-                {!(fileInputRef.current?.hasFile() === true) && (
+                {!fileInputRef.current?.hasFile() && (
                   <>
                     <div className="p-4 bg-muted rounded-full">
                       <Icons.Image className="w-8 h-8 text-muted-foreground" />
                     </div>
-                    <p className="font-medium">Choose a photo to upload</p>
+                    <p className="font-medium">Choose a photo to upload or drag and drop here</p>
                   </>
                 )}
                 <FileInputButton onFileSelect={onFileSelect} ref={fileInputRef} id="postMedia" />
@@ -185,6 +223,10 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
                 value={postState.original_source}
                 onChange={handlePostStateEvent('original_source')}
                 errorText={postErrors?.original_source?.join('\n')}
+                autoComplete="off"
+                autoCorrect="off"
+                autoCapitalize="off"
+                aria-autocomplete="none"
               />
             </div>
             <small className="text-muted-foreground">Meme's youtube/reddit/blog link</small>
