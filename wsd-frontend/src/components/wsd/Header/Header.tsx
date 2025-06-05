@@ -5,6 +5,7 @@ import * as Icons from 'lucide-react'
 import { Button, buttonVariants } from '@/components/shadcn/button'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/shadcn/sheet'
 import { MobileNav } from '@/components/wsd/Header/MobileNav'
+import HeaderSearchBar from '@/components/wsd/Header/client'
 import Notifications from '@/components/wsd/Notifications'
 import UserAvatar from '@/components/wsd/UserAvatar'
 
@@ -34,6 +35,7 @@ export async function Header() {
           <div className="w-3/4 max-md:w-full md:flex-none" />
         </div>
         <div className="xl:w-1/6 flex justify-end gap-1 items-center">
+          <HeaderSearchBar />
           {(await wsd.isAuthenticated()) ? (
             <>
               <Link
