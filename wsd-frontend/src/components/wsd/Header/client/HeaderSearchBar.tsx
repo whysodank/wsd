@@ -2,12 +2,13 @@
 
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
 import { debounce } from 'lodash'
 
+import { Button } from '@/components/shadcn/button'
 import { Input } from '@/components/shadcn/input'
 
 import { cn } from '@/lib/utils'
@@ -20,7 +21,9 @@ export function HeaderSearchBar() {
   const searchParams = useSearchParams()
   const [value, setValue] = useState(searchParams.get('search') || '')
 
-  const handleSearch = (searchValue: string) => {
+  const searchInputRef = useRef<HTMLInputElement>(null)
+
+  function handleSearch(searchValue: string) {
     const params = new URLSearchParams(searchParams)
     if (searchValue.trim().length < 3) {
       if (searchParams.has('search')) {
@@ -38,15 +41,29 @@ export function HeaderSearchBar() {
     router.replace(`${pathname}?${params.toString()}`)
   }
 
+  function focusSearchInput() {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus()
+    }
+  }
+
   const search = debounce((searchValue: string) => handleSearch(searchValue), 500, { leading: false, trailing: true })
   return (
     <div
-      className={cn('flex items-center h-10', (isHovered || isFocused) && 'gap-1')}
+      className={cn('relative flex items-center h-10', (isHovered || isFocused) && 'gap-1')}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={() => {
+        if (value.trim().length > 0) {
+          return
+        }
+        setIsHovered(false)
+      }}
     >
-      <Icons.Search size={20} className="w-10" />
+      <Button variant={'ghost'} onClick={focusSearchInput} className="p-0" size="icon" aria-hidden="true">
+        <Icons.Search size={20} className="w-10" />
+      </Button>
       <Input
+        ref={searchInputRef}
         type="text"
         className={cn(
           'transition-all duration-200 outline-none h-8',
@@ -55,10 +72,10 @@ export function HeaderSearchBar() {
         value={value}
         onFocus={() => setIsFocused(true)}
         onBlur={() => {
-          setIsFocused(false)
-          if (!value) {
-            setIsHovered(false)
+          if (value.trim().length > 0) {
+            return
           }
+          setIsFocused(false)
         }}
         onChange={(e) => {
           setValue(e.target.value)
@@ -66,6 +83,25 @@ export function HeaderSearchBar() {
         }}
         placeholder="Search..."
       />
+      <Button
+        variant="ghost"
+        className={cn(
+          'absolute top-1/2 -translate-y-1/2 h-6 w-6 right-2 p-0 opacity-0 pointer-events-none transition-all duration-200',
+          (isFocused || isHovered) && 'opacity-100 pointer-events-auto'
+        )}
+        size="icon"
+      >
+        <Icons.X
+          size={20}
+          className={cn('w-10')}
+          onClick={() => {
+            setValue('')
+            handleSearch('')
+            setIsFocused(false)
+            setIsHovered(false)
+          }}
+        />
+      </Button>
     </div>
   )
 }
