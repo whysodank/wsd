@@ -30,6 +30,7 @@ export function Meme({
   withRepostData = false,
   fullScreen = false,
   isAuthenticated = false,
+  currentUser = null,
 }: {
   post: Includes<
     Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
@@ -40,6 +41,8 @@ export function Meme({
   withRepostData?: boolean
   fullScreen?: boolean
   isAuthenticated?: boolean
+  currentUser?: APIType<'User'> | null
+  onDelete?: (post: APIType<'Post'>) => void
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isBlurred, setIsBlurred] = useState(true)
@@ -209,7 +212,7 @@ export function Meme({
               </Link>
             )}
 
-            <MemeThreeDotMenu post={post} />
+            <MemeThreeDotMenu post={post} currentUser={currentUser} />
           </div>
         </div>
       </div>

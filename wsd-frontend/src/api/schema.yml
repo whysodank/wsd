@@ -1077,6 +1077,10 @@ paths:
         schema:
           type: boolean
       - in: query
+        name: is_removed
+        schema:
+          type: boolean
+      - in: query
         name: is_repost
         schema:
           type: boolean
@@ -1415,6 +1419,33 @@ paths:
           description: No response body
         '401':
           description: No response body
+  /v0/posts/{id}/remove/:
+    post:
+      operationId: posts_remove_create
+      description: Mark a post as removed. Only the post creator or superusers can
+        remove posts.
+      summary: Remove Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
+        '403':
+          description: No response body
   /v0/posts/{id}/unbookmark/:
     post:
       operationId: posts_unbookmark_create
@@ -1438,6 +1469,33 @@ paths:
         '204':
           description: No response body
         '401':
+          description: No response body
+  /v0/posts/{id}/unremove/:
+    post:
+      operationId: posts_unremove_create
+      description: Mark a removed post as not removed. Only superusers can unremove
+        posts.
+      summary: Unremove Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
+        '403':
           description: No response body
   /v0/posts/{id}/unvote/:
     post:
@@ -2397,6 +2455,16 @@ components:
           type: integer
           readOnly: true
           nullable: true
+        is_removed:
+          type: boolean
+          readOnly: true
+          description: Whether this post has been removed.
+        removed_at:
+          type: string
+          format: date-time
+          readOnly: true
+          nullable: true
+          description: When this post was removed.
       required:
       - bookmarked
       - comment_count
@@ -2404,9 +2472,11 @@ components:
       - id
       - image
       - initial
+      - is_removed
       - is_repost
       - negative_vote_count
       - positive_vote_count
+      - removed_at
       - tags
       - title
       - updated_at
@@ -2788,6 +2858,16 @@ components:
           items:
             type: string
           readOnly: true
+        is_removed:
+          type: array
+          items:
+            type: string
+          readOnly: true
+        removed_at:
+          type: array
+          items:
+            type: string
+          readOnly: true
         non_field_errors:
           type: array
           items:
@@ -2803,11 +2883,13 @@ components:
       - initial
       - is_nsfw
       - is_original
+      - is_removed
       - is_repost
       - negative_vote_count
       - non_field_errors
       - original_source
       - positive_vote_count
+      - removed_at
       - tags
       - title
       - updated_at

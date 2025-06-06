@@ -356,6 +356,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/v0/posts/{id}/remove/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Remove Post
+     * @description Mark a post as removed. Only the post creator or superusers can remove posts.
+     */
+    post: operations['posts_remove_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/v0/posts/{id}/unbookmark/': {
     parameters: {
       query?: never
@@ -370,6 +390,26 @@ export interface paths {
      * @description Remove bookmark from post by id
      */
     post: operations['posts_unbookmark_create']
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
+  '/v0/posts/{id}/unremove/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    get?: never
+    put?: never
+    /**
+     * Unremove Post
+     * @description Mark a removed post as not removed. Only superusers can unremove posts.
+     */
+    post: operations['posts_unremove_create']
     delete?: never
     options?: never
     head?: never
@@ -907,6 +947,13 @@ export interface components {
       readonly positive_vote_count: number | null
       readonly negative_vote_count: number | null
       readonly comment_count: number | null
+      /** @description Whether this post has been removed. */
+      readonly is_removed: boolean
+      /**
+       * Format: date-time
+       * @description When this post was removed.
+       */
+      readonly removed_at: string | null
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
      *     read only.
@@ -1090,6 +1137,8 @@ export interface components {
       readonly positive_vote_count: string[]
       readonly negative_vote_count: string[]
       readonly comment_count: string[]
+      readonly is_removed: string[]
+      readonly removed_at: string[]
       readonly non_field_errors: string[]
     }
     /** @description Serializes the nested field, doesn't turn the serializer into read-only automatically(should it?) but it is
@@ -2214,6 +2263,7 @@ export interface operations {
         include?: 'category' | 'tags' | 'tags,category' | 'tags,user' | 'tags,user,category' | 'user' | 'user,category'
         is_nsfw?: boolean
         is_original?: boolean
+        is_removed?: boolean
         is_repost?: boolean
         negative_vote_count?: number
         negative_vote_count__gt?: number
@@ -2475,6 +2525,41 @@ export interface operations {
       }
     }
   }
+  posts_remove_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      403: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
   posts_unbookmark_create: {
     parameters: {
       query?: never
@@ -2496,6 +2581,41 @@ export interface operations {
       }
       /** @description No response body */
       401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+    }
+  }
+  posts_unremove_create: {
+    parameters: {
+      query?: never
+      header?: never
+      path: {
+        /** @description A UUID string identifying this Post. */
+        id: string
+      }
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      /** @description No response body */
+      204: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      401: {
+        headers: {
+          [name: string]: unknown
+        }
+        content?: never
+      }
+      /** @description No response body */
+      403: {
         headers: {
           [name: string]: unknown
         }

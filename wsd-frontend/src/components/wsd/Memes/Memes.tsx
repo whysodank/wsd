@@ -26,11 +26,13 @@ export function Memes({
   initialPosts,
   hasMorePages,
   isAuthenticated = false,
+  currentUser = null,
 }: {
   query?: Omit<APIQuery<'/v0/posts/'>, 'include' | 'page'>
   initialPosts?: APIType<'Post'>[]
   hasMorePages?: boolean
   isAuthenticated?: boolean
+  currentUser?: APIType<'User'> | null
 }) {
   const wsd = getWSDAPI()
   const searchParams = useSearchParams()
@@ -98,6 +100,7 @@ export function Memes({
             withTags
             withRepostData
             isAuthenticated={isAuthenticated}
+            currentUser={currentUser}
           />
           <Separator className="max-sm:w-[calc(100%-8px)] w-5/6" />
         </div>

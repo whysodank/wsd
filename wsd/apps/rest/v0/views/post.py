@@ -10,6 +10,7 @@ from apps.rest.utils.permissions import (
 from apps.rest.utils.schema_helpers import fake_serializer
 from apps.rest.v0.serializers import PostSerializer
 from django.db.models import BooleanField, Count, Exists, IntegerField, OuterRef, Q, Subquery, Value
+from django.utils import timezone
 from django_filters import BooleanFilter, ChoiceFilter, NumberFilter
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
@@ -54,6 +55,7 @@ class PostViewSet(BaseModelViewSet):
         "is_repost": ["exact"],
         "is_nsfw": ["exact"],
         "is_original": ["exact"],
+        "is_removed": ["exact"],
     }
 
     ordering_fields = [
@@ -73,6 +75,8 @@ class PostViewSet(BaseModelViewSet):
         qs = self.annotate_vote(qs, self.request)
         qs = self.annotate_bookmarked(qs, self.request)
         qs = qs.prefetch_related("user", "tags", "category")
+        # Filter based on user permissions
+        qs = qs.for_user(self.request.user)
         return qs
 
     @staticmethod
@@ -178,4 +182,44 @@ class PostViewSet(BaseModelViewSet):
     @django_to_drf_validation_error
     def unbookmark(self, *args, **kwargs):
         self.request.user.unbookmark(self.get_object())
+        return Response(status=204)
+
+    @extend_schema(
+        summary=f"Remove Post",
+        description=f"Mark a post as removed. Only the post creator or superusers can remove posts.",
+        responses={204: None, 401: None, 403: None},
+    )
+    @action(
+        detail=True,
+        methods=["POST"],
+        url_path="remove",
+        serializer_class=fake_serializer("RemovePost", dont_initialize=True),
+        permission_classes=[IsAuthenticatedANDSignupCompleted & (is_owner("user") | IsSuperUser)],
+    )
+    @django_to_drf_validation_error
+    def remove(self, *args, **kwargs):
+        post = self.get_object()
+        post.is_removed = True
+        post.removed_at = timezone.now()
+        post.save()
+        return Response(status=204)
+
+    @extend_schema(
+        summary=f"Unremove Post",
+        description=f"Mark a removed post as not removed. Only superusers can unremove posts.",
+        responses={204: None, 401: None, 403: None},
+    )
+    @action(
+        detail=True,
+        methods=["POST"],
+        url_path="unremove",
+        serializer_class=fake_serializer("UnremovePost", dont_initialize=True),
+        permission_classes=[IsSuperUser],
+    )
+    @django_to_drf_validation_error
+    def unremove(self, *args, **kwargs):
+        post = self.get_object()
+        post.is_removed = False
+        post.removed_at = None
+        post.save()
         return Response(status=204)

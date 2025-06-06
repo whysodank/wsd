@@ -57,3 +57,19 @@ class PostQuerySet(models.QuerySet):
 
     def without_reposts(self):
         return self.filter(is_repost=False)
+
+    def without_removed(self):
+        """
+        Filter out removed posts.
+        """
+        return self.filter(is_removed=False)
+
+    def for_user(self, user=None):
+        """
+        Filter posts based on user permissions:
+        - Superusers can see all posts
+        - Regular users can only see non-removed posts
+        """
+        if user and user.is_authenticated and user.is_superuser:
+            return self
+        return self.without_removed()

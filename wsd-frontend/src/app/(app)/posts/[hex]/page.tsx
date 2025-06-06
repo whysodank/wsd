@@ -45,7 +45,8 @@ export default async function PostPage(props: {
   const searchParams = await props.searchParams
   const params = await props.params
   const wsd = getWSDAPI()
-  const isAuthenticated = await wsd.isAuthenticated()
+  const currentUser = await wsd.getCurrentUser()
+  const isAuthenticated = !_.isUndefined(currentUser)
   const postId = suppress<string, undefined>([InvalidHEXError], () => hexToUUIDv4(params.hex))
 
   const orderingLabels = {
@@ -77,7 +78,14 @@ export default async function PostPage(props: {
       return (
         <div className="flex flex-col gap-2 items-center lg:w-5/6 w-full">
           <div className="w-full min-h-[130vh]">
-            <Meme post={post_} withRepostData withTags fullScreen isAuthenticated={isAuthenticated} />
+            <Meme
+              post={post_}
+              withRepostData
+              withTags
+              fullScreen
+              isAuthenticated={isAuthenticated}
+              currentUser={currentUser}
+            />
             <Separator className="max-sm:w-[calc(100%-8px)] w-full max-w-full" />
             {wsd.hasResults(comments) && (
               <Overlay breakpoint="md">

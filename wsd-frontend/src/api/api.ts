@@ -122,6 +122,14 @@ export class WSDAPI {
     return await this.client.DELETE('/v0/posts/{id}/', { params: { path: { id } } })
   }
 
+  public async removePost(id: string) {
+    return await this.client.POST('/v0/posts/{id}/remove/', { params: { path: { id } } })
+  }
+
+  public async unRemovePost(id: string) {
+    return await this.client.POST('/v0/posts/{id}/unremove/', { params: { path: { id } } })
+  }
+
   public async upvotePost(id: string) {
     return await this.client.POST('/v0/posts/{id}/upvote/', { params: { path: { id } } })
   }
