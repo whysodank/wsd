@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 import BackToTopButton from '@/components/wsd/BackToTopButton/client'
 import Memes from '@/components/wsd/Memes'
 
@@ -8,7 +10,8 @@ import { getWSDAPI } from '@/lib/serverHooks'
 export default async function Home(props: { searchParams?: Promise<APIQuery<'/v0/posts/'>> }) {
   const searchParams = await props.searchParams
   const wsd = getWSDAPI()
-  const isAuthenticated = await wsd.isAuthenticated()
+  const currentUser = await wsd.getCurrentUser()
+  const isAuthenticated = !_.isUndefined(currentUser)
   const postQuery = {
     ...searchParams,
     page_size: config.ux.defaultPostPerPage,
@@ -23,6 +26,7 @@ export default async function Home(props: { searchParams?: Promise<APIQuery<'/v0
         initialPosts={data?.results || []}
         hasMorePages={Boolean(data?.total_pages && data.total_pages > 1)}
         isAuthenticated={isAuthenticated}
+        currentUser={currentUser}
       />
       <BackToTopButton />
     </>
