@@ -101,6 +101,12 @@ export function Memes({
             withRepostData
             isAuthenticated={isAuthenticated}
             currentUser={currentUser}
+            onDelete={() => {
+              fetchPosts(page)
+            }}
+            onRestore={() => {
+              fetchPosts(page)
+            }}
           />
           <Separator className="max-sm:w-[calc(100%-8px)] w-5/6" />
         </div>

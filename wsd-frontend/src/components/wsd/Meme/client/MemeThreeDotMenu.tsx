@@ -25,20 +25,8 @@ export default function MemeThreeDotMenu({
     APIType<'PostCategory'>
   >
   currentUser?: APIType<'User'> | null
-  onDelete?: (
-    post: Includes<
-      Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
-      'category',
-      APIType<'PostCategory'>
-    >
-  ) => void
-  onRestore?: (
-    post: Includes<
-      Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
-      'category',
-      APIType<'PostCategory'>
-    >
-  ) => void
+  onDelete?: (postId: string) => void
+  onRestore?: (postId: string) => void
 }) {
   const wsd = getWSDAPI()
   // Move the condition checks into individual useMemo hooks
@@ -74,7 +62,7 @@ export default function MemeThreeDotMenu({
               icon: Icons.Trash2,
               action: async () => {
                 await wsd.removePost(post.id)
-                onDelete?.(post)
+                onDelete?.(post.id)
               },
             },
           ]
@@ -86,7 +74,7 @@ export default function MemeThreeDotMenu({
               icon: Icons.RefreshCcw,
               action: async () => {
                 await wsd.unRemovePost(post.id)
-                onRestore?.(post)
+                onRestore?.(post.id)
               },
             },
           ]
