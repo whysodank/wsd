@@ -42,6 +42,20 @@ class PostViewSet(BaseModelViewSet):
         **make_filters("comment_count", NumberFilter, ["exact", "gt", "gte", "lt", "lte"]),
     }
 
+    search_fields = ["title", "user__username", "tags__name"]
+
+    def filter_queryset(self, queryset):
+        """
+        Overrides the default filter_queryset to ensure the search query has at least 3 characters.
+        """
+        search_value = self.request.GET.get("search", "")
+        if search_value and len(search_value.strip()) < 3:
+            # If the search term is less than 3 characters, remove the search filter
+            self.request.GET._mutable = True
+            self.request.GET.pop("search", None)
+
+        return super().filter_queryset(queryset)
+
     filterset_fields = {
         "user": ["exact"],
         "user__username": ["exact"],
