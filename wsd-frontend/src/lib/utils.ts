@@ -261,3 +261,30 @@ export function noopLayout() {
     return React.createElement(React.Fragment, null, children)
   }
 }
+/**
+ * Converts a URLSearchParams object into a Record where values can be of type T,
+ * or arrays of type T when multiple values exist for the same key.
+ *
+ * @template T The type of values in the resulting record (defaults to string | number | boolean)
+ * @param searchParamsObj - URLSearchParams object to convert
+ * @param valueTransformer - Optional function to transform string values to type T
+ * @returns A record with search parameter keys and their values
+ */
+export function searchParamsToRecord<T = string | number | boolean>(
+  searchParamsObj: URLSearchParams,
+  valueTransformer?: (value: string, key: string) => T
+): Record<string, T | T[]> {
+  return Array.from(searchParamsObj).reduce(
+    (data, [key, value]) => {
+      const transformedValue = valueTransformer ? valueTransformer(value, key) : (value as unknown as T)
+
+      if (key in data) {
+        data[key] = `${data[key]},${transformedValue}` as T
+      } else {
+        data[key] = transformedValue
+      }
+      return data
+    },
+    {} as Record<string, T | T[]>
+  )
+}
