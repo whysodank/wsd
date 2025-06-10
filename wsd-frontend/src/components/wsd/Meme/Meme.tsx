@@ -158,6 +158,7 @@ export function Meme({
           <span title={shortFormattedDateTime(new Date(post.created_at))} className="text-xs text-muted-foreground">
             {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
           </span>
+          {post.is_hidden && <span className="text-xs text-red-500 font-semibold">Hidden</span>}
         </div>
         <h2 className="text-xl font-semibold">
           <Link className="hover:underline break-word" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>

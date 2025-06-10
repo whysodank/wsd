@@ -4,6 +4,8 @@ import { useMemo } from 'react'
 
 import * as Icons from 'lucide-react'
 
+import _ from 'lodash'
+
 import { Button } from '@/components/shadcn/button'
 import { Overlay, OverlayContent, OverlayTrigger } from '@/components/shadcn/overlay'
 
@@ -31,57 +33,50 @@ export default function MemeThreeDotMenu({
   const wsd = getWSDAPI()
   // Move the condition checks into individual useMemo hooks
   const canDelete = useMemo(() => {
-    if (post.is_removed) return false
+    if (post.is_hidden) return false
     return currentUser?.id === post.user.id || currentUser?.is_superuser === true
-  }, [currentUser?.id, currentUser?.is_superuser, post.is_removed, post.user.id])
+  }, [currentUser?.id, currentUser?.is_superuser, post.is_hidden, post.user.id])
 
   const canRestore = useMemo(() => {
-    if (!post.is_removed) return false
+    if (!post.is_hidden) return false
     return currentUser?.is_superuser === true
-  }, [currentUser?.is_superuser, post.is_removed])
+  }, [currentUser?.is_superuser, post.is_hidden])
 
-  // Use these values directly in your actions definition
-  const actions = useMemo(
-    () => [
-      {
-        label: 'Download',
-        icon: Icons.Download,
+  const downloadAction = useMemo(
+    () => ({
+      label: 'Download',
+      icon: Icons.Download,
+      action: async () => {
+        try {
+          await downloadAndFormatImage(post.image, `${post.title}.png`, 'image/png', 1)
+          toast('Image downloaded successfully')
+        } catch {
+          toast('Unknown error downloading image')
+        }
+      },
+    }),
+    [post.image, post.title]
+  )
+
+  const hideAction = useMemo(
+    () =>
+      ((!post.is_hidden && canDelete) || (post.is_hidden && canRestore)) && {
+        label: post.is_hidden ? 'Restore' : 'Hide',
+        icon: post.is_hidden ? Icons.Eye : Icons.EyeClosed,
         action: async () => {
-          try {
-            await downloadAndFormatImage(post.image, `${post.title}.png`, 'image/png', 1)
-            toast('Image downloaded successfully')
-          } catch {
-            toast('Unknown error downloading image')
+          if (post.is_hidden) {
+            await wsd.unHidePost(post.id)
+            onRestore?.(post.id)
+          } else {
+            await wsd.hidePost(post.id)
+            onDelete?.(post.id)
           }
         },
       },
-      ...(canDelete
-        ? [
-            {
-              label: 'Delete',
-              icon: Icons.Trash2,
-              action: async () => {
-                await wsd.removePost(post.id)
-                onDelete?.(post.id)
-              },
-            },
-          ]
-        : []),
-      ...(canRestore
-        ? [
-            {
-              label: 'Restore',
-              icon: Icons.RefreshCcw,
-              action: async () => {
-                await wsd.unRemovePost(post.id)
-                onRestore?.(post.id)
-              },
-            },
-          ]
-        : []),
-    ],
-    [canDelete, canRestore, post, wsd, onDelete, onRestore]
+    [post.is_hidden, post.id, canDelete, canRestore, wsd, onRestore, onDelete]
   )
+
+  const actions = useMemo(() => _.compact([downloadAction, hideAction]), [downloadAction, hideAction])
 
   return (
     <Overlay breakpoint="md">
@@ -107,8 +102,7 @@ export default function MemeThreeDotMenu({
             variant={'ghost'}
             key={action.label}
             onClick={action.action}
-            className="w-full flex items-center px-3 py-1 text-sm text-muted-foreground rounded-md focus-visible:ring-0 focus-visible:ring-offset-0
-"
+            className="w-full flex items-center px-3 py-1 text-sm text-muted-foreground rounded-md focus-visible:ring-0 focus-visible:ring-offset-0"
           >
             <action.icon className="mr-2 h-4 w-4" />
             {action.label}

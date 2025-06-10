@@ -57,17 +57,11 @@ class Post(BaseModel):
     is_nsfw = models.BooleanField(default=False, verbose_name=_("Is NSFW?"))
     tags = tags(related_name="posts")
 
-    # Removal status
-    is_removed = models.BooleanField(
+    # Hidden status
+    is_hidden = models.BooleanField(
         default=False,
-        verbose_name=_("Is Removed"),
-        help_text=_("Whether this post has been removed."),
-    )
-    removed_at = models.DateTimeField(
-        null=True,
-        blank=True,
-        verbose_name=_("Removed At"),
-        help_text=_("When this post was removed."),
+        verbose_name=_("Is Hidden"),
+        help_text=_("Whether this post has been hidden."),
     )
 
     # Feedback from the user

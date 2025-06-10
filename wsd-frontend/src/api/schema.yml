@@ -1069,15 +1069,15 @@ paths:
         explode: false
         style: form
       - in: query
+        name: is_hidden
+        schema:
+          type: boolean
+      - in: query
         name: is_nsfw
         schema:
           type: boolean
       - in: query
         name: is_original
-        schema:
-          type: boolean
-      - in: query
-        name: is_removed
         schema:
           type: boolean
       - in: query
@@ -1419,12 +1419,12 @@ paths:
           description: No response body
         '401':
           description: No response body
-  /v0/posts/{id}/remove/:
+  /v0/posts/{id}/hide/:
     post:
-      operationId: posts_remove_create
-      description: Mark a post as removed. Only the post creator or superusers can
-        remove posts.
-      summary: Remove Post
+      operationId: posts_hide_create
+      description: Mark a post as hidden. Only the post creator or superusers can
+        hide posts.
+      summary: Hide Post
       parameters:
       - in: path
         name: id
@@ -1470,12 +1470,11 @@ paths:
           description: No response body
         '401':
           description: No response body
-  /v0/posts/{id}/unremove/:
+  /v0/posts/{id}/unhide/:
     post:
-      operationId: posts_unremove_create
-      description: Mark a removed post as not removed. Only superusers can unremove
-        posts.
-      summary: Unremove Post
+      operationId: posts_unhide_create
+      description: Mark a removed post as not hidden. Only superusers can unhide posts.
+      summary: Unhide Post
       parameters:
       - in: path
         name: id
@@ -2455,16 +2454,10 @@ components:
           type: integer
           readOnly: true
           nullable: true
-        is_removed:
+        is_hidden:
           type: boolean
           readOnly: true
-          description: Whether this post has been removed.
-        removed_at:
-          type: string
-          format: date-time
-          readOnly: true
-          nullable: true
-          description: When this post was removed.
+          description: Whether this post has been hidden.
       required:
       - bookmarked
       - comment_count
@@ -2472,11 +2465,10 @@ components:
       - id
       - image
       - initial
-      - is_removed
+      - is_hidden
       - is_repost
       - negative_vote_count
       - positive_vote_count
-      - removed_at
       - tags
       - title
       - updated_at
@@ -2858,12 +2850,7 @@ components:
           items:
             type: string
           readOnly: true
-        is_removed:
-          type: array
-          items:
-            type: string
-          readOnly: true
-        removed_at:
+        is_hidden:
           type: array
           items:
             type: string
@@ -2881,15 +2868,14 @@ components:
       - id
       - image
       - initial
+      - is_hidden
       - is_nsfw
       - is_original
-      - is_removed
       - is_repost
       - negative_vote_count
       - non_field_errors
       - original_source
       - positive_vote_count
-      - removed_at
       - tags
       - title
       - updated_at

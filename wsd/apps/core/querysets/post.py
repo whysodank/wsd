@@ -62,7 +62,7 @@ class PostQuerySet(models.QuerySet):
         """
         Filter out removed posts.
         """
-        return self.filter(is_removed=False)
+        return self.filter(is_hidden=False)
 
     def for_user(self, user=None):
         """

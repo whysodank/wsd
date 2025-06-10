@@ -10,7 +10,6 @@ from apps.rest.utils.permissions import (
 from apps.rest.utils.schema_helpers import fake_serializer
 from apps.rest.v0.serializers import PostSerializer
 from django.db.models import BooleanField, Count, Exists, IntegerField, OuterRef, Q, Subquery, Value
-from django.utils import timezone
 from django_filters import BooleanFilter, ChoiceFilter, NumberFilter
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
@@ -55,7 +54,7 @@ class PostViewSet(BaseModelViewSet):
         "is_repost": ["exact"],
         "is_nsfw": ["exact"],
         "is_original": ["exact"],
-        "is_removed": ["exact"],
+        "is_hidden": ["exact"],
     }
 
     ordering_fields = [
@@ -185,41 +184,35 @@ class PostViewSet(BaseModelViewSet):
         return Response(status=204)
 
     @extend_schema(
-        summary=f"Remove Post",
-        description=f"Mark a post as removed. Only the post creator or superusers can remove posts.",
+        summary=f"Hide Post",
+        description=f"Mark a post as hidden. Only the post creator or superusers can hide posts.",
         responses={204: None, 401: None, 403: None},
     )
     @action(
         detail=True,
         methods=["POST"],
-        url_path="remove",
-        serializer_class=fake_serializer("RemovePost", dont_initialize=True),
+        url_path="hide",
+        serializer_class=fake_serializer("HidePost", dont_initialize=True),
         permission_classes=[IsAuthenticatedANDSignupCompleted & (is_owner("user") | IsSuperUser)],
     )
     @django_to_drf_validation_error
-    def remove(self, *args, **kwargs):
-        post = self.get_object()
-        post.is_removed = True
-        post.removed_at = timezone.now()
-        post.save()
+    def hide(self, *args, **kwargs):
+        self.get_object().update(is_hidden=True)
         return Response(status=204)
 
     @extend_schema(
-        summary=f"Unremove Post",
-        description=f"Mark a removed post as not removed. Only superusers can unremove posts.",
+        summary=f"Unhide Post",
+        description=f"Mark a removed post as not hidden. Only superusers can unhide posts.",
         responses={204: None, 401: None, 403: None},
     )
     @action(
         detail=True,
         methods=["POST"],
-        url_path="unremove",
-        serializer_class=fake_serializer("UnremovePost", dont_initialize=True),
+        url_path="unhide",
+        serializer_class=fake_serializer("UnhidePost", dont_initialize=True),
         permission_classes=[IsSuperUser],
     )
     @django_to_drf_validation_error
-    def unremove(self, *args, **kwargs):
-        post = self.get_object()
-        post.is_removed = False
-        post.removed_at = None
-        post.save()
+    def unhide(self, *args, **kwargs):
+        self.get_object().update(is_hidden=False)
         return Response(status=204)
