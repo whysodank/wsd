@@ -57,6 +57,13 @@ class Post(BaseModel):
     is_nsfw = models.BooleanField(default=False, verbose_name=_("Is NSFW?"))
     tags = tags(related_name="posts")
 
+    # Hidden status
+    is_hidden = models.BooleanField(
+        default=False,
+        verbose_name=_("Is Hidden"),
+        help_text=_("Whether this post has been hidden."),
+    )
+
     # Feedback from the user
     comments = comments()
     votes = votes()

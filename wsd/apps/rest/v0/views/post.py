@@ -54,6 +54,7 @@ class PostViewSet(BaseModelViewSet):
         "is_repost": ["exact"],
         "is_nsfw": ["exact"],
         "is_original": ["exact"],
+        "is_hidden": ["exact"],
     }
 
     ordering_fields = [
@@ -73,6 +74,8 @@ class PostViewSet(BaseModelViewSet):
         qs = self.annotate_vote(qs, self.request)
         qs = self.annotate_bookmarked(qs, self.request)
         qs = qs.prefetch_related("user", "tags", "category")
+        # Filter based on user permissions
+        qs = qs.for_user(self.request.user)
         return qs
 
     @staticmethod
@@ -178,4 +181,38 @@ class PostViewSet(BaseModelViewSet):
     @django_to_drf_validation_error
     def unbookmark(self, *args, **kwargs):
         self.request.user.unbookmark(self.get_object())
+        return Response(status=204)
+
+    @extend_schema(
+        summary=f"Hide Post",
+        description=f"Mark a post as hidden. Only the post creator or superusers can hide posts.",
+        responses={204: None, 401: None, 403: None},
+    )
+    @action(
+        detail=True,
+        methods=["POST"],
+        url_path="hide",
+        serializer_class=fake_serializer("HidePost", dont_initialize=True),
+        permission_classes=[IsAuthenticatedANDSignupCompleted & (is_owner("user") | IsSuperUser)],
+    )
+    @django_to_drf_validation_error
+    def hide(self, *args, **kwargs):
+        self.get_object().update(is_hidden=True)
+        return Response(status=204)
+
+    @extend_schema(
+        summary=f"Unhide Post",
+        description=f"Mark a removed post as not hidden. Only superusers can unhide posts.",
+        responses={204: None, 401: None, 403: None},
+    )
+    @action(
+        detail=True,
+        methods=["POST"],
+        url_path="unhide",
+        serializer_class=fake_serializer("UnhidePost", dont_initialize=True),
+        permission_classes=[IsSuperUser],
+    )
+    @django_to_drf_validation_error
+    def unhide(self, *args, **kwargs):
+        self.get_object().update(is_hidden=False)
         return Response(status=204)

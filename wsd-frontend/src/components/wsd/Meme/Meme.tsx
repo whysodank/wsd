@@ -16,6 +16,7 @@ import UserAvatar from '@/components/wsd/UserAvatar'
 
 import { APIType, Includes, includesType } from '@/api'
 import { useElementAttributes } from '@/lib/hooks'
+import { getWSDAPI } from '@/lib/serverHooks'
 import { cn, preventDefault, shortFormattedDateTime, uuidV4toHEX } from '@/lib/utils'
 
 import { formatDistanceToNow } from 'date-fns'
@@ -25,11 +26,14 @@ function getQuickFilterHREF(params?: { [key: string]: string }) {
 }
 
 export function Meme({
-  post,
+  post: initialPost,
   withTags = false,
   withRepostData = false,
   fullScreen = false,
   isAuthenticated = false,
+  currentUser = null,
+  onRestore,
+  onDelete,
 }: {
   post: Includes<
     Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
@@ -40,7 +44,17 @@ export function Meme({
   withRepostData?: boolean
   fullScreen?: boolean
   isAuthenticated?: boolean
+  currentUser?: APIType<'User'> | null
+  onDelete?: (postId: string) => void
+  onRestore?: (postId: string) => void
 }) {
+  const [post, setPost] = useState<Includes<
+    Includes<Includes<APIType<'Post'>, 'user', APIType<'User'>>, 'tags', APIType<'PostTag'>[]>,
+    'category',
+    APIType<'PostCategory'>
+  > | null>(initialPost)
+  const wsd = getWSDAPI()
+
   const [isExpanded, setIsExpanded] = useState(false)
   const [isBlurred, setIsBlurred] = useState(true)
   const { ref: imageRef, attributeValues: meme } = useElementAttributes<
@@ -54,18 +68,56 @@ export function Meme({
   const showExpandButton = !fullScreen && scaledHeight !== null && scaledHeight > 900 && !isExpanded
   const showShrinkButton = !fullScreen && scaledHeight !== null && scaledHeight > 900 && isExpanded
 
-  const shouldApplyBlur = post.is_nsfw && isAuthenticated && isBlurred
+  const shouldApplyBlur = post?.is_nsfw && isAuthenticated && isBlurred
 
   function handleNSFWClick() {
+    if (!post) return
     if (post.is_nsfw && isAuthenticated) {
       setIsBlurred(false)
     }
   }
 
   function handleReBlur() {
+    if (!post) return
     if (post.is_nsfw && isAuthenticated) {
       setIsBlurred(true)
     }
+  }
+
+  async function handlePostUpdate() {
+    if (!post) return
+    const { data } = await wsd.post(uuidV4toHEX(post.id), { include: 'tags,user,category' })
+    const post_ = includesType(
+      includesType(includesType(data as APIType<'Post'>, 'user', 'User'), 'tags', 'PostTag', true),
+      'category',
+      'PostCategory'
+    )
+    setPost(post_)
+  }
+
+  async function handlePostDelete(id: string) {
+    await handlePostUpdate()
+    onDelete?.(uuidV4toHEX(id))
+  }
+
+  async function handlePostRestore(id: string) {
+    await handlePostUpdate()
+    onRestore?.(uuidV4toHEX(id))
+  }
+
+  if (!post) {
+    return (
+      <article
+        className={cn(
+          'shadow-sm overflow-hidden transition-all duration-300 hover:shadow-md w-5/6 max-md:w-full',
+          fullScreen && 'max-w-full w-full'
+        )}
+      >
+        <div className="p-4 max-md:p-2 max-md:py-0">
+          <h2 className="text-xl font-semibold">Post not found</h2>
+        </div>
+      </article>
+    )
   }
 
   const originalSource = post.initial ? `/posts/${uuidV4toHEX(post.initial)}/` : post.original_source || undefined
@@ -106,6 +158,7 @@ export function Meme({
           <span title={shortFormattedDateTime(new Date(post.created_at))} className="text-xs text-muted-foreground">
             {formatDistanceToNow(new Date(post.created_at), { addSuffix: true })}
           </span>
+          {post.is_hidden && <span className="text-xs text-red-500 font-semibold">Hidden</span>}
         </div>
         <h2 className="text-xl font-semibold">
           <Link className="hover:underline break-word" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
@@ -209,7 +262,12 @@ export function Meme({
               </Link>
             )}
 
-            <MemeThreeDotMenu post={post} />
+            <MemeThreeDotMenu
+              post={post}
+              currentUser={currentUser}
+              onDelete={handlePostDelete}
+              onRestore={handlePostRestore}
+            />
           </div>
         </div>
       </div>

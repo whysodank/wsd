@@ -1069,6 +1069,10 @@ paths:
         explode: false
         style: form
       - in: query
+        name: is_hidden
+        schema:
+          type: boolean
+      - in: query
         name: is_nsfw
         schema:
           type: boolean
@@ -1415,6 +1419,33 @@ paths:
           description: No response body
         '401':
           description: No response body
+  /v0/posts/{id}/hide/:
+    post:
+      operationId: posts_hide_create
+      description: Mark a post as hidden. Only the post creator or superusers can
+        hide posts.
+      summary: Hide Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
+        '403':
+          description: No response body
   /v0/posts/{id}/unbookmark/:
     post:
       operationId: posts_unbookmark_create
@@ -1438,6 +1469,32 @@ paths:
         '204':
           description: No response body
         '401':
+          description: No response body
+  /v0/posts/{id}/unhide/:
+    post:
+      operationId: posts_unhide_create
+      description: Mark a removed post as not hidden. Only superusers can unhide posts.
+      summary: Unhide Post
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+          format: uuid
+        description: A UUID string identifying this Post.
+        required: true
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '204':
+          description: No response body
+        '401':
+          description: No response body
+        '403':
           description: No response body
   /v0/posts/{id}/unvote/:
     post:
@@ -2397,6 +2454,10 @@ components:
           type: integer
           readOnly: true
           nullable: true
+        is_hidden:
+          type: boolean
+          readOnly: true
+          description: Whether this post has been hidden.
       required:
       - bookmarked
       - comment_count
@@ -2404,6 +2465,7 @@ components:
       - id
       - image
       - initial
+      - is_hidden
       - is_repost
       - negative_vote_count
       - positive_vote_count
@@ -2788,6 +2850,11 @@ components:
           items:
             type: string
           readOnly: true
+        is_hidden:
+          type: array
+          items:
+            type: string
+          readOnly: true
         non_field_errors:
           type: array
           items:
@@ -2801,6 +2868,7 @@ components:
       - id
       - image
       - initial
+      - is_hidden
       - is_nsfw
       - is_original
       - is_repost
