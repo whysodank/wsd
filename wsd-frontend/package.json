@@ -121,25 +121,6 @@
   },
   "overrides": {
     "@types/react": "19.1.1",
-    "@types/react-dom": "19.1.2",
-    "eslint-config-standard": {
-      "eslint-plugin-n": "^17.0.0"
-    },
-    "emblor": {
-      "react": "^19.0.0",
-      "react-dom": "^19.0.0"
-    },
-    "@radix-ui/react-icons": {
-      "react": "^19.0.0",
-      "react-dom": "^19.0.0"
-    },
-    "cmdk": {
-      "react": "^19.0.0",
-      "react-dom": "^19.0.0"
-    },
-    "embla-carousel-react": {
-      "react": "^19.0.0",
-      "react-dom": "^19.0.0"
-    }
+    "@types/react-dom": "19.1.2"
   }
 }
