@@ -94,3 +94,66 @@ export async function downloadAndFormatImage(
     console.error('Failed to download image:', error)
   }
 }
+
+/***
+ * Converts a File object to a Base64 string using FileReader.
+ * This function does not remove metadata from images.
+ * @param file - The File object to convert.
+ */
+export async function fileToBase64Native(file: File): Promise<string> {
+  const result = await new Promise<string | ArrayBuffer | null>((resolve, reject) => {
+    const reader = new FileReader()
+    reader.readAsDataURL(file)
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = (error) => reject(error)
+  })
+
+  if (typeof result === 'string') {
+    return result
+  } else {
+    throw new Error('Failed to read file as Data URL')
+  }
+}
+
+/***
+ * Converts a File object to a Base64 string, removing metadata if it's an image.
+ * If the image is not supported or the conversion fails, it falls back to fileToBase64Native.
+ * @param file - The File object to convert.
+ * @param quality - The quality of the image (0-1) for JPEG and WEBP formats. Ignored for PNG.
+ */
+export async function fileToBase64(file: File, quality: number = 1): Promise<string> {
+  if (file.type.startsWith('image/')) {
+    const img = new Image()
+    const url = URL.createObjectURL(file)
+    try {
+      await new Promise<void>((resolve, reject) => {
+        img.onload = () => resolve()
+        img.onerror = () => reject(new Error('Failed to load image for metadata removal'))
+        img.src = url
+      })
+
+      const canvas = document.createElement('canvas')
+      canvas.width = img.width
+      canvas.height = img.height
+
+      const ctx = canvas.getContext('2d')
+      if (!ctx) {
+        throw new Error('Failed to get canvas context')
+      }
+      ctx.drawImage(img, 0, 0)
+
+      const cleanDataUrl = canvas.toDataURL(file.type, quality)
+      if (cleanDataUrl === 'data:,') {
+        // If the canvas.toDataURL returns an empty data URL, fallback to native file reading
+        // Commonly happens with unsupported image types, canvas blocked / max size exceeded
+        return await fileToBase64Native(file)
+      }
+
+      return cleanDataUrl
+    } finally {
+      URL.revokeObjectURL(url)
+    }
+  } else {
+    return await fileToBase64Native(file)
+  }
+}
