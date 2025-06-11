@@ -17,9 +17,10 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Switch } from '@/components/shadcn/switch'
 
 import { APIType } from '@/api'
+import { fileToBase64 } from '@/lib/fileUtils'
 import { useFileDragDrop, useFormState } from '@/lib/hooks'
 import { getWSDAPI } from '@/lib/serverHooks'
-import { cn, fileToBase64, uuidV4toHEX } from '@/lib/utils'
+import { cn, uuidV4toHEX } from '@/lib/utils'
 
 import { Tag, TagInput } from 'emblor'
 import { toast } from 'sonner'
