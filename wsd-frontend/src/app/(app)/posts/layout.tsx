@@ -61,7 +61,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
                       /
                       <Link
                         className="text-muted-foreground text-sm hover:underline flex items-center gap-1 justify-between"
-                        href={config.api.baseURL + '/v0/feeds/latest/rss/'}
+                        href={config.api.baseURL + '/v0/feeds/latest/atom/'}
                       >
                         Atom Feed
                       </Link>
