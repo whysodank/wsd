@@ -45,16 +45,12 @@ class LatestPostsFeed(Feed):
         return user_template_url % item.user.username
 
     def _item_category_link(self, item):
-        # Escape the category name to be URL-safe
         return (category_template_url % quote(item.category.handle, safe="")) if item.category else None
 
     def item_pubdate(self, item):
         return item.created_at
 
     def item_extra_kwargs(self, item):
-        """
-        Return extra keywords arguments for each item in the feed.
-        """
         return {
             "image_url": item.image.url if item.image else None,
             "category": item.category.name if item.category else None,
