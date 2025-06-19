@@ -1,6 +1,0 @@
-node_modules
-.next
-package.json
-.prettierrc
-src/components/shadcn
-src/locales
