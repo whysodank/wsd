@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from apps.core.models import Post, PostBookmark, PostVote
 from apps.rest.utils.filters import make_filters
 from apps.rest.utils.permissions import (
@@ -9,7 +11,7 @@ from apps.rest.utils.permissions import (
 )
 from apps.rest.utils.schema_helpers import fake_serializer
 from apps.rest.v0.serializers import PostSerializer
-from django.db.models import BooleanField, Count, Exists, IntegerField, OuterRef, Q, Subquery, Value
+from django.db.models import BooleanField, Count, Exists, Func, IntegerField, OuterRef, Q, Subquery, Value
 from django_filters import BooleanFilter, ChoiceFilter, NumberFilter
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
@@ -179,3 +181,23 @@ class PostViewSet(BaseModelViewSet):
     def unbookmark(self, *args, **kwargs):
         self.request.user.unbookmark(self.get_object())
         return Response(status=204)
+
+    @extend_schema(
+        summary="Get Random Post ID",
+        description="Returns a random post id from the database.",
+        responses={200: str},
+    )
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="random",
+        serializer_class=fake_serializer("RandomPost", dont_initialize=True),
+        permission_classes=[ReadOnly],
+    )
+    def get_random_post(self, *args, **kwargs):
+        """
+        Returns a random post id from the database.
+        """
+
+        post_id_: UUID = Post.objects.order_by(Func(function="RANDOM")).first().id
+        return Response(str(post_id_))

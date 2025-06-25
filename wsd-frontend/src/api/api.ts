@@ -213,4 +213,8 @@ export class WSDAPI {
   public async markAllNotificationsAsRead() {
     return await this.client.POST('/v0/notifications/mark-all-as-read/', {})
   }
+
+  public async getRandomPostId() {
+    return await this.client.GET('/v0/posts/random/')
+  }
 }

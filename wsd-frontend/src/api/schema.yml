@@ -1487,6 +1487,24 @@ paths:
           description: No response body
         '401':
           description: No response body
+  /v0/posts/random/:
+    get:
+      operationId: posts_random_retrieve
+      description: Returns a random post id from the database.
+      summary: Get Random Post ID
+      tags:
+      - posts
+      security:
+      - tokenAuth: []
+      - basicAuth: []
+      - cookieAuth: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: string
+          description: ''
   /v0/users/:
     get:
       operationId: users_list

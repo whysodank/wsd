@@ -3,6 +3,7 @@ import * as Icons from 'lucide-react'
 import { RawSVGIcon } from '@/components/shadcn/raw-svg-icon'
 import { Separator } from '@/components/shadcn/separator'
 import CategoryLink from '@/components/wsd/CategoryLink'
+import FeelingLuckyButton from '@/components/wsd/FeelingLuckyButton'
 
 import { getWSDAPI } from '@/lib/serverHooks'
 
@@ -15,6 +16,7 @@ export async function LeftColumn() {
   const { data: postCategoriesData } = await wsd.postCategories()
 
   const categories = postCategoriesData?.results || []
+
   return (
     <div className="w-full">
       <div className="pb-4 flex flex-col gap-1">
@@ -31,6 +33,9 @@ export async function LeftColumn() {
             {category.name}
           </CategoryLink>
         ))}
+      </div>
+      <div>
+        <FeelingLuckyButton />
       </div>
     </div>
   )
