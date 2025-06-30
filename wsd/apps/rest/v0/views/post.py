@@ -1,5 +1,3 @@
-from uuid import UUID
-
 from apps.core.models import Post, PostBookmark, PostVote
 from apps.rest.utils.filters import make_filters
 from apps.rest.utils.permissions import (
@@ -185,19 +183,23 @@ class PostViewSet(BaseModelViewSet):
     @extend_schema(
         summary="Get Random Post ID",
         description="Returns a random post id from the database.",
-        responses={200: str},
+        responses={200: PostSerializer},
     )
     @action(
         detail=False,
         methods=["GET"],
         url_path="random",
-        serializer_class=fake_serializer("RandomPost", dont_initialize=True),
+        serializer_class=PostSerializer,
         permission_classes=[ReadOnly],
     )
     def get_random_post(self, *args, **kwargs):
         """
-        Returns a random post id from the database.
+        Returns a random post serialized using PostSerializer.
         """
 
-        post_id_: UUID = Post.objects.order_by(Func(function="RANDOM")).first().id
-        return Response(str(post_id_))
+        random_post = Post.objects.order_by(Func(function="RANDOM")).first()
+        if not random_post:
+            return Response({"detail": "No posts found."}, status=404)
+
+        serializer = self.get_serializer(random_post)
+        return Response(serializer.data)
