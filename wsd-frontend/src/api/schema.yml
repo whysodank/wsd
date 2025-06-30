@@ -1490,8 +1490,8 @@ paths:
   /v0/posts/random/:
     get:
       operationId: posts_random_retrieve
-      description: Returns a random post id from the database.
-      summary: Get Random Post ID
+      description: Returns a random post from the database.
+      summary: Get Random Post
       tags:
       - posts
       security:

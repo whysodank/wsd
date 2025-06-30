@@ -181,8 +181,8 @@ class PostViewSet(BaseModelViewSet):
         return Response(status=204)
 
     @extend_schema(
-        summary="Get Random Post ID",
-        description="Returns a random post id from the database.",
+        summary="Get Random Post",
+        description="Returns a random post from the database.",
         responses={200: PostSerializer},
     )
     @action(

@@ -424,8 +424,8 @@ export interface paths {
       cookie?: never
     }
     /**
-     * Get Random Post ID
-     * @description Returns a random post id from the database.
+     * Get Random Post
+     * @description Returns a random post from the database.
      */
     get: operations['posts_random_retrieve']
     put?: never
