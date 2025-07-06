@@ -15,6 +15,7 @@ export async function LeftColumn() {
   const { data: postCategoriesData } = await wsd.postCategories()
 
   const categories = postCategoriesData?.results || []
+
   return (
     <div className="w-full">
       <div className="pb-4 flex flex-col gap-1">

@@ -4,6 +4,7 @@ import * as Icons from 'lucide-react'
 
 import { Button, buttonVariants } from '@/components/shadcn/button'
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from '@/components/shadcn/sheet'
+import FeelingLuckyButton from '@/components/wsd/FeelingLuckyButton'
 import { MobileNav } from '@/components/wsd/Header/MobileNav'
 import Notifications from '@/components/wsd/Notifications'
 import UserAvatar from '@/components/wsd/UserAvatar'
@@ -21,14 +22,17 @@ export async function Header() {
   return (
     <header className="sticky top-0 z-50 w-full bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b border-primary">
       <div className="container flex h-12 items-center max-md:px-4 gap-2">
-        <div className="xl:w-1/6">
-          <Link prefetch={true} href={{ pathname: '/' }} className="items-center gap-2 hidden xl:flex">
-            <span className="hidden font-bold lg:flex gap-2 flex-row">
-              <Icons.Shell size={24} />
-              {config.name}
-            </span>
-          </Link>
-          <MobileNav />
+        <div className="flex items-center gap-6 justify-between md:w-auto">
+          <div className="xl:w-1/6">
+            <Link prefetch={true} href={{ pathname: '/' }} className="items-center gap-2 hidden xl:flex">
+              <span className="hidden font-bold lg:flex gap-2 flex-row">
+                <Icons.Shell size={24} />
+                {config.name}
+              </span>
+            </Link>
+            <MobileNav />
+          </div>
+          <FeelingLuckyButton />
         </div>
         <div className="flex flex-1 items-center justify-between gap-2 md:justify-center lg:w-1/2">
           <div className="w-3/4 max-md:w-full md:flex-none" />

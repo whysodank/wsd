@@ -416,6 +416,26 @@ export interface paths {
     patch?: never
     trace?: never
   }
+  '/v0/posts/random/': {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    /**
+     * Get Random Post
+     * @description Returns a random post from the database.
+     */
+    get: operations['posts_random_retrieve']
+    put?: never
+    post?: never
+    delete?: never
+    options?: never
+    head?: never
+    patch?: never
+    trace?: never
+  }
   '/v0/users/': {
     parameters: {
       query?: never
@@ -2556,6 +2576,25 @@ export interface operations {
           [name: string]: unknown
         }
         content?: never
+      }
+    }
+  }
+  posts_random_retrieve: {
+    parameters: {
+      query?: never
+      header?: never
+      path?: never
+      cookie?: never
+    }
+    requestBody?: never
+    responses: {
+      200: {
+        headers: {
+          [name: string]: unknown
+        }
+        content: {
+          'application/json': components['schemas']['Post']
+        }
       }
     }
   }

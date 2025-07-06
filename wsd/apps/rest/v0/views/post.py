@@ -9,7 +9,7 @@ from apps.rest.utils.permissions import (
 )
 from apps.rest.utils.schema_helpers import fake_serializer
 from apps.rest.v0.serializers import PostSerializer
-from django.db.models import BooleanField, Count, Exists, IntegerField, OuterRef, Q, Subquery, Value
+from django.db.models import BooleanField, Count, Exists, Func, IntegerField, OuterRef, Q, Subquery, Value
 from django_filters import BooleanFilter, ChoiceFilter, NumberFilter
 from drf_spectacular.utils import extend_schema
 from rest_framework.decorators import action
@@ -179,3 +179,27 @@ class PostViewSet(BaseModelViewSet):
     def unbookmark(self, *args, **kwargs):
         self.request.user.unbookmark(self.get_object())
         return Response(status=204)
+
+    @extend_schema(
+        summary="Get Random Post",
+        description="Returns a random post from the database.",
+        responses={200: PostSerializer},
+    )
+    @action(
+        detail=False,
+        methods=["GET"],
+        url_path="random",
+        serializer_class=PostSerializer,
+        permission_classes=[ReadOnly],
+    )
+    def get_random_post(self, *args, **kwargs):
+        """
+        Returns a random post serialized using PostSerializer.
+        """
+
+        random_post = Post.objects.order_by(Func(function="RANDOM")).first()
+        if not random_post:
+            return Response({"detail": "No posts found."}, status=404)
+
+        serializer = self.get_serializer(random_post)
+        return Response(serializer.data)
