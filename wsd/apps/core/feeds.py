@@ -1,24 +1,26 @@
 from urllib.parse import quote
 
 from apps.core.models import Post
+from django.conf import settings
 from django.contrib.syndication.views import Feed
 from django.utils.feedgenerator import Atom1Feed
 
-from wsd.config import CONFIG as config
-
-post_template_url = f"{config.PROTOCOL}://{config.HOSTS.DOMAIN}/posts/%s"
-user_template_url = f"{config.PROTOCOL}://{config.HOSTS.DOMAIN}/users/%s"
-category_template_url = f"{config.PROTOCOL}://{config.HOSTS.DOMAIN}/?category__handle=%s"
+# TODO: Use reverse_lazy from django_hosts instead of hardcoding the URL
+url = f"{settings.PROTOCOL}://{settings.HOST}"
+post_template_url = f"{url}/posts/%s"
+user_template_url = f"{url}/users/%s"
+category_template_url = f"{url}/?category__handle=%s"
 
 
 class LatestPostsFeed(Feed):
     title = "Latest Memes"
-    link = f"{config.PROTOCOL}://{config.HOSTS.DOMAIN}"
-    description = f"Latest memes from the site. Check out it at {config.PROTOCOL}://{config.HOSTS.DOMAIN}!"
+    link = url
+    description = f"Latest memes from the site. Check out it at {url}!"
     language = "en"
 
     def items(self):
-        return Post.objects.filter(is_nsfw=False).order_by("-created_at")[:20]
+        posts = Post.objects.filter(is_nsfw=False).select_related("user", "category").prefetch_related("tags")
+        return posts.order_by("-created_at")[:20]
 
     def item_title(self, item):
         return item.title
@@ -46,10 +48,8 @@ class LatestPostsFeed(Feed):
     @classmethod
     def _category_link(cls, item):
         if item.category:
-            category_link = f'<a href="{cls._item_category_link(item)}">{item.category.name}</a>'
-        else:
-            category_link = f'<a href="{config.PROTOCOL}://{config.HOSTS.DOMAIN}">Recent</a>'
-        return category_link
+            return f'<a href="{cls._item_category_link(item)}">{item.category.name}</a>'
+        return f'<a href="{url}">Recent</a>'
 
     @staticmethod
     def _item_author_link(item):
