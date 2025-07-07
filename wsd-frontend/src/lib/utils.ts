@@ -240,22 +240,6 @@ export function setKeyValueToObjectIfValue(key: string, value: unknown, object: 
   }
 }
 
-export function fileToBase64(file: File): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const reader = new FileReader()
-
-    reader.readAsDataURL(file)
-    reader.onload = () => {
-      if (typeof reader.result === 'string') {
-        resolve(reader.result)
-      } else {
-        reject(new Error('Failed to read file as Data URL'))
-      }
-    }
-    reader.onerror = (error) => reject(error)
-  })
-}
-
 export function noopLayout() {
   return function Layout({ children }: { children: React.ReactNode }) {
     return React.createElement(React.Fragment, null, children)
