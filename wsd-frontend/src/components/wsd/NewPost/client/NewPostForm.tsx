@@ -17,8 +17,8 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Switch } from '@/components/shadcn/switch'
 
 import { APIType } from '@/api'
-import { useFileDragDrop, useFilePaste, useFormState } from '@/lib/hooks'
 import { fileToBase64 } from '@/lib/fileUtils'
+import { useFileDragDrop, useFilePaste, useFormState } from '@/lib/hooks'
 import { getWSDAPI } from '@/lib/serverHooks'
 import { cn, uuidV4toHEX } from '@/lib/utils'
 
