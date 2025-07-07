@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation'
 
-import { SetStateAction, useRef, useState, useTransition } from 'react'
+import { SetStateAction, useEffect, useRef, useState, useTransition } from 'react'
 
 import * as Icons from 'lucide-react'
 
@@ -17,8 +17,8 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 import { Switch } from '@/components/shadcn/switch'
 
 import { APIType } from '@/api'
+import { useFileDragDrop, useFilePaste, useFormState } from '@/lib/hooks'
 import { fileToBase64 } from '@/lib/fileUtils'
-import { useFileDragDrop, useFormState } from '@/lib/hooks'
 import { getWSDAPI } from '@/lib/serverHooks'
 import { cn, uuidV4toHEX } from '@/lib/utils'
 
@@ -48,6 +48,27 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
       handlePostStateValue('image')(await fileToBase64(file))
     }
   }
+
+  // Use the useFilePaste hook to handle image paste
+  const { files: pastedFiles, error: pasteError } = useFilePaste({
+    acceptedTypes: ['image/*'],
+    enabled: true,
+  })
+
+  // Process pasted files whenever they change
+  useEffect(() => {
+    if (pastedFiles.length > 0 && fileInputRef.current) {
+      const imageFile = pastedFiles[0]
+      fileInputRef.current.setFile(imageFile)
+      toast.success('Image pasted successfully!')
+    }
+  }, [pastedFiles])
+
+  useEffect(() => {
+    if (pasteError) {
+      toast.error(pasteError)
+    }
+  }, [pasteError])
 
   const {
     formState: postState,
@@ -200,7 +221,9 @@ export default function NewPostForm({ categories }: { categories: APIType<'PostC
                     <div className="p-4 bg-muted rounded-full">
                       <Icons.Image className="w-8 h-8 text-muted-foreground" />
                     </div>
-                    <p className="font-medium">Choose a photo to upload or drag and drop here</p>
+                    <p className="font-medium">
+                      Choose, paste or drag and drop a photo to upload or drag and drop here
+                    </p>
                   </>
                 )}
                 <FileInputButton onFileSelect={onFileSelect} ref={fileInputRef} id="postMedia" />
