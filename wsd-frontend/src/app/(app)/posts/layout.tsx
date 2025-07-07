@@ -19,7 +19,7 @@ export default async function Layout({ children }: { children: React.ReactNode }
           <div className="relative flex min-h-screen flex-col bg-background">
             <div className="border-b">
               <div className="container flex-1 items-start xl:grid xl:grid-cols-[240px_minmax(0,1fr)_240px] max-md:px-0">
-                <aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100dvh-10rem)] w-full shrink-0 xl:sticky xl:block">
+                <aside className="fixed top-14 z-30 -ml-2 hidden h-[calc(100dvh-11rem)] w-full shrink-0 xl:sticky xl:block">
                   <ScrollArea className="h-full py-6 pr-6">
                     <LeftColumn />
                     <ScrollBar orientation="vertical" />
@@ -50,6 +50,22 @@ export default async function Layout({ children }: { children: React.ReactNode }
                         GitHub
                       </Link>
                     )}
+                    <div className="flex flex-row gap-1">
+                      <Link
+                        className="text-muted-foreground text-sm hover:underline flex items-center gap-1 justify-between"
+                        href={config.api.baseURL + '/v0/feeds/latest/rss/'}
+                      >
+                        <Icons.Rss color="darkorange" size={18} className="mr-1" />
+                        RSS Feed
+                      </Link>
+                      /
+                      <Link
+                        className="text-muted-foreground text-sm hover:underline flex items-center gap-1 justify-between"
+                        href={config.api.baseURL + '/v0/feeds/latest/atom/'}
+                      >
+                        Atom Feed
+                      </Link>
+                    </div>
                   </div>
                 </aside>
                 <main className="flex min-h-screen flex-col items-center pt-2">{children}</main>

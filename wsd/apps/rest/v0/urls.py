@@ -1,3 +1,4 @@
+from apps.core.feeds import AtomLatestPostsFeed, LatestPostsFeed
 from apps.rest.v0.views import (
     NotificationViewSet,
     PostCategoryViewSet,
@@ -34,6 +35,8 @@ v0_urlpatterns = [
         SpectacularRedocView.as_view(url=reverse_lazy(f"rest:v0:{SCHEMA_URL_NAME}")),
         name="redoc",
     ),
+    path("feeds/latest/rss/", LatestPostsFeed(), name="posts-rss"),
+    path("feeds/latest/atom/", AtomLatestPostsFeed(), name="posts-atom"),
     *router.urls,
 ]
 
