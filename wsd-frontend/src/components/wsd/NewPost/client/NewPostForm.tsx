@@ -18,8 +18,9 @@ import { Switch } from '@/components/shadcn/switch'
 
 import { APIType } from '@/api'
 import { useFileDragDrop, useFilePaste, useFormState } from '@/lib/hooks'
+import { fileToBase64 } from '@/lib/fileUtils'
 import { getWSDAPI } from '@/lib/serverHooks'
-import { cn, fileToBase64, uuidV4toHEX } from '@/lib/utils'
+import { cn, uuidV4toHEX } from '@/lib/utils'
 
 import { Tag, TagInput } from 'emblor'
 import { toast } from 'sonner'
