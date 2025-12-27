@@ -1,0 +1,61 @@
+services:
+  backend:
+    image: wsd:latest
+    build:
+      context: ../../wsd
+    env_file: ../../.env
+    networks:
+      - internal
+      - external
+    volumes:
+      - user_uploads:/wsd/mediafiles
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+  celery:
+    image: wsd:latest
+    command: celery -A wsd worker --pool=threads --concurrency=10  # threads option is important for tensorflow
+    env_file: ../../.env
+    volumes:
+      - user_uploads:/wsd/mediafiles
+    depends_on:
+      database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    networks:
+      - internal
+      - external  # Needs to download static files and send errors to sentry
+    restart: unless-stopped
+
+  celery-beat:
+    image: wsd:latest
+    command: celery -A wsd beat
+    env_file: ../../.env
+    volumes:
+      - user_uploads:/wsd/mediafiles
+    depends_on:
+      database:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      backend:
+        condition: service_started
+    networks:
+      - internal
+      - external  # Needs to download static files and send errors to sentry
+    restart: unless-stopped
+  rabbitmq:
+    image: rabbitmq:3
+    env_file: ../../.env
+    networks:
+      - internal
+    restart: unless-stopped
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 10s
+      retries: 10

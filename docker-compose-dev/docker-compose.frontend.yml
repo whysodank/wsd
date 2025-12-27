@@ -1,0 +1,18 @@
+include:
+  - services/docker-compose.base.yml
+  - services/docker-compose.frontend.yml
+
+services:
+  server:
+    extends:
+      file: services/docker-compose.server.yml
+      service: server
+    restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      backend:
+        condition: service_started
+    environment:
+      WSD__HOSTS__FRONTEND_DOMAIN: "host.docker.internal"
+      WSD__HOSTS__BACKEND_DOMAIN: "backend"
