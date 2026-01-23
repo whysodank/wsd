@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import * as Icons from 'lucide-react'
 
@@ -43,6 +43,7 @@ export function Meme({
 }) {
   const [isExpanded, setIsExpanded] = useState(false)
   const [isBlurred, setIsBlurred] = useState(true)
+  const [isZoomed, setIsZoomed] = useState(false)
   const { ref: imageRef, attributeValues: meme } = useElementAttributes<
     HTMLImageElement,
     'naturalHeight' | 'offsetWidth' | 'naturalWidth'
@@ -67,6 +68,22 @@ export function Meme({
       setIsBlurred(true)
     }
   }
+
+  function handleZoomToggle() {
+    const newZoomed = !isZoomed
+    setIsZoomed(newZoomed)
+  }
+
+  useEffect(() => {
+    if (isZoomed) {
+      const originalOverflow = document.body.style.overflow
+      document.body.style.overflow = 'hidden'
+
+      return () => {
+        document.body.style.overflow = originalOverflow
+      }
+    }
+  }, [isZoomed])
 
   const originalSource = post.initial ? `/posts/${uuidV4toHEX(post.initial)}/` : post.original_source || undefined
 
@@ -112,6 +129,47 @@ export function Meme({
             {post.title}
           </Link>
         </h2>
+        {isZoomed && (
+          <div
+            className="fixed inset-0 bg-black/85 z-50 flex items-center justify-center overflow-hidden"
+            onClick={(e) => {
+              e.preventDefault()
+              e.stopPropagation()
+              handleZoomToggle()
+            }}
+            onKeyDown={(e) => {
+              if (e.key === 'Escape') {
+                e.preventDefault()
+                e.stopPropagation()
+                handleZoomToggle()
+              }
+            }}
+            tabIndex={0}
+            role="button"
+          >
+            <div className="relative flex items-center justify-center">
+              <img
+                src={post.image}
+                alt={post.title}
+                className="max-w-full max-h-full object-contain"
+                style={{
+                  width: 'auto',
+                  height: '100vh',
+                  maxWidth: '95vw',
+                  maxHeight: '95vh',
+                }}
+              />
+              <Button
+                onClick={preventDefault(() => handleZoomToggle())}
+                variant="ghost"
+                className="z-10 w-8 h-8 absolute bottom-4 right-4 rounded-full p-2"
+                aria-label="Close zoom"
+              >
+                <Icons.ZoomOut size={16} />
+              </Button>
+            </div>
+          </div>
+        )}
         <Link className="hover:underline break-word" href={{ pathname: `/posts/${uuidV4toHEX(post.id)}/` }}>
           <div className="relative w-full flex justify-center items-center bg-black overflow-hidden">
             <div className="absolute inset-0 bg-black/60" />
@@ -168,6 +226,17 @@ export function Meme({
                 {isExpanded ? <Icons.Minimize2 size={16} /> : <Icons.Maximize2 size={16} />}
               </Button>
             )}
+            <Button
+              onClick={preventDefault(() => handleZoomToggle())}
+              variant="ghost"
+              className={cn(
+                'z-10 w-8 h-8 absolute bottom-4 right-4 rounded-full p-2',
+                (showExpandButton || showShrinkButton) && 'mb-10'
+              )}
+              aria-label="Zoom image"
+            >
+              <Icons.ZoomIn size={16} />
+            </Button>
           </div>
         </Link>
         {withTags && (
@@ -208,7 +277,6 @@ export function Meme({
                 </Badge>
               </Link>
             )}
-
             <MemeThreeDotMenu post={post} />
           </div>
         </div>
