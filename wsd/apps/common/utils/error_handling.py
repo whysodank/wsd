@@ -51,7 +51,7 @@ def suppress_callable_to_sentry(*exceptions, return_value=None):
     """
     Same as SuppressToSentry but as a decorator instead of a context manager.
     """
-    return suppress_callable(exceptions, func=sentry_sdk.capture_exception, return_value=return_value)
+    return suppress_callable(*exceptions, func=sentry_sdk.capture_exception, return_value=return_value)
 
 
 class TransformExceptions(ContextDecorator):
