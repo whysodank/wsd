@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import { useRouter, useSearchParams } from 'next/navigation'
 
 import { useState } from 'react'
 
@@ -41,13 +42,14 @@ export function Meme({
   fullScreen?: boolean
   isAuthenticated?: boolean
 }) {
+  const router = useRouter()
   const [isExpanded, setIsExpanded] = useState(false)
   const [isBlurred, setIsBlurred] = useState(true)
   const { ref: imageRef, attributeValues: meme } = useElementAttributes<
     HTMLImageElement,
     'naturalHeight' | 'offsetWidth' | 'naturalWidth'
   >(['naturalHeight', 'offsetWidth', 'naturalWidth'])
-
+  const searchParams = useSearchParams()
   const scale = meme.offsetWidth && meme.naturalWidth ? meme.offsetWidth / meme.naturalWidth : 1
   const scaledHeight = meme.naturalHeight ? meme.naturalHeight * scale : null
 
@@ -66,6 +68,30 @@ export function Meme({
     if (post.is_nsfw && isAuthenticated) {
       setIsBlurred(true)
     }
+  }
+
+  function handleTagClick(tagName: string) {
+    const currentParams = new URLSearchParams(searchParams.toString())
+    const currentTags = currentParams.get('tags__name__in')
+
+    if (currentTags) {
+      const tagsArray = currentTags.split(',')
+      if (tagsArray.includes(tagName)) {
+        const newTags = tagsArray.filter((tag) => tag !== tagName)
+        if (newTags.length > 0) {
+          currentParams.set('tags__name__in', newTags.join(','))
+        } else {
+          currentParams.delete('tags__name__in')
+        }
+      } else {
+        tagsArray.push(tagName)
+        currentParams.set('tags__name__in', tagsArray.join(','))
+      }
+    }
+
+    router.replace(`${window.location.pathname}?${currentParams.toString()}`, {
+      scroll: true,
+    })
   }
 
   const originalSource = post.initial ? `/posts/${uuidV4toHEX(post.initial)}/` : post.original_source || undefined
@@ -173,7 +199,16 @@ export function Meme({
         {withTags && (
           <div className="flex flex-wrap gap-2 py-2">
             {post.tags.map((tag) => (
-              <Badge key={tag.name} variant="outline" className="px-3 py-1 text-sm">
+              <Badge
+                key={tag.name}
+                variant="outline"
+                className={cn(
+                  'px-3 py-1 text-sm cursor-pointer hover:bg-secondary hover:text-secondary-foreground transition-colors',
+                  searchParams.get('tags__name__in')?.split(',')?.includes(tag.name) &&
+                    'bg-accent text-secondary-foreground border-white border'
+                )}
+                onClick={preventDefault(() => handleTagClick(tag.name))}
+              >
                 {tag.name}
               </Badge>
             ))}
