@@ -42,3 +42,5 @@ django-celery-beat==2.8.0
 django-celery-results==2.6.0
 robohash==2.0a1
 pillow==11.2.1
+
+django-health-check

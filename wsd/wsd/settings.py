@@ -54,6 +54,13 @@ THIRD_PARTY_APPS = [
     # Celery
     "django_celery_beat",
     "django_celery_results",
+    # Health Check
+    "health_check",  # required
+    "health_check.db",
+    "health_check.contrib.celery",
+    "health_check.contrib.celery_ping",
+    "health_check.contrib.db_heartbeat",
+    "health_check.contrib.mail",
 ]
 
 BUILTIN_APPS = [
