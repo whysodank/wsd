@@ -3,6 +3,7 @@ import * as Icons from 'lucide-react'
 import { RawSVGIcon } from '@/components/shadcn/raw-svg-icon'
 import { Separator } from '@/components/shadcn/separator'
 import CategoryLink from '@/components/wsd/CategoryLink'
+import MemesOption from '@/components/wsd/MemesOptions/client'
 
 import { getWSDAPI } from '@/lib/serverHooks'
 
@@ -32,6 +33,10 @@ export async function LeftColumn() {
             {category.name}
           </CategoryLink>
         ))}
+        <Separator />
+        <div>
+          <MemesOption />
+        </div>
       </div>
     </div>
   )
